@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.36, for Win64 (x86_64)
 --
--- Host: localhost    Database: project2
+-- Host: localhost    Database: SRS_Project_SQL
 -- ------------------------------------------------------
 -- Server version	8.3.0
 
