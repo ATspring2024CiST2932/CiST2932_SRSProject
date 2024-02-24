@@ -18,8 +18,9 @@ public class NewHireInfoController {
     private NewHireInfoService newHireInfoService;
 
     @GetMapping
-    public List<NewHireInfo> getAllNewHireInfo() {
-        return newHireInfoService.findAll();
+    public ResponseEntity<List<NewHireInfo>> getAllNewHireInfo() {
+        List<NewHireInfo> newHireInfoList = newHireInfoService.findAll();
+        return ResponseEntity.ok(newHireInfoList);
     }
 
     @GetMapping("/{id}")

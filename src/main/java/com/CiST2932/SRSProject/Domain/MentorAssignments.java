@@ -5,7 +5,9 @@ package com.CiST2932.SRSProject.Domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
+@Table(name = "mentorassignments")  // Table name in the database
 @Entity
 public class MentorAssignments {
     @Id
