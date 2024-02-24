@@ -23,10 +23,10 @@ DROP TABLE IF EXISTS `mentorassignments`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `mentorassignments` (
-  `assignment_id` int NOT NULL AUTO_INCREMENT,
+  `assignmentID` int NOT NULL AUTO_INCREMENT,
   `mentorID` int NOT NULL,
   `menteeID` int NOT NULL,
-  PRIMARY KEY (`assignment_id`),
+  PRIMARY KEY (`assignmentID`),
   KEY `fk_mentee` (`menteeID`),
   CONSTRAINT `fk_mentee` FOREIGN KEY (`menteeID`) REFERENCES `newhireinfo` (`EmployeeID`),
   CONSTRAINT `fk_mentor` FOREIGN KEY (`mentorID`) REFERENCES `newhireinfo` (`EmployeeID`)
