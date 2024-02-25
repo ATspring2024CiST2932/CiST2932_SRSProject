@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -30,5 +31,16 @@ public class NewHireInfoService {
 
     public void deleteById(int id) {
         newHireInfoRepository.deleteById(id);
+    }
+
+    public NewHireInfo assignMentor(int menteeId, int mentorId) {
+        Optional<NewHireInfo> mentee = newHireInfoRepository.findById(menteeId);
+        if (mentee.isPresent()) {
+            NewHireInfo updatedMentee = mentee.get();
+            updatedMentee.setMentorId(mentorId);
+            return newHireInfoRepository.save(updatedMentee);
+        } else {
+            throw new NoSuchElementException("Mentee with id " + menteeId + " not found");
+        }
     }
 }
