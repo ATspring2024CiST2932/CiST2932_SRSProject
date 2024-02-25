@@ -33,6 +33,10 @@ public class NewHireInfoService {
         newHireInfoRepository.deleteById(id);
     }
 
+    public List<NewHireInfo> findMenteesByMentorId(int mentorId) {
+        return newHireInfoRepository.findMenteesByMentorId(mentorId);
+    }
+
     public NewHireInfo assignMentor(int menteeId, int mentorId) {
         Optional<NewHireInfo> mentee = newHireInfoRepository.findById(menteeId);
         if (mentee.isPresent()) {

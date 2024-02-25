@@ -52,4 +52,16 @@ public class NewHireInfoController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @GetMapping("/mentees/{mentorId}")
+    public ResponseEntity<List<NewHireInfo>> getMenteesByMentorId(@PathVariable int mentorId) {
+        List<NewHireInfo> mentees = newHireInfoService.findMenteesByMentorId(mentorId);
+        return ResponseEntity.ok(mentees);
+    }
+
+    @PostMapping("/assign-mentor")
+    public ResponseEntity<NewHireInfo> assignMentor(@RequestBody NewHireInfo newHireInfo) {
+        NewHireInfo updatedNewHireInfo = newHireInfoService.assignMentor(newHireInfo.getMenteeId(), newHireInfo.getMentorId());
+        return ResponseEntity.ok(updatedNewHireInfo);
+    }
 }

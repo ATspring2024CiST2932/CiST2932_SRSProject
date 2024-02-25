@@ -65,5 +65,22 @@ public class NewHireInfo {
     public void setMentor(boolean mentor) {
         this.mentor = mentor;
     }
+
+    public Integer getMentorId() {
+        return employeeID;
+    }
+
+    public void setMentorId(Integer mentorId) {
+        this.employeeID = mentorId;
+    }
+
+    public Integer getMenteeId() {
+        return employeeID;
+    }
+
+    public void setMenteeId(Integer menteeId) {
+        this.employeeID = menteeId;
+    }
+
 }
 
