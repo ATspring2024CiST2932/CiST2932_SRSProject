@@ -28,19 +28,19 @@ public class PeerCodingTasks {
     @Column(name = "total_hours")
     private BigDecimal total_hours;
 
-    @Column(name = "employeeID")
-    private int employeeID;
+    @Column(name = "employeeId")
+    private int employeeId;
 
     public PeerCodingTasks() {
     }
 
-    public PeerCodingTasks(int task_id, String task_url, String task_number, String task_type, BigDecimal total_hours, int employeeID) {
+    public PeerCodingTasks(int task_id, String task_url, String task_number, String task_type, BigDecimal total_hours, int employeeId) {
         this.task_id = task_id;
         this.task_url = task_url;
         this.task_number = task_number;
         this.task_type = task_type;
         this.total_hours = total_hours;
-        this.employeeID = employeeID;
+        this.employeeId = employeeId;
     }
 
     public int getTask_id() {
@@ -83,11 +83,11 @@ public class PeerCodingTasks {
         this.total_hours = total_hours;
     }
 
-    public int getEmployeeID() {
-        return employeeID;
+    public int getEmployeeId() {
+        return employeeId;
     }
 
-    public void setEmployeeID(int employeeID) {
-        this.employeeID = employeeID;
+    public void setEmployeeId(int employeeId) {
+        this.employeeId = employeeId;
     }
 }

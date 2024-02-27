@@ -6,11 +6,13 @@ import com.CiST2932.SRSProject.Domain.NewHireInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface NewHireInfoRepository extends JpaRepository<NewHireInfo, Integer> {
+    List<NewHireInfo> findMenteesByMentorEmployeeId(int mentorEmployeeId);
     List<NewHireInfo> findByName(String name);
-    Optional<NewHireInfo> findByEmployeeId(int employeeId);
+    List<NewHireInfo> findByEmploymentType(String employmentType);
+    List<NewHireInfo> findByMentor(boolean isMentor);
     List<NewHireInfo> findMenteesByMentorId(int mentorId);
 }
+

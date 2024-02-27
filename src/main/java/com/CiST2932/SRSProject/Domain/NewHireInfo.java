@@ -11,8 +11,8 @@ import jakarta.persistence.Table;
 @Entity
 public class NewHireInfo {
     @Id
-    @Column(name = "employeeID")
-    private int employeeID;
+    @Column(name = "employeeId")
+    private int employeeId;
 
     @Column(name = "name")
     private String name;
@@ -27,19 +27,19 @@ public class NewHireInfo {
     public NewHireInfo() {
     }
 
-    public NewHireInfo(int employeeID, String name, String employmentType, boolean mentor) {
-        this.employeeID = employeeID;
+    public NewHireInfo(int employeeId, String name, String employmentType, boolean mentor) {
+        this.employeeId = employeeId;
         this.name = name;
         this.employmentType = employmentType;
         this.mentor = mentor;
     }
 
-    public int getEmployeeID() {
-        return employeeID;
+    public int getEmployeeId() {
+        return employeeId;
     }
 
-    public void setEmployeeID(int employeeID) {
-        this.employeeID = employeeID;
+    public void setEmployeeId(int employeeId) {
+        this.employeeId = employeeId;
     }
 
     public String getName() {
@@ -67,19 +67,19 @@ public class NewHireInfo {
     }
 
     public Integer getMentorId() {
-        return employeeID;
+        return employeeId;
     }
 
     public void setMentorId(Integer mentorId) {
-        this.employeeID = mentorId;
+        this.employeeId = mentorId;
     }
 
     public Integer getMenteeId() {
-        return employeeID;
+        return employeeId;
     }
 
     public void setMenteeId(Integer menteeId) {
-        this.employeeID = menteeId;
+        this.employeeId = menteeId;
     }
 
 }
