@@ -11,16 +11,16 @@ import jakarta.persistence.Table;
 @Entity
 public class NewHireInfo {
     @Id
-    @Column(name = "employeeID")
+    @Column(name = "EmployeeID")
     private int employeeID;
 
-    @Column(name = "name")
+    @Column(name = "Name")
     private String name;
 
-    @Column(name = "employmentType")
+    @Column(name = "EmploymentType")
     private String employmentType;
 
-    @Column(name = "mentor")
+    @Column(name = "Mentor")
     private boolean mentor;
 
     // Constructors, getters, and setters
