@@ -1,3 +1,4 @@
+
 -- MySQL dump 10.13  Distrib 8.0.36, for Win64 (x86_64)
 --
 -- Host: localhost    Database: project2
@@ -87,10 +88,10 @@ CREATE TABLE `peercodingtasks` (
   `task_number` varchar(50) DEFAULT NULL,
   `task_type` varchar(50) DEFAULT NULL,
   `total_hours` decimal(10,2) DEFAULT NULL,
-  `employeeID` int DEFAULT NULL,
+  `EmployeeID` int DEFAULT NULL,
   PRIMARY KEY (`task_id`),
-  KEY `fk_employeeID` (`employeeID`),
-  CONSTRAINT `fk_employeeID` FOREIGN KEY (`employeeID`) REFERENCES `newhireinfo` (`EmployeeID`)
+  KEY `fk_EmployeeID` (`EmployeeID`),
+  CONSTRAINT `fk_EmployeeID` FOREIGN KEY (`EmployeeID`) REFERENCES `newhireinfo` (`EmployeeID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
