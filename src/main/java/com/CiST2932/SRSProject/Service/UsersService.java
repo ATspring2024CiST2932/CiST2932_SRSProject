@@ -24,6 +24,7 @@ public class UsersService {
         return usersRepository.findById(id);
     }
 
+    @SuppressWarnings("null")
     public Users save(Users user) {
         return usersRepository.save(user);
     }
