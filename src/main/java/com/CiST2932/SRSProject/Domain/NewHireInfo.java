@@ -5,6 +5,8 @@ package com.CiST2932.SRSProject.Domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Table(name = "newhireinfo")  // Table name in the database
@@ -23,23 +25,27 @@ public class NewHireInfo {
     @Column(name = "Mentor")
     private boolean mentor;
 
+    @ManyToOne
+    @JoinColumn(name = "MentorID", referencedColumnName = "mentorId")
+    private MentorAssignments mentorAssignment;
+
     // Constructors, getters, and setters
     public NewHireInfo() {
     }
 
     public NewHireInfo(int employeeId, String name, String employmentType, boolean mentor) {
-        this.employeeId = employeeId;
+        this.employeeID = employeeId;
         this.name = name;
         this.employmentType = employmentType;
         this.mentor = mentor;
     }
 
     public int getEmployeeId() {
-        return employeeId;
+        return employeeID;
     }
 
     public void setEmployeeId(int employeeId) {
-        this.employeeId = employeeId;
+        this.employeeID = employeeId;
     }
 
     public String getName() {
@@ -67,19 +73,19 @@ public class NewHireInfo {
     }
 
     public Integer getMentorId() {
-        return employeeId;
+        return employeeID;
     }
 
     public void setMentorId(Integer mentorId) {
-        this.employeeId = mentorId;
+        this.employeeID = mentorId;
     }
 
     public Integer getMenteeId() {
-        return employeeId;
+        return employeeID;
     }
 
     public void setMenteeId(Integer menteeId) {
-        this.employeeId = menteeId;
+        this.employeeID = menteeId;
     }
 
 }
