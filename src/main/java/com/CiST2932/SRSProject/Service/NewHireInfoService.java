@@ -25,6 +25,10 @@ public class NewHireInfoService {
         return newHireInfoRepository.findById(id);
     }
 
+    public List<NewHireInfo> findAllMentors() {
+        return newHireInfoRepository.findByMentor(true);
+    }     
+
     @SuppressWarnings("null")
     public NewHireInfo save(NewHireInfo newHireInfo) {
         return newHireInfoRepository.save(newHireInfo);

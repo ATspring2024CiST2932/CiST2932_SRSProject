@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/newhireinfo")
@@ -64,4 +65,12 @@ public class NewHireInfoController {
         NewHireInfo updatedNewHireInfo = newHireInfoService.assignMentor(newHireInfo.getMenteeId(), newHireInfo.getMentorId());
         return ResponseEntity.ok(updatedNewHireInfo);
     }
+
+    @GetMapping("/mentors")
+    public ResponseEntity<List<String>> getAllMentorNames() {
+        List<NewHireInfo> mentors = newHireInfoService.findAllMentors();
+        List<String> mentorNames = mentors.stream().map(NewHireInfo::getName).collect(Collectors.toList());
+        return ResponseEntity.ok(mentorNames);
+    }    
+
 }
