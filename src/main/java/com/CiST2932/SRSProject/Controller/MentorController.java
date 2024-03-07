@@ -21,7 +21,7 @@ public class MentorController {
     private MentorService mentorService;
 
     @GetMapping("/{mentorId}")
-    public ResponseEntity<MentorInfo> getMentorInfo(@PathVariable Long mentorId) {
+    public ResponseEntity<MentorInfo> getMentorInfo(@PathVariable int mentorId) {
         MentorInfo mentorInfo = mentorService.getMentorInfo(mentorId);
         return ResponseEntity.ok(mentorInfo);
     }

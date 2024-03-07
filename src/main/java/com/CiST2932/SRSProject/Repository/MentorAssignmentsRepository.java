@@ -11,5 +11,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MentorAssignmentsRepository extends JpaRepository<MentorAssignments, Integer> {
-    List<MentorAssignments> findByMentorId(Long mentorId);
+    List<MentorAssignments> findByMentorId(int mentorId);
 }

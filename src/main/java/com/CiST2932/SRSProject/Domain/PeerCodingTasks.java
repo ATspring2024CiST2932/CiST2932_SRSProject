@@ -14,73 +14,73 @@ import jakarta.persistence.Table;
 public class PeerCodingTasks {
     @Id
     @Column(name = "task_id")
-    private int task_id;
+    private int taskId;
 
     @Column(name = "task_url")
-    private String task_url;
+    private String taskUrl;
 
     @Column(name = "task_number")
-    private String task_number;
+    private String taskNumber;
 
     @Column(name = "task_type")
-    private String task_type;
+    private String taskType;
 
     @Column(name = "total_hours")
-    private BigDecimal total_hours;
+    private BigDecimal totalHours;
 
-    @Column(name = "employeeId")
+    @Column(name = "EmployeeID")
     private int employeeId;
 
     public PeerCodingTasks() {
     }
 
-    public PeerCodingTasks(int task_id, String task_url, String task_number, String task_type, BigDecimal total_hours, int employeeId) {
-        this.task_id = task_id;
-        this.task_url = task_url;
-        this.task_number = task_number;
-        this.task_type = task_type;
-        this.total_hours = total_hours;
+    public PeerCodingTasks(int taskId, String taskUrl, String taskNumber, String taskType, BigDecimal totalHours, int employeeId) {
+        this.taskId = taskId;
+        this.taskUrl = taskUrl;
+        this.taskNumber = taskNumber;
+        this.taskType = taskType;
+        this.totalHours = totalHours;
         this.employeeId = employeeId;
     }
 
     public int getTask_id() {
-        return task_id;
+        return taskId;
     }
 
-    public void setTask_id(int task_id) {
-        this.task_id = task_id;
+    public void setTask_id(int taskId) {
+        this.taskId = taskId;
     }
 
     public String getTask_url() {
-        return task_url;
+        return taskUrl;
     }
 
-    public void setTask_url(String task_url) {
-        this.task_url = task_url;
+    public void setTask_url(String taskUrl) {
+        this.taskUrl = taskUrl;
     }
 
     public String getTask_number() {
-        return task_number;
+        return taskNumber;
     }
 
-    public void setTask_number(String task_number) {
-        this.task_number = task_number;
+    public void setTask_number(String taskNumber) {
+        this.taskNumber = taskNumber;
     }
 
     public String getTask_type() {
-        return task_type;
+        return taskType;
     }
 
-    public void setTask_type(String task_type) {
-        this.task_type = task_type;
+    public void setTask_type(String taskType) {
+        this.taskType = taskType;
     }
 
     public BigDecimal getTotal_hours() {
-        return total_hours;
+        return totalHours;
     }
 
-    public void setTotal_hours(BigDecimal total_hours) {
-        this.total_hours = total_hours;
+    public void setTotal_hours(BigDecimal totalHours) {
+        this.totalHours = totalHours;
     }
 
     public int getEmployeeId() {

@@ -14,7 +14,7 @@ import jakarta.persistence.Table;
 public class NewHireInfo {
     @Id
     @Column(name = "EmployeeID")
-    private int employeeID;
+    private int employeeId;
 
     @Column(name = "Name")
     private String name;
@@ -26,26 +26,26 @@ public class NewHireInfo {
     private boolean mentor;
 
     @ManyToOne
-    @JoinColumn(name = "MentorID", referencedColumnName = "mentorId")
-    private MentorAssignments mentorAssignment;
+    @JoinColumn(name = "mentorID", referencedColumnName = "mentorID")
+    private MentorAssignments mentorAssignment;    
 
     // Constructors, getters, and setters
     public NewHireInfo() {
     }
 
     public NewHireInfo(int employeeId, String name, String employmentType, boolean mentor) {
-        this.employeeID = employeeId;
+        this.employeeId = employeeId;
         this.name = name;
         this.employmentType = employmentType;
         this.mentor = mentor;
     }
 
     public int getEmployeeId() {
-        return employeeID;
+        return employeeId;
     }
 
     public void setEmployeeId(int employeeId) {
-        this.employeeID = employeeId;
+        this.employeeId = employeeId;
     }
 
     public String getName() {
@@ -73,19 +73,19 @@ public class NewHireInfo {
     }
 
     public Integer getMentorId() {
-        return employeeID;
+        return employeeId;
     }
 
     public void setMentorId(Integer mentorId) {
-        this.employeeID = mentorId;
+        this.employeeId = mentorId;
     }
 
     public Integer getMenteeId() {
-        return employeeID;
+        return employeeId;
     }
 
     public void setMenteeId(Integer menteeId) {
-        this.employeeID = menteeId;
+        this.employeeId = menteeId;
     }
 
 }

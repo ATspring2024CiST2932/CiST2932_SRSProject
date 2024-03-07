@@ -15,7 +15,10 @@ public interface NewHireInfoRepository extends JpaRepository<NewHireInfo, Intege
     List<NewHireInfo> findByEmploymentType(String employmentType);
     List<NewHireInfo> findByMentor(boolean isMentor);
 
-    @Query("SELECT n FROM NewHireInfo n JOIN MentorAssignments m ON n.employeeID = m.menteeId WHERE m.mentorId = :mentorId")
+    @Query("SELECT n FROM NewHireInfo n WHERE n.mentorAssignment.mentorId = :mentorId")
     List<NewHireInfo> findMenteesByMentorId(int mentorId);
+
+    @Query("SELECT n FROM NewHireInfo n WHERE n.mentorAssignment.mentorId = :mentorId")
+    List<NewHireInfo> findMenteesByMentorEmployeeId(int mentorId);
 }
 

@@ -19,7 +19,7 @@ public class MentorService {
     @Autowired
     private NewHireInfoRepository newHireInfoRepository;
 
-    public MentorInfo getMentorInfo(Long mentorId) {
+    public MentorInfo getMentorInfo(int mentorId) {
         List<MentorAssignments> assignments = mentorAssignmentsRepository.findByMentorId(mentorId);
         List<NewHireInfo> mentees = new ArrayList<>();
         for (MentorAssignments assignment : assignments) {
