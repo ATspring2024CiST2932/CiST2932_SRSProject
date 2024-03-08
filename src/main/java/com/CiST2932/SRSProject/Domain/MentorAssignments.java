@@ -23,8 +23,8 @@ public class MentorAssignments {
     @Column(name = "menteeID")
     private int menteeId;
 
-    @OneToMany(mappedBy = "mentorAssignment")
-    private List<NewHireInfo> mentees;    
+    // @OneToMany(mappedBy = "mentorAssignment")
+    // private List<NewHireInfo> mentees;    
 
     // Constructors, getters, and setters
     public MentorAssignments() {

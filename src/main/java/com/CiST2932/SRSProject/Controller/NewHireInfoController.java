@@ -54,23 +54,41 @@ public class NewHireInfoController {
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/mentees/{mentorId}")
-    public ResponseEntity<List<NewHireInfo>> getMenteesByMentorId(@PathVariable int mentorId){
-        List<NewHireInfo> mentees = newHireInfoService.findMenteesByMentorId(mentorId);
+    // @GetMapping("/mentees/{mentorId}")
+    // public ResponseEntity<List<NewHireInfo>> getMenteesByMentorId(@PathVariable int mentorId){
+    //     List<NewHireInfo> mentees = newHireInfoService.findMenteesByMentorId(mentorId);
+    //     return ResponseEntity.ok(mentees);
+    // }
+
+    // @PostMapping("/assign-mentor")
+    // public ResponseEntity<NewHireInfo> assignMentor(@RequestBody NewHireInfo newHireInfo) {
+    //     NewHireInfo updatedNewHireInfo = newHireInfoService.assignMentor(newHireInfo.getMenteeId(), newHireInfo.getMentorId());
+    //     return ResponseEntity.ok(updatedNewHireInfo);
+    // }
+
+    // @GetMapping("/mentors")
+    // public ResponseEntity<List<String>> getAllMentorNames() {
+    //     List<NewHireInfo> mentors = newHireInfoService.findAllMentors();
+    //     List<String> mentorNames = mentors.stream().map(NewHireInfo::getName).collect(Collectors.toList());
+    //     return ResponseEntity.ok(mentorNames);
+    // }    
+
+    @GetMapping("/mentors")
+    public ResponseEntity<List<NewHireInfo>> getDistinctMentors() {
+        List<NewHireInfo> mentors = newHireInfoService.findDistinctMentors();
+        return ResponseEntity.ok(mentors);
+    }
+
+    @GetMapping("/mentees")
+    public ResponseEntity<List<NewHireInfo>> getMentees(@RequestParam(required = false) Integer mentorId) {
+        List<NewHireInfo> mentees;
+        if (mentorId != null) {
+            mentees = newHireInfoService.findMenteesByMentorId(mentorId);
+        } else {
+            mentees = newHireInfoService.findAllMentees();
+        }
         return ResponseEntity.ok(mentees);
     }
 
-    @PostMapping("/assign-mentor")
-    public ResponseEntity<NewHireInfo> assignMentor(@RequestBody NewHireInfo newHireInfo) {
-        NewHireInfo updatedNewHireInfo = newHireInfoService.assignMentor(newHireInfo.getMenteeId(), newHireInfo.getMentorId());
-        return ResponseEntity.ok(updatedNewHireInfo);
-    }
-
-    @GetMapping("/mentors")
-    public ResponseEntity<List<String>> getAllMentorNames() {
-        List<NewHireInfo> mentors = newHireInfoService.findAllMentors();
-        List<String> mentorNames = mentors.stream().map(NewHireInfo::getName).collect(Collectors.toList());
-        return ResponseEntity.ok(mentorNames);
-    }    
 
 }

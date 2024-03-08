@@ -43,43 +43,43 @@ public class PeerCodingTasks {
         this.employeeId = employeeId;
     }
 
-    public int getTask_id() {
+    public int getTaskId() {
         return taskId;
     }
 
-    public void setTask_id(int taskId) {
+    public void setTaskId(int taskId) {
         this.taskId = taskId;
     }
 
-    public String getTask_url() {
+    public String getTaskUrl() {
         return taskUrl;
     }
 
-    public void setTask_url(String taskUrl) {
+    public void setTaskUrl(String taskUrl) {
         this.taskUrl = taskUrl;
     }
 
-    public String getTask_number() {
+    public String getTaskNumber() {
         return taskNumber;
     }
 
-    public void setTask_number(String taskNumber) {
+    public void setTaskNumber(String taskNumber) {
         this.taskNumber = taskNumber;
     }
 
-    public String getTask_type() {
+    public String getTaskType() {
         return taskType;
     }
 
-    public void setTask_type(String taskType) {
+    public void setTaskType(String taskType) {
         this.taskType = taskType;
     }
 
-    public BigDecimal getTotal_hours() {
+    public BigDecimal getTotalHours() {
         return totalHours;
     }
 
-    public void setTotal_hours(BigDecimal totalHours) {
+    public void setTotalHours(BigDecimal totalHours) {
         this.totalHours = totalHours;
     }
 

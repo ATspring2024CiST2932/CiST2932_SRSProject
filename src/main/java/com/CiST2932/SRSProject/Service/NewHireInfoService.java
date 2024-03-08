@@ -38,18 +38,31 @@ public class NewHireInfoService {
         newHireInfoRepository.deleteById(id);
     }
 
+    // public List<NewHireInfo> findMenteesByMentorId(int mentorId) {
+    //     return newHireInfoRepository.findMenteesByMentorId(mentorId);
+    // }
+
+    // public NewHireInfo assignMentor(int menteeId, int mentorId) {
+    //     Optional<NewHireInfo> mentee = newHireInfoRepository.findById(menteeId);
+    //     if (mentee.isPresent()) {
+    //         NewHireInfo updatedMentee = mentee.get();
+    //         updatedMentee.setMentorId(mentorId);
+    //         return newHireInfoRepository.save(updatedMentee);
+    //     } else {
+    //         throw new NoSuchElementException("Mentee with id " + menteeId + " not found");
+    //     }
+    // }
+
+    public List<NewHireInfo> findDistinctMentors() {
+        return newHireInfoRepository.findDistinctMentors();
+    }
+
     public List<NewHireInfo> findMenteesByMentorId(int mentorId) {
         return newHireInfoRepository.findMenteesByMentorId(mentorId);
     }
-
-    public NewHireInfo assignMentor(int menteeId, int mentorId) {
-        Optional<NewHireInfo> mentee = newHireInfoRepository.findById(menteeId);
-        if (mentee.isPresent()) {
-            NewHireInfo updatedMentee = mentee.get();
-            updatedMentee.setMentorId(mentorId);
-            return newHireInfoRepository.save(updatedMentee);
-        } else {
-            throw new NoSuchElementException("Mentee with id " + menteeId + " not found");
-        }
+    
+    public List<NewHireInfo> findAllMentees() {
+        return newHireInfoRepository.findAllMentees();
     }
+    
 }

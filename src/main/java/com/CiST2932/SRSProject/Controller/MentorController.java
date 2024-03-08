@@ -20,10 +20,10 @@ public class MentorController {
     @Autowired
     private MentorService mentorService;
 
-    @GetMapping("/{mentorId}")
-    public ResponseEntity<MentorInfo> getMentorInfo(@PathVariable int mentorId) {
-        MentorInfo mentorInfo = mentorService.getMentorInfo(mentorId);
-        return ResponseEntity.ok(mentorInfo);
-    }
+    // @GetMapping("/{mentorId}")
+    // public ResponseEntity<MentorInfo> getMentorInfo(@PathVariable int mentorId) {
+    //     MentorInfo mentorInfo = mentorService.getMentorInfo(mentorId);
+    //     return ResponseEntity.ok(mentorInfo);
+    // }
 }
 
