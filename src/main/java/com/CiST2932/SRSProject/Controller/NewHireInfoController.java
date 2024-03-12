@@ -1,13 +1,9 @@
-// src/main/java/com/CiST2932/SRSProject/Controller/MentorAssignmentsController.java
+//src/main/java/com/CiST2932/SRSProject/Controller/NewHireInfoController.java
 
 package com.CiST2932.SRSProject.Controller;
 
 import com.CiST2932.SRSProject.Domain.NewHireInfo;
-import com.CiST2932.SRSProject.Domain.NewHireInfoDto;
 import com.CiST2932.SRSProject.Service.NewHireInfoService;
-=======
-import com.CiST2932.SRSProject.Domain.MentorAssignments;
-import com.CiST2932.SRSProject.Service.MentorAssignmentsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,42 +11,43 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/mentorassignments")
-public class MentorAssignmentsController {
+@RequestMapping("/newhireinfo")
+public class NewHireInfoController {
 
     @Autowired
-    private MentorAssignmentsService mentorAssignmentsService;
+    private NewHireInfoService newHireInfoService;
 
     @GetMapping
-    public List<MentorAssignments> getAllMentorAssignments() {
-        return mentorAssignmentsService.findAll();
+    public ResponseEntity<List<NewHireInfo>> getAllNewHireInfo() {
+        List<NewHireInfo> newHireInfoList = newHireInfoService.findAll();
+        return ResponseEntity.ok(newHireInfoList);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MentorAssignments> getMentorAssignmentsById(@PathVariable int id) {
-        return mentorAssignmentsService.findById(id)
+    public ResponseEntity<NewHireInfo> getNewHireInfoById(@PathVariable int id) {
+        return newHireInfoService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public MentorAssignments createMentorAssignments(@RequestBody MentorAssignments mentorAssignments) {
-        return mentorAssignmentsService.save(mentorAssignments);
+    public NewHireInfo createNewHireInfo(@RequestBody NewHireInfo newHireInfo) {
+        return newHireInfoService.save(newHireInfo);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MentorAssignments> updateMentorAssignments(@PathVariable int id, @RequestBody MentorAssignments mentorAssignments) {
-        if (mentorAssignmentsService.findById(id).isPresent()) {
-            mentorAssignments.setAssignmentID(id);
-            return ResponseEntity.ok(mentorAssignmentsService.save(mentorAssignments));
+    public ResponseEntity<NewHireInfo> updateNewHireInfo(@PathVariable int id, @RequestBody NewHireInfo newHireInfo) {
+        if (newHireInfoService.findById(id).isPresent()) {
+            newHireInfo.setEmployeeID(id);
+            return ResponseEntity.ok(newHireInfoService.save(newHireInfo));
         }
         return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteMentorAssignments(@PathVariable int id) {
-        if (mentorAssignmentsService.findById(id).isPresent()) {
-            mentorAssignmentsService.deleteById(id);
+    public ResponseEntity<Void> deleteNewHireInfo(@PathVariable int id) {
+        if (newHireInfoService.findById(id).isPresent()) {
+            newHireInfoService.deleteById(id);
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
