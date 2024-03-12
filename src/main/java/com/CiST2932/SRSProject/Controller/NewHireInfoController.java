@@ -3,7 +3,7 @@
 package com.CiST2932.SRSProject.Controller;
 
 import com.CiST2932.SRSProject.Domain.NewHireInfo;
-import com.CiST2932.SRSProject.Repository.NewHireInfoDto;
+import com.CiST2932.SRSProject.Domain.NewHireInfoDto;
 import com.CiST2932.SRSProject.Service.NewHireInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
