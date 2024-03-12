@@ -1,4 +1,4 @@
-package com.CiST2932.SRSProject.Repository;
+package com.CiST2932.SRSProject.Domain;
 
 public class NewHireInfoDto {
     private int employeeId;

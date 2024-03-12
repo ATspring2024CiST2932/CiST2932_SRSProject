@@ -2,6 +2,10 @@
 
 package com.CiST2932.SRSProject.Controller;
 
+import com.CiST2932.SRSProject.Domain.NewHireInfo;
+import com.CiST2932.SRSProject.Domain.NewHireInfoDto;
+import com.CiST2932.SRSProject.Service.NewHireInfoService;
+=======
 import com.CiST2932.SRSProject.Domain.MentorAssignments;
 import com.CiST2932.SRSProject.Service.MentorAssignmentsService;
 import org.springframework.beans.factory.annotation.Autowired;

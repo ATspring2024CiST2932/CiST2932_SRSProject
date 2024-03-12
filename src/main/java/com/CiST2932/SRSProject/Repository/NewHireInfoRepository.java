@@ -3,6 +3,8 @@
 package com.CiST2932.SRSProject.Repository;
 
 import com.CiST2932.SRSProject.Domain.NewHireInfo;
+import com.CiST2932.SRSProject.Domain.NewHireInfoDto;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
