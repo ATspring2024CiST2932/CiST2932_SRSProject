@@ -3,6 +3,7 @@
 package com.CiST2932.SRSProject.Controller;
 
 import com.CiST2932.SRSProject.Domain.NewHireInfo;
+import com.CiST2932.SRSProject.Repository.NewHireInfoDto;
 import com.CiST2932.SRSProject.Service.NewHireInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -54,24 +55,11 @@ public class NewHireInfoController {
         return ResponseEntity.notFound().build();
     }
 
-    // @GetMapping("/mentees/{mentorId}")
-    // public ResponseEntity<List<NewHireInfo>> getMenteesByMentorId(@PathVariable int mentorId){
-    //     List<NewHireInfo> mentees = newHireInfoService.findMenteesByMentorId(mentorId);
-    //     return ResponseEntity.ok(mentees);
-    // }
-
-    // @PostMapping("/assign-mentor")
-    // public ResponseEntity<NewHireInfo> assignMentor(@RequestBody NewHireInfo newHireInfo) {
-    //     NewHireInfo updatedNewHireInfo = newHireInfoService.assignMentor(newHireInfo.getMenteeId(), newHireInfo.getMentorId());
-    //     return ResponseEntity.ok(updatedNewHireInfo);
-    // }
-
-    // @GetMapping("/mentors")
-    // public ResponseEntity<List<String>> getAllMentorNames() {
-    //     List<NewHireInfo> mentors = newHireInfoService.findAllMentors();
-    //     List<String> mentorNames = mentors.stream().map(NewHireInfo::getName).collect(Collectors.toList());
-    //     return ResponseEntity.ok(mentorNames);
-    // }    
+    @GetMapping("/mentees/{mentorId}")
+    public ResponseEntity<List<NewHireInfoDto>> getMenteesByMentorId(@PathVariable Integer mentorId){
+        List<NewHireInfoDto> mentees = newHireInfoService.findMenteesByMentorId(mentorId);
+        return ResponseEntity.ok(mentees);
+    }
 
     @GetMapping("/mentors")
     public ResponseEntity<List<NewHireInfo>> getDistinctMentors() {
@@ -80,15 +68,18 @@ public class NewHireInfoController {
     }
 
     @GetMapping("/mentees")
-    public ResponseEntity<List<NewHireInfo>> getMentees(@RequestParam(required = false) Integer mentorId) {
-        List<NewHireInfo> mentees;
+    public ResponseEntity<List<NewHireInfoDto>> getMentees(@RequestParam(required = false) Integer mentorId) {
+        List<NewHireInfoDto> mentees;
         if (mentorId != null) {
             mentees = newHireInfoService.findMenteesByMentorId(mentorId);
         } else {
-            mentees = newHireInfoService.findAllMentees();
+            // You need to update the findAllMentees method to return List<NewHireInfoDto>
+            mentees = newHireInfoService.findAllMenteesDto();
         }
         return ResponseEntity.ok(mentees);
     }
+    
+    
 
 
 }

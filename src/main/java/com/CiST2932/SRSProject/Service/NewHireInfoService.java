@@ -3,6 +3,7 @@
 package com.CiST2932.SRSProject.Service;
 
 import com.CiST2932.SRSProject.Domain.NewHireInfo;
+import com.CiST2932.SRSProject.Repository.NewHireInfoDto;
 import com.CiST2932.SRSProject.Repository.NewHireInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,12 +58,17 @@ public class NewHireInfoService {
         return newHireInfoRepository.findDistinctMentors();
     }
 
-    public List<NewHireInfo> findMenteesByMentorId(int mentorId) {
+    public List<NewHireInfoDto> findMenteesByMentorId(Integer mentorId) {
         return newHireInfoRepository.findMenteesByMentorId(mentorId);
     }
     
     public List<NewHireInfo> findAllMentees() {
         return newHireInfoRepository.findAllMentees();
     }
+
+    public List<NewHireInfoDto> findAllMenteesDto() {
+        return newHireInfoRepository.findAllMenteesDto();
+    }
+    
     
 }
