@@ -1,3 +1,4 @@
+=======
 
 -- MySQL dump 10.13  Distrib 8.0.36, for Win64 (x86_64)
 --
@@ -58,10 +59,8 @@ CREATE TABLE `newhireinfo` (
   `EmploymentType` varchar(50) DEFAULT NULL,
   `Mentor` bit(1) DEFAULT NULL,
   PRIMARY KEY (`EmployeeID`),
-  UNIQUE KEY `EmployeeID` (`EmployeeID`),
-  UNIQUE KEY `unique_employeeid` (`EmployeeID`),
-  KEY `idx_name` (`Name`),
-  CONSTRAINT `chk_mentor_employment_type` CHECK ((((`Mentor` = 1) and (`EmploymentType` in (_utf8mb4'Full Time',_utf8mb4'Contractor'))) or (`Mentor` = 0)))
+  KEY `idx_name` (`Name`)
+--  CONSTRAINT `chk_mentor_employment_type` CHECK ((((`Mentor` = 1) and (`EmploymentType` in (_utf8mb4'Full Time',_utf8mb4'Contractor'))) or (`Mentor` = 0)))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

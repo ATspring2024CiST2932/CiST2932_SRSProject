@@ -5,6 +5,8 @@ package com.CiST2932.SRSProject.Domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+// import jakarta.persistence.JoinColumn;
+// import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Table(name = "newhireinfo")  // Table name in the database
@@ -12,7 +14,7 @@ import jakarta.persistence.Table;
 public class NewHireInfo {
     @Id
     @Column(name = "EmployeeID")
-    private int employeeID;
+    private int employeeId;
 
     @Column(name = "Name")
     private String name;
@@ -23,23 +25,28 @@ public class NewHireInfo {
     @Column(name = "Mentor")
     private boolean mentor;
 
+    // @ManyToOne
+    // @JoinColumn(name = "EmployeeID", referencedColumnName = "mentorID")
+    // private MentorAssignments mentorAssignment;
+    
+
     // Constructors, getters, and setters
     public NewHireInfo() {
     }
 
-    public NewHireInfo(int employeeID, String name, String employmentType, boolean mentor) {
-        this.employeeID = employeeID;
+    public NewHireInfo(int employeeId, String name, String employmentType, boolean mentor) {
+        this.employeeId = employeeId;
         this.name = name;
         this.employmentType = employmentType;
         this.mentor = mentor;
     }
 
-    public int getEmployeeID() {
-        return employeeID;
+    public int getEmployeeId() {
+        return employeeId;
     }
 
-    public void setEmployeeID(int employeeID) {
-        this.employeeID = employeeID;
+    public void setEmployeeId(int employeeId) {
+        this.employeeId = employeeId;
     }
 
     public String getName() {
@@ -65,5 +72,22 @@ public class NewHireInfo {
     public void setMentor(boolean mentor) {
         this.mentor = mentor;
     }
+
+    // public Integer getMentorId() {
+    //     return employeeId;
+    // }
+
+    // public void setMentorId(Integer mentorId) {
+    //     this.employeeId = mentorId;
+    // }
+
+    // public Integer getMenteeId() {
+    //     return employeeId;
+    // }
+
+    // public void setMenteeId(Integer menteeId) {
+    //     this.employeeId = menteeId;
+    // }
+
 }
 
