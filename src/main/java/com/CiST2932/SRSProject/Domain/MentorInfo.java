@@ -5,22 +5,22 @@ package com.CiST2932.SRSProject.Domain;
 import java.util.List;
 
 public class MentorInfo {
-    private int mentorId;
+    private int mentor;
     private List<NewHireInfo> mentees;
 
     // Constructor
-    public MentorInfo(int mentorId, List<NewHireInfo> mentees) {
-        this.mentorId = mentorId;
+    public MentorInfo(int mentor, List<NewHireInfo> mentees) {
+        this.mentor = mentor;
         this.mentees = mentees;
     }
 
     // Getters and Setters
-    public int getMentorId() {
-        return mentorId;
+    public int getmentor() {
+        return mentor;
     }
 
-    public void setMentorId(int mentorId) {
-        this.mentorId = mentorId;
+    public void setmentor(int mentor) {
+        this.mentor = mentor;
     }
 
     public List<NewHireInfo> getMentees() {

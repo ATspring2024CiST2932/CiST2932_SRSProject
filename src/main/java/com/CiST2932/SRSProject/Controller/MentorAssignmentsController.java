@@ -51,4 +51,14 @@ public class MentorAssignmentsController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @GetMapping("/mentor/{mentorEmployeeId}")
+    public ResponseEntity<List<MentorAssignments>> getMentorAssignmentsByMentorEmployeeId(@PathVariable int mentorEmployeeId) {
+        List<MentorAssignments> mentorAssignments = mentorAssignmentsService.findByMentorEmployeeId(mentorEmployeeId);
+        if (mentorAssignments.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(mentorAssignments);
+    }
+
 }

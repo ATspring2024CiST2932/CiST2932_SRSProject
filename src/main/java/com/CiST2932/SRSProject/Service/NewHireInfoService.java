@@ -33,4 +33,9 @@ public class NewHireInfoService {
     public void deleteById(int id) {
         newHireInfoRepository.deleteById(id);
     }
+
+    public List<NewHireInfo> findMenteesByMentorId(int mentorId) {
+        return newHireInfoRepository.findMenteesByMentorId(mentorId);
+    }
+
 }
