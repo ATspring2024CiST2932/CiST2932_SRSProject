@@ -3,6 +3,7 @@
 package com.CiST2932.SRSProject.Service;
 
 import com.CiST2932.SRSProject.Domain.NewHireInfo;
+import com.CiST2932.SRSProject.Domain.NewHireInfoDto;
 import com.CiST2932.SRSProject.Repository.NewHireInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ public class NewHireInfoService {
         return newHireInfoRepository.findById(id);
     }
 
+    @SuppressWarnings("null")
     public NewHireInfo save(NewHireInfo newHireInfo) {
         return newHireInfoRepository.save(newHireInfo);
     }
@@ -31,4 +33,9 @@ public class NewHireInfoService {
     public void deleteById(int id) {
         newHireInfoRepository.deleteById(id);
     }
+
+    public List<NewHireInfo> findMenteesByMentorId(int mentorId) {
+        return newHireInfoRepository.findMenteesByMentorId(mentorId);
+    }
+
 }

@@ -37,7 +37,7 @@ public class MentorAssignmentsController {
     @PutMapping("/{id}")
     public ResponseEntity<MentorAssignments> updateMentorAssignments(@PathVariable int id, @RequestBody MentorAssignments mentorAssignments) {
         if (mentorAssignmentsService.findById(id).isPresent()) {
-            mentorAssignments.setAssignmentID(id);
+            mentorAssignments.setAssignmentId(id);
             return ResponseEntity.ok(mentorAssignmentsService.save(mentorAssignments));
         }
         return ResponseEntity.notFound().build();
@@ -51,4 +51,14 @@ public class MentorAssignmentsController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @GetMapping("/mentor/{mentorEmployeeId}")
+    public ResponseEntity<List<MentorAssignments>> getMentorAssignmentsByMentorEmployeeId(@PathVariable int mentorEmployeeId) {
+        List<MentorAssignments> mentorAssignments = mentorAssignmentsService.findByMentorEmployeeId(mentorEmployeeId);
+        if (mentorAssignments.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(mentorAssignments);
+    }
+
 }

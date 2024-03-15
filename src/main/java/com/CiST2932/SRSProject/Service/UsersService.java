@@ -25,6 +25,7 @@ public class UsersService {
     }
 
     //UPDATED save method for user validation
+
     @SuppressWarnings("null")
     public Users save(Users user) {
         // Perform data validation here

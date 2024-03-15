@@ -38,7 +38,7 @@ public class NewHireInfoController {
     @PutMapping("/{id}")
     public ResponseEntity<NewHireInfo> updateNewHireInfo(@PathVariable int id, @RequestBody NewHireInfo newHireInfo) {
         if (newHireInfoService.findById(id).isPresent()) {
-            newHireInfo.setEmployeeID(id);
+            newHireInfo.setEmployeeId(id);
             return ResponseEntity.ok(newHireInfoService.save(newHireInfo));
         }
         return ResponseEntity.notFound().build();
@@ -52,4 +52,11 @@ public class NewHireInfoController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @GetMapping("/{mentorId}/mentees")
+    public ResponseEntity<List<NewHireInfo>> getMenteesByMentor(@PathVariable int mentorId) {
+        List<NewHireInfo> mentees = newHireInfoService.findMenteesByMentorId(mentorId);
+        return ResponseEntity.ok(mentees);
+    }
+
 }
