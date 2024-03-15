@@ -54,10 +54,8 @@ public class PeerCodingTasksController {
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/tasks/{mentorId}")
-    public ResponseEntity<List<TaskDTO>> getTasksByMentorId(@PathVariable int mentorId) {
-        List<TaskDTO> tasks = peerCodingTasksService.getTasksByMentorId(mentorId);
-        return ResponseEntity.ok(tasks);
+    @GetMapping("/tasks/{employeeId}")  
+    public List<TaskDTO> getPeerCodingTasksByEmployeeId(@PathVariable int employeeId) {
+        return peerCodingTasksService.getPeerCodingTasksByEmployeeId(employeeId);
     }
-
 }

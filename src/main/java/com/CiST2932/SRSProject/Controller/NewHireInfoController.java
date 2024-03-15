@@ -38,7 +38,7 @@ public class NewHireInfoController {
     @PutMapping("/{id}")
     public ResponseEntity<NewHireInfo> updateNewHireInfo(@PathVariable int id, @RequestBody NewHireInfo newHireInfo) {
         if (newHireInfoService.findById(id).isPresent()) {
-            newHireInfo.setEmployeeID(id);
+            newHireInfo.setEmployeeId(id);
             return ResponseEntity.ok(newHireInfoService.save(newHireInfo));
         }
         return ResponseEntity.notFound().build();
