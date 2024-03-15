@@ -1,4 +1,4 @@
-//src/main/java/com/CiST2932/SRSProject/Service/PeerCodingTasksService.java
+// src/main/java/com/CiST2932/SRSProject/Service/PeerCodingTasksService.java
 
 package com.CiST2932.SRSProject.Service;
 
@@ -33,8 +33,11 @@ public class PeerCodingTasksService {
         peerCodingTasksRepository.deleteById(id);
     }
 
-    public List<PeerCodingTasks> findByEmployeeID(int employeeId) {
+    public List<PeerCodingTasks> findByEmployeeId(int employeeId) {
         return peerCodingTasksRepository.findByEmployeeId(employeeId);
     }
-}
 
+    public List<PeerCodingTasks> findTasksByMentorAndMentees(int mentorId) {
+        return peerCodingTasksRepository.findTasksByMentorAndMentees(mentorId);
+    }
+}
