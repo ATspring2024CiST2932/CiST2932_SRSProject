@@ -47,6 +47,10 @@ public class PeerCodingTasksService {
         task.setEmployeeId((Integer) result[4]);
         return task;
     }).collect(Collectors.toList());
+    }
+
+    public List<PeerCodingTasks> findByEmployeeID(int employeeId) {
+        return peerCodingTasksRepository.findByEmployeeId(employeeId);
+    }
 }
 
-}

@@ -22,5 +22,6 @@ public interface PeerCodingTasksRepository extends JpaRepository<PeerCodingTasks
                "  WHERE mma.MentorID = :mentorId" +
                ")", nativeQuery = true)
     List<Object[]> findTasksByMentorId(@Param("mentorId") int mentorId);
+    List<PeerCodingTasks> findByEmployeeId(int employeeId);
 
 }
