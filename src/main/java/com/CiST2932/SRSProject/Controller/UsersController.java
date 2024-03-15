@@ -17,6 +17,7 @@ public class UsersController {
     @Autowired
     private UsersService usersService;
 
+    // Existing endpoints for user management
     @GetMapping
     public List<Users> getAllUsers() {
         return usersService.findAll();
@@ -50,5 +51,18 @@ public class UsersController {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    // NEW ENDPOINTS FOR USER AUTHENTICATION AND REGISTRATION
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody Users user) {
+        // Authentication logic goes here
+        return ResponseEntity.ok("Login endpoint placeholder");
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<String> register(@RequestBody Users user) {
+        // Registration logic goes here
+        return ResponseEntity.ok("Register endpoint placeholder");
     }
 }
