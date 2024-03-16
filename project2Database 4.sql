@@ -1,4 +1,3 @@
-
 -- MySQL dump 10.13  Distrib 8.0.36, for Win64 (x86_64)
 --
 -- Host: localhost    Database: project2
@@ -28,6 +27,8 @@ CREATE TABLE `mentorassignments` (
   `menteeID` int NOT NULL,
   `AssignmentID` int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`AssignmentID`),
+  UNIQUE KEY `menteeID_UNIQUE` (`menteeID`),
+  UNIQUE KEY `AssignmentID_UNIQUE` (`AssignmentID`),
   KEY `fk_mentorID` (`mentorID`),
   KEY `fk_menteeID` (`menteeID`),
   CONSTRAINT `fk_menteeID` FOREIGN KEY (`menteeID`) REFERENCES `newhireinfo` (`EmployeeID`),
@@ -88,10 +89,10 @@ CREATE TABLE `peercodingtasks` (
   `task_number` varchar(50) DEFAULT NULL,
   `task_type` varchar(50) DEFAULT NULL,
   `total_hours` decimal(10,2) DEFAULT NULL,
-  `EmployeeID` int DEFAULT NULL,
+  `employeeID` int DEFAULT NULL,
   PRIMARY KEY (`task_id`),
-  KEY `fk_EmployeeID` (`EmployeeID`),
-  CONSTRAINT `fk_EmployeeID` FOREIGN KEY (`EmployeeID`) REFERENCES `newhireinfo` (`EmployeeID`)
+  KEY `fk_employeeID` (`employeeID`),
+  CONSTRAINT `fk_employeeID` FOREIGN KEY (`employeeID`) REFERENCES `newhireinfo` (`EmployeeID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -113,15 +114,17 @@ DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
-  `user_id` int NOT NULL AUTO_INCREMENT,
+  `EmployeeID` int NOT NULL,
   `username` varchar(50) NOT NULL,
   `password_hash` varchar(255) NOT NULL,
   `email` varchar(100) NOT NULL,
   `registration_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`user_id`),
+  PRIMARY KEY (`EmployeeID`),
   UNIQUE KEY `username` (`username`),
-  UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  UNIQUE KEY `email` (`email`),
+  UNIQUE KEY `EmployeeID_UNIQUE` (`EmployeeID`),
+  CONSTRAINT `fk_employeeID_Users` FOREIGN KEY (`EmployeeID`) REFERENCES `newhireinfo` (`EmployeeID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -133,6 +136,10 @@ LOCK TABLES `users` WRITE;
 INSERT INTO `users` VALUES (1,'john_mentor','hashed_password','john.doe@example.com','2024-02-02 19:09:57');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Dumping events for database 'project2'
+--
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -143,4 +150,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-02-27 22:13:36
+-- Dump completed on 2024-03-16 19:41:45
