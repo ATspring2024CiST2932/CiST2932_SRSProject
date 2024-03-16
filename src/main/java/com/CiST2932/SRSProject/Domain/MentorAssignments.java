@@ -1,39 +1,40 @@
-//src/main/java/com/CiST2932/SRSProject/Domain/Student.java
-
+// src/main/java/com/CiST2932/SRSProject/Domain/MentorAssignments.java
 package com.CiST2932.SRSProject.Domain;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-@Table(name = "mentorassignments")  // Table name in the database
 @Entity
+@Table(name = "mentorassignments")
 public class MentorAssignments {
     @Id
-    @Column(name = "assignmentID")
+    @Column(name = "AssignmentID")
     private int assignmentId;
 
-    @Column(name = "mentorID")
-    private int mentorId;
+    @ManyToOne
+    @JoinColumn(name = "mentorID", referencedColumnName = "EmployeeID")
+    @JsonManagedReference // Add this annotation
+    private NewHireInfo mentor;
 
-    @Column(name = "menteeID")
-    private int menteeId;
-
-    // @OneToMany(mappedBy = "mentorAssignment")
-    // private List<NewHireInfo> mentees;    
+    @ManyToOne
+    @JoinColumn(name = "menteeID", referencedColumnName = "EmployeeID")
+    @JsonManagedReference // Add this annotation
+    private NewHireInfo mentee;
 
     // Constructors, getters, and setters
     public MentorAssignments() {
     }
 
-    public MentorAssignments(int assignmentId, int mentorId, int menteeId) {
+    public MentorAssignments(int assignmentId, NewHireInfo mentor, NewHireInfo mentee) {
         this.assignmentId = assignmentId;
-        this.mentorId = mentorId;
-        this.menteeId = menteeId;
+        this.mentor = mentor;
+        this.mentee = mentee;
     }
 
     public int getAssignmentId() {
@@ -44,19 +45,19 @@ public class MentorAssignments {
         this.assignmentId = assignmentId;
     }
 
-    public int getMentorId() {
-        return mentorId;
+    public NewHireInfo getMentor() {
+        return mentor;
     }
 
-    public void setMentorId(int mentorId) {
-        this.mentorId = mentorId;
+    public void setMentor(NewHireInfo mentor) {
+        this.mentor = mentor;
     }
 
-    public int getMenteeId() {
-        return menteeId;
+    public NewHireInfo getMentee() {
+        return mentee;
     }
 
-    public void setMenteeId(int menteeId) {
-        this.menteeId = menteeId;
+    public void setMentee(NewHireInfo mentee) {
+        this.mentee = mentee;
     }
 }

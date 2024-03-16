@@ -3,7 +3,6 @@
 package com.CiST2932.SRSProject.Controller;
 
 import com.CiST2932.SRSProject.Domain.PeerCodingTasks;
-import com.CiST2932.SRSProject.Domain.TaskDTO;
 import com.CiST2932.SRSProject.Service.PeerCodingTasksService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,4 +57,13 @@ public class PeerCodingTasksController {
     public List<TaskDTO> getPeerCodingTasksByEmployeeId(@PathVariable int employeeId) {
         return peerCodingTasksService.getPeerCodingTasksByEmployeeId(employeeId);
     }
+
+    @GetMapping("/mentor/{mentorId}/tasks")
+    public ResponseEntity<List<PeerCodingTasks>> getTasksByMentorAndMentees(@PathVariable int mentorId) {
+        List<PeerCodingTasks> tasks = peerCodingTasksService.findTasksByMentorAndMentees(mentorId);
+        if (tasks.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(tasks);
+    }  
 }

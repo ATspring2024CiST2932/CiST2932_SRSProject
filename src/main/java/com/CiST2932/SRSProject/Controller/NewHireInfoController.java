@@ -52,4 +52,11 @@ public class NewHireInfoController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @GetMapping("/{mentorId}/mentees")
+    public ResponseEntity<List<NewHireInfo>> getMenteesByMentor(@PathVariable int mentorId) {
+        List<NewHireInfo> mentees = newHireInfoService.findMenteesByMentorId(mentorId);
+        return ResponseEntity.ok(mentees);
+    }
+
 }

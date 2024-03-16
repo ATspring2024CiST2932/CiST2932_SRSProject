@@ -2,11 +2,14 @@
 
 package com.CiST2932.SRSProject.Domain;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-// import jakarta.persistence.JoinColumn;
-// import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Table(name = "newhireinfo")  // Table name in the database
@@ -23,22 +26,25 @@ public class NewHireInfo {
     private String employmentType;
 
     @Column(name = "Mentor")
-    private boolean mentor;
+    private boolean isMentor;  // Indicates if this NewHireInfo represents a mentor
 
-    // @ManyToOne
-    // @JoinColumn(name = "EmployeeID", referencedColumnName = "mentorID")
-    // private MentorAssignments mentorAssignment;
-    
+    @OneToMany(mappedBy = "mentor")
+    @JsonBackReference // Add this annotation
+    private List<MentorAssignments> assignmentsAsMentor;
+
+    @OneToMany(mappedBy = "mentee")
+    @JsonBackReference // Add this annotation
+    private List<MentorAssignments> assignmentsAsMentee;
 
     // Constructors, getters, and setters
     public NewHireInfo() {
     }
 
-    public NewHireInfo(int employeeId, String name, String employmentType, boolean mentor) {
+    public NewHireInfo(int employeeId, String name, String employmentType, boolean isMentor) {
         this.employeeId = employeeId;
         this.name = name;
         this.employmentType = employmentType;
-        this.mentor = mentor;
+        this.isMentor = isMentor;
     }
 
     public int getEmployeeId() {
@@ -66,28 +72,26 @@ public class NewHireInfo {
     }
 
     public boolean isMentor() {
-        return mentor;
+        return isMentor;
     }
 
-    public void setMentor(boolean mentor) {
-        this.mentor = mentor;
+    public void setMentor(boolean isMentor) {
+        this.isMentor = isMentor;
     }
 
-    // public Integer getMentorId() {
-    //     return employeeId;
-    // }
+    public List<MentorAssignments> getAssignmentsAsMentor() {
+        return assignmentsAsMentor;
+    }
 
-    // public void setMentorId(Integer mentorId) {
-    //     this.employeeId = mentorId;
-    // }
+    public void setAssignmentsAsMentor(List<MentorAssignments> assignmentsAsMentor) {
+        this.assignmentsAsMentor = assignmentsAsMentor;
+    }
 
-    // public Integer getMenteeId() {
-    //     return employeeId;
-    // }
+    public List<MentorAssignments> getAssignmentsAsMentee() {
+        return assignmentsAsMentee;
+    }
 
-    // public void setMenteeId(Integer menteeId) {
-    //     this.employeeId = menteeId;
-    // }
-
+    public void setAssignmentsAsMentee(List<MentorAssignments> assignmentsAsMentee) {
+        this.assignmentsAsMentee = assignmentsAsMentee;
+    }   
 }
-
