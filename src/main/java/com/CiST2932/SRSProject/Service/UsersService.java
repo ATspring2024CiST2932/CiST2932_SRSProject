@@ -1,10 +1,11 @@
+// src/main/java/com/CiST2932/SRSProject/Service/UsersService.java
 package com.CiST2932.SRSProject.Service;
 
 import com.CiST2932.SRSProject.Domain.Users;
 import com.CiST2932.SRSProject.Repository.UsersRepository;
-import io.micrometer.common.lang.NonNullApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import io.micrometer.common.lang.NonNullApi;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,9 +13,12 @@ import java.util.Optional;
 @NonNullApi
 @Service
 public class UsersService {
+    private final UsersRepository usersRepository;
 
     @Autowired
-    private UsersRepository usersRepository;
+    public UsersService(UsersRepository usersRepository) {
+        this.usersRepository = usersRepository;
+    }
 
     public List<Users> findAll() {
         return usersRepository.findAll();
@@ -22,6 +26,10 @@ public class UsersService {
 
     public Optional<Users> findById(int id) {
         return usersRepository.findById(id);
+    }
+
+    public void deleteById(int id) {
+        usersRepository.deleteById(id);
     }
 
     //UPDATED save method for user validation
@@ -39,10 +47,6 @@ public class UsersService {
             // Handle invalid user data
             throw new IllegalArgumentException("Invalid user data");
         }
-    }
-
-    public void deleteById(int id) {
-        usersRepository.deleteById(id);
     }
     
     private boolean isValidUser(Users user) {
