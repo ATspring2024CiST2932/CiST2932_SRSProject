@@ -26,7 +26,7 @@ public class Users {
 
     @OneToOne
     @JoinColumn(name = "EmployeeID", referencedColumnName = "EmployeeID")
-    @JsonManagedReference
+    @JsonManagedReference("user-info")
     private NewHireInfo newHireInfo;
 
     public Users() {

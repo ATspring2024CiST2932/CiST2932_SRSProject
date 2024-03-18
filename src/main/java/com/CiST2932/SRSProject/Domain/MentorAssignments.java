@@ -1,7 +1,6 @@
 // src/main/java/com/CiST2932/SRSProject/Domain/MentorAssignments.java
 package com.CiST2932.SRSProject.Domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
@@ -16,14 +15,14 @@ public class MentorAssignments {
 
     @ManyToOne
     @JoinColumn(name = "mentorID", referencedColumnName = "EmployeeID")
-    @JsonManagedReference
+    @JsonManagedReference("mentor-assignments")
     private NewHireInfo mentor;
 
     @ManyToOne
     @JoinColumn(name = "menteeID", referencedColumnName = "EmployeeID")
-    @JsonManagedReference
+    @JsonManagedReference("mentee-assignments")
     private NewHireInfo mentee;
-
+    
     // Constructors, getters, and setters
     public MentorAssignments() {
     }

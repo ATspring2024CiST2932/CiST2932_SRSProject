@@ -22,19 +22,21 @@ public class NewHireInfo {
     private boolean isMentor;
 
     @OneToMany(mappedBy = "mentor")
-    @JsonBackReference
+    @JsonBackReference("mentor-assignments")
     private List<MentorAssignments> assignmentsAsMentor;
 
     @OneToMany(mappedBy = "mentee")
-    @JsonBackReference
+    @JsonBackReference("mentee-assignments")
     private List<MentorAssignments> assignmentsAsMentee;
 
     @OneToMany(mappedBy = "assignee")
-    @JsonBackReference
+    @JsonBackReference("assigned-tasks")
     private List<PeerCodingTasks> assignedTasks;
 
     @OneToOne(mappedBy = "newHireInfo")
+    @JsonBackReference("user-info")
     private Users user;
+
 
     // Constructors, getters, and setters
     public NewHireInfo() {
