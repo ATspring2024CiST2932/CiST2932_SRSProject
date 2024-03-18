@@ -52,7 +52,7 @@ public class UsersService {
     private boolean isValidUser(Users user) {
         // Perform validation logic here
         // Example: Check if required fields are not null
-        return user.getUsername() != null && user.getPassword_hash() != null && user.getEmail() != null;
+        return user.getUsername() != null && user.getPasswordHash() != null && user.getEmail() != null;
     }
     
     // Additional business logic methods can be added here

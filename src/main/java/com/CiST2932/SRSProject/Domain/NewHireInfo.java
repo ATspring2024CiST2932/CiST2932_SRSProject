@@ -1,19 +1,12 @@
 // src/main/java/com/CiST2932/SRSProject/Domain/NewHireInfo.java
-
 package com.CiST2932.SRSProject.Domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-
-@Table(name = "newhireinfo")  // Table name in the database
 @Entity
+@Table(name = "newhireinfo")
 public class NewHireInfo {
     @Id
     @Column(name = "EmployeeID")
@@ -26,15 +19,22 @@ public class NewHireInfo {
     private String employmentType;
 
     @Column(name = "Mentor")
-    private boolean isMentor;  // Indicates if this NewHireInfo represents a mentor
+    private boolean isMentor;
 
     @OneToMany(mappedBy = "mentor")
-    @JsonBackReference // Add this annotation
+    @JsonBackReference
     private List<MentorAssignments> assignmentsAsMentor;
 
     @OneToMany(mappedBy = "mentee")
-    @JsonBackReference // Add this annotation
+    @JsonBackReference
     private List<MentorAssignments> assignmentsAsMentee;
+
+    @OneToMany(mappedBy = "assignee")
+    @JsonBackReference
+    private List<PeerCodingTasks> assignedTasks;
+
+    @OneToOne(mappedBy = "newHireInfo")
+    private Users user;
 
     // Constructors, getters, and setters
     public NewHireInfo() {
@@ -93,5 +93,21 @@ public class NewHireInfo {
 
     public void setAssignmentsAsMentee(List<MentorAssignments> assignmentsAsMentee) {
         this.assignmentsAsMentee = assignmentsAsMentee;
-    }   
+    }
+
+    public List<PeerCodingTasks> getAssignedTasks() {
+        return assignedTasks;
+    }
+
+    public void setAssignedTasks(List<PeerCodingTasks> assignedTasks) {
+        this.assignedTasks = assignedTasks;
+    }
+
+    public Users getUser() {
+        return user;
+    }
+
+    public void setUser(Users user) {
+        this.user = user;
+    }
 }
