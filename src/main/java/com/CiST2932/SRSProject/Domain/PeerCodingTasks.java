@@ -1,16 +1,15 @@
-//src/main/java/com/CiST2932/SRSProject/Domain/PeerCodingTasks.java
-
+// src/main/java/com/CiST2932/SRSProject/Domain/PeerCodingTasks.java
 package com.CiST2932.SRSProject.Domain;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
-@Table(name = "peercodingtasks")  // Table name in the database
 @Entity
+@Table(name = "peercodingtasks")
 public class PeerCodingTasks {
     @Id
     @Column(name = "task_id")
@@ -28,19 +27,22 @@ public class PeerCodingTasks {
     @Column(name = "total_hours")
     private BigDecimal totalHours;
 
-    @Column(name = "EmployeeID")
-    private int employeeId;
+    @ManyToOne
+    @JoinColumn(name = "employeeID", referencedColumnName = "EmployeeID")
+    @JsonManagedReference
+    private NewHireInfo assignee;
 
+    // Constructors, getters, and setters
     public PeerCodingTasks() {
     }
 
-    public PeerCodingTasks(int taskId, String taskUrl, String taskNumber, String taskType, BigDecimal totalHours, int employeeId) {
+    public PeerCodingTasks(int taskId, String taskUrl, String taskNumber, String taskType, BigDecimal totalHours, NewHireInfo assignee) {
         this.taskId = taskId;
         this.taskUrl = taskUrl;
         this.taskNumber = taskNumber;
         this.taskType = taskType;
         this.totalHours = totalHours;
-        this.employeeId = employeeId;
+        this.assignee = assignee;
     }
 
     public int getTaskId() {
@@ -83,11 +85,11 @@ public class PeerCodingTasks {
         this.totalHours = totalHours;
     }
 
-    public int getEmployeeId() {
-        return employeeId;
+    public NewHireInfo getAssignee() {
+        return assignee;
     }
 
-    public void setEmployeeId(int employeeId) {
-        this.employeeId = employeeId;
+    public void setAssignee(NewHireInfo assignee) {
+        this.assignee = assignee;
     }
 }

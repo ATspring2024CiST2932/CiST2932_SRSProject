@@ -1,30 +1,27 @@
 // src/main/java/com/CiST2932/SRSProject/Domain/MentorAssignments.java
 package com.CiST2932.SRSProject.Domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "mentorassignments")
 public class MentorAssignments {
-    @Id
+        @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "AssignmentID")
     private int assignmentId;
 
     @ManyToOne
     @JoinColumn(name = "mentorID", referencedColumnName = "EmployeeID")
-    @JsonManagedReference // Add this annotation
+    @JsonManagedReference
     private NewHireInfo mentor;
 
     @ManyToOne
     @JoinColumn(name = "menteeID", referencedColumnName = "EmployeeID")
-    @JsonManagedReference // Add this annotation
+    @JsonManagedReference
     private NewHireInfo mentee;
 
     // Constructors, getters, and setters

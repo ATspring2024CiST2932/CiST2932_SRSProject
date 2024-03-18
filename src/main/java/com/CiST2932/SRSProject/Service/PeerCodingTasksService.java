@@ -38,8 +38,8 @@ public class PeerCodingTasksService {
         peerCodingTasksRepository.deleteById(id);
     }
 
-    public List<PeerCodingTasks> findByEmployeeId(int employeeId) {
-        return peerCodingTasksRepository.findByEmployeeId(employeeId);
+    public List<PeerCodingTasks> findByAssigneeEmployeeId(int employeeId) {
+        return peerCodingTasksRepository.findByAssigneeEmployeeId(employeeId);
     }
 
     public NewHireInfo getAssigneeInfo(int employeeId) {
@@ -49,11 +49,11 @@ public class PeerCodingTasksService {
     public List<PeerCodingTasks> findTasksByMentorAndMentees(int mentorId) {
         return peerCodingTasksRepository.findTasksByMentorAndMentees(mentorId);
     }
-
+    
     public List<TaskWithAssigneeDTO> getTasksByMentorAndMentees(int mentorId) {
-        List<PeerCodingTasks> tasks = peerCodingTasksRepository.findTasksByMentorAndMentees(mentorId);
+        List<PeerCodingTasks> tasks = peerCodingTasksRepository.findByAssigneeEmployeeId(mentorId);
         List<TaskWithAssigneeDTO> taskWithAssigneeDTOs = new ArrayList<>();
-
+    
         for (PeerCodingTasks task : tasks) {
             TaskWithAssigneeDTO dto = new TaskWithAssigneeDTO();
             dto.setTaskId(task.getTaskId());
@@ -61,16 +61,17 @@ public class PeerCodingTasksService {
             dto.setTaskNumber(task.getTaskNumber());
             dto.setTaskType(task.getTaskType());
             dto.setTotalHours(task.getTotalHours());
-
+    
             // Retrieve the name of the employee assigned to the task
-            NewHireInfo assignee = newHireInfoRepository.findById(task.getEmployeeId()).orElse(null);
+            NewHireInfo assignee = task.getAssignee();
             if (assignee != null) {
                 dto.setAssigneeName(assignee.getName());
             }
-
+    
             taskWithAssigneeDTOs.add(dto);
         }
-
+    
         return taskWithAssigneeDTOs;
     }
+    
 }
