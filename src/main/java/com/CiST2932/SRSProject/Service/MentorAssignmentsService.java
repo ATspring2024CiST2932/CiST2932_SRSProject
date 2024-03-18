@@ -3,7 +3,6 @@
 package com.CiST2932.SRSProject.Service;
 
 import com.CiST2932.SRSProject.Domain.MentorAssignments;
-import com.CiST2932.SRSProject.Domain.NewHireInfoDto;
 import com.CiST2932.SRSProject.Repository.MentorAssignmentsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

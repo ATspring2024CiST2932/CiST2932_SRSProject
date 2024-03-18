@@ -3,7 +3,10 @@
 package com.CiST2932.SRSProject.Controller;
 
 import com.CiST2932.SRSProject.Domain.MentorAssignments;
+import com.CiST2932.SRSProject.Domain.TaskWithAssigneeDTO;
 import com.CiST2932.SRSProject.Service.MentorAssignmentsService;
+import com.CiST2932.SRSProject.Service.PeerCodingTasksService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +19,10 @@ public class MentorAssignmentsController {
 
     @Autowired
     private MentorAssignmentsService mentorAssignmentsService;
+    private final PeerCodingTasksService peerCodingTasksService;
+
+    
+
 
     @GetMapping
     public List<MentorAssignments> getAllMentorAssignments() {
@@ -60,5 +67,20 @@ public class MentorAssignmentsController {
         }
         return ResponseEntity.ok(mentorAssignments);
     }
+
+    public MentorAssignmentsController(PeerCodingTasksService peerCodingTasksService) {
+        this.peerCodingTasksService = peerCodingTasksService;
+    }
+
+    @GetMapping("/mentor/{mentorId}/tasks")
+    public ResponseEntity<List<TaskWithAssigneeDTO>> getTasksByMentorAndMentees(@PathVariable int mentorId) {
+        List<TaskWithAssigneeDTO> tasks = peerCodingTasksService.getTasksByMentorAndMentees(mentorId);
+        if (tasks.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(tasks);
+    }
+
+
 
 }
