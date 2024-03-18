@@ -5,6 +5,8 @@ package com.CiST2932.SRSProject.Service;
 import com.CiST2932.SRSProject.Domain.NewHireInfo;
 import com.CiST2932.SRSProject.Repository.NewHireInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,6 +37,14 @@ public class NewHireInfoService {
 
     public List<NewHireInfo> findMenteesByMentorId(int mentorId) {
         return newHireInfoRepository.findMenteesByMentorId(mentorId);
+    }
+
+    public List<NewHireInfo> findUnassignedMentees() {
+        return newHireInfoRepository.findUnassignedMentees();
+    }   
+
+    public List<NewHireInfo> findAllMentors() {
+        return newHireInfoRepository.findAllMentors();
     }
 
 }
