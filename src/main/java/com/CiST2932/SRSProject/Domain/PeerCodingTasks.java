@@ -29,7 +29,7 @@ public class PeerCodingTasks {
 
     @ManyToOne
     @JoinColumn(name = "employeeID", referencedColumnName = "EmployeeID")
-    @JsonManagedReference
+    @JsonManagedReference("assigned-tasks")
     private NewHireInfo assignee;
 
     // Constructors, getters, and setters
