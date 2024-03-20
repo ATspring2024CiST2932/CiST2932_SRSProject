@@ -1,18 +1,16 @@
 // src/main/java/com/CiST2932/SRSProject/Domain/NewHireInfo.java
-
 package com.CiST2932.SRSProject.Domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
+import java.util.List;
 
-@Table(name = "newhireinfo")  // Table name in the database
 @Entity
+@Table(name = "newhireinfo")
 public class NewHireInfo {
     @Id
     @Column(name = "EmployeeID")
-    private int employeeID;
+    private int employeeId;
 
     @Column(name = "Name")
     private String name;
@@ -21,25 +19,42 @@ public class NewHireInfo {
     private String employmentType;
 
     @Column(name = "Mentor")
-    private boolean mentor;
+    private boolean isMentor;
+
+    @OneToMany(mappedBy = "mentor")
+    @JsonBackReference("mentor-assignments")
+    private List<MentorAssignments> assignmentsAsMentor;
+
+    @OneToMany(mappedBy = "mentee")
+    @JsonBackReference("mentee-assignments")
+    private List<MentorAssignments> assignmentsAsMentee;
+
+    @OneToMany(mappedBy = "assignee")
+    @JsonBackReference("assigned-tasks")
+    private List<PeerCodingTasks> assignedTasks;
+
+    @OneToOne(mappedBy = "newHireInfo")
+    @JsonBackReference("user-info")
+    private Users user;
+
 
     // Constructors, getters, and setters
     public NewHireInfo() {
     }
 
-    public NewHireInfo(int employeeID, String name, String employmentType, boolean mentor) {
-        this.employeeID = employeeID;
+    public NewHireInfo(int employeeId, String name, String employmentType, boolean isMentor) {
+        this.employeeId = employeeId;
         this.name = name;
         this.employmentType = employmentType;
-        this.mentor = mentor;
+        this.isMentor = isMentor;
     }
 
-    public int getEmployeeID() {
-        return employeeID;
+    public int getEmployeeId() {
+        return employeeId;
     }
 
-    public void setEmployeeID(int employeeID) {
-        this.employeeID = employeeID;
+    public void setEmployeeId(int employeeId) {
+        this.employeeId = employeeId;
     }
 
     public String getName() {
@@ -59,11 +74,42 @@ public class NewHireInfo {
     }
 
     public boolean isMentor() {
-        return mentor;
+        return isMentor;
     }
 
-    public void setMentor(boolean mentor) {
-        this.mentor = mentor;
+    public void setMentor(boolean isMentor) {
+        this.isMentor = isMentor;
+    }
+
+    public List<MentorAssignments> getAssignmentsAsMentor() {
+        return assignmentsAsMentor;
+    }
+
+    public void setAssignmentsAsMentor(List<MentorAssignments> assignmentsAsMentor) {
+        this.assignmentsAsMentor = assignmentsAsMentor;
+    }
+
+    public List<MentorAssignments> getAssignmentsAsMentee() {
+        return assignmentsAsMentee;
+    }
+
+    public void setAssignmentsAsMentee(List<MentorAssignments> assignmentsAsMentee) {
+        this.assignmentsAsMentee = assignmentsAsMentee;
+    }
+
+    public List<PeerCodingTasks> getAssignedTasks() {
+        return assignedTasks;
+    }
+
+    public void setAssignedTasks(List<PeerCodingTasks> assignedTasks) {
+        this.assignedTasks = assignedTasks;
+    }
+
+    public Users getUser() {
+        return user;
+    }
+
+    public void setUser(Users user) {
+        this.user = user;
     }
 }
-

@@ -1,50 +1,29 @@
-// src/main/java/com/CiST2932/SRSProject/Domain/PeerCodingTasks.java
 package com.CiST2932.SRSProject.Domain;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 
-@Entity
-@Table(name = "peercodingtasks")
-public class PeerCodingTasks {
-    @Id
-    @Column(name = "task_id")
+public class TaskWithAssigneeDTO {
     private int taskId;
-
-    @Column(name = "task_url")
     private String taskUrl;
-
-    @Column(name = "task_number")
     private String taskNumber;
-
-    @Column(name = "task_type")
     private String taskType;
-
-    @Column(name = "total_hours")
     private BigDecimal totalHours;
+    private String assigneeName;
 
-    @ManyToOne
-    @JoinColumn(name = "employeeID", referencedColumnName = "EmployeeID")
-    @JsonManagedReference("assigned-tasks")
-    private NewHireInfo assignee;
-
-    // Constructors, getters, and setters
-    public PeerCodingTasks() {
+    // Constructors
+    public TaskWithAssigneeDTO() {
     }
 
-    public PeerCodingTasks(int taskId, String taskUrl, String taskNumber, String taskType, BigDecimal totalHours, NewHireInfo assignee) {
+    public TaskWithAssigneeDTO(int taskId, String taskUrl, String taskNumber, String taskType, BigDecimal totalHours, String assigneeName) {
         this.taskId = taskId;
         this.taskUrl = taskUrl;
         this.taskNumber = taskNumber;
         this.taskType = taskType;
         this.totalHours = totalHours;
-        this.assignee = assignee;
+        this.assigneeName = assigneeName;
     }
 
+    // Getters and setters
     public int getTaskId() {
         return taskId;
     }
@@ -85,11 +64,11 @@ public class PeerCodingTasks {
         this.totalHours = totalHours;
     }
 
-    public NewHireInfo getAssignee() {
-        return assignee;
+    public String getAssigneeName() {
+        return assigneeName;
     }
 
-    public void setAssignee(NewHireInfo assignee) {
-        this.assignee = assignee;
+    public void setAssigneeName(String assigneeName) {
+        this.assigneeName = assigneeName;
     }
 }

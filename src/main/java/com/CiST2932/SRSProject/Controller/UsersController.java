@@ -1,5 +1,4 @@
 // src/main/java/com/CiST2932/SRSProject/Controller/UsersController.java
-
 package com.CiST2932.SRSProject.Controller;
 
 import com.CiST2932.SRSProject.Domain.Users;
@@ -13,17 +12,21 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 public class UsersController {
+    private final UsersService usersService;
 
     @Autowired
-    private UsersService usersService;
+    public UsersController(UsersService usersService) {
+        this.usersService = usersService;
+    }
 
     @GetMapping
-    public List<Users> getAllUsers() {
-        return usersService.findAll();
+    public ResponseEntity<List<Users>> getAllUsers() {
+        List<Users> usersList = usersService.findAll();
+        return ResponseEntity.ok(usersList);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Users> getUsersById(@PathVariable int id) {
+    public ResponseEntity<Users> getUserById(@PathVariable int id) {
         return usersService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -37,7 +40,7 @@ public class UsersController {
     @PutMapping("/{id}")
     public ResponseEntity<Users> updateUser(@PathVariable int id, @RequestBody Users user) {
         if (usersService.findById(id).isPresent()) {
-            user.setUser_id(id);
+            user.setEmployeeId(id);
             return ResponseEntity.ok(usersService.save(user));
         }
         return ResponseEntity.notFound().build();
@@ -50,5 +53,18 @@ public class UsersController {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    // NEW ENDPOINTS FOR USER AUTHENTICATION AND REGISTRATION
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody Users user) {
+        // Authentication logic goes here
+        return ResponseEntity.ok("Login endpoint placeholder");
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<String> register(@RequestBody Users user) {
+        // Registration logic goes here
+        return ResponseEntity.ok("Register endpoint placeholder");
     }
 }

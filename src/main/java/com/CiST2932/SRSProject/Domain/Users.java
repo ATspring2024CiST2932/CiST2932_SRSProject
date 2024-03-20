@@ -1,50 +1,51 @@
 // src/main/java/com/CiST2932/SRSProject/Domain/Users.java
-
 package com.CiST2932.SRSProject.Domain;
 
 import java.sql.Timestamp;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
-@Table(name = "users")  // Table name in the database
 @Entity
+@Table(name = "users")
 public class Users {
     @Id
-    @Column(name = "user_id")
-    private int user_id;
+    @Column(name = "EmployeeID")
+    private int employeeId;
 
     @Column(name = "username")
     private String username;
 
     @Column(name = "password_hash")
-    private String password_hash;
+    private String passwordHash;
 
     @Column(name = "email")
     private String email;
 
     @Column(name = "registration_date")
-    private Timestamp registration_date;
+    private Timestamp registrationDate;
+
+    @OneToOne
+    @JoinColumn(name = "EmployeeID", referencedColumnName = "EmployeeID")
+    @JsonManagedReference("user-info")
+    private NewHireInfo newHireInfo;
 
     public Users() {
     }
 
-    public Users(int user_id, String username, String password_hash, String email, Timestamp registration_date) {
-        this.user_id = user_id;
+    public Users(int employeeId, String username, String passwordHash, String email, Timestamp registrationDate) {
+        this.employeeId = employeeId;
         this.username = username;
-        this.password_hash = password_hash;
+        this.passwordHash = passwordHash;
         this.email = email;
-        this.registration_date = registration_date;
+        this.registrationDate = registrationDate;
     }
 
-    public int getUser_id() {
-        return user_id;
+    public int getEmployeeId() {
+        return employeeId;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setEmployeeId(int employeeId) {
+        this.employeeId = employeeId;
     }
 
     public String getUsername() {
@@ -55,12 +56,12 @@ public class Users {
         this.username = username;
     }
 
-    public String getPassword_hash() {
-        return password_hash;
+    public String getPasswordHash() {
+        return passwordHash;
     }
 
-    public void setPassword_hash(String password_hash) {
-        this.password_hash = password_hash;
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 
     public String getEmail() {
@@ -71,11 +72,19 @@ public class Users {
         this.email = email;
     }
 
-    public Timestamp getRegistration_date() {
-        return registration_date;
+    public Timestamp getRegistrationDate() {
+        return registrationDate;
     }
 
-    public void setRegistration_date(Timestamp registration_date) {
-        this.registration_date = registration_date;
+    public void setRegistrationDate(Timestamp registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+
+    public NewHireInfo getNewHireInfo() {
+        return newHireInfo;
+    }
+
+    public void setNewHireInfo(NewHireInfo newHireInfo) {
+        this.newHireInfo = newHireInfo;
     }
 }

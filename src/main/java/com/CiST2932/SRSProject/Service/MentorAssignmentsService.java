@@ -32,4 +32,8 @@ public class MentorAssignmentsService {
     public void deleteById(int id) {
         mentorAssignmentsRepository.deleteById(id);
     }
+
+    public List<MentorAssignments> findByMentorEmployeeId(int mentorEmployeeId) {
+        return mentorAssignmentsRepository.findByMentorEmployeeId(mentorEmployeeId);
+    }
 }

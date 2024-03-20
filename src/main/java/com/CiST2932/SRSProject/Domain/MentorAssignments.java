@@ -1,56 +1,59 @@
-//src/main/java/com/CiST2932/SRSProject/Domain/Student.java
-
+// src/main/java/com/CiST2932/SRSProject/Domain/MentorAssignments.java
 package com.CiST2932.SRSProject.Domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-@Table(name = "mentorassignments")  // Table name in the database
+import jakarta.persistence.*;
+
 @Entity
+@Table(name = "mentorassignments")
 public class MentorAssignments {
-    @Id
-    @Column(name = "assignmentID")
-    private int assignmentID;
+        @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "AssignmentID")
+    private int assignmentId;
 
-    @Column(name = "mentorID")
-    private int mentorID;
+    @ManyToOne
+    @JoinColumn(name = "mentorID", referencedColumnName = "EmployeeID")
+    @JsonManagedReference("mentor-assignments")
+    private NewHireInfo mentor;
 
-    @Column(name = "menteeID")
-    private int menteeID;
-
+    @ManyToOne
+    @JoinColumn(name = "menteeID", referencedColumnName = "EmployeeID")
+    @JsonManagedReference("mentee-assignments")
+    private NewHireInfo mentee;
+    
     // Constructors, getters, and setters
     public MentorAssignments() {
     }
 
-    public MentorAssignments(int assignmentID, int mentorID, int menteeID) {
-        this.assignmentID = assignmentID;
-        this.mentorID = mentorID;
-        this.menteeID = menteeID;
+    public MentorAssignments(int assignmentId, NewHireInfo mentor, NewHireInfo mentee) {
+        this.assignmentId = assignmentId;
+        this.mentor = mentor;
+        this.mentee = mentee;
     }
 
-    public int getAssignmentID() {
-        return assignmentID;
+    public int getAssignmentId() {
+        return assignmentId;
     }
 
-    public void setAssignmentID(int assignmentID) {
-        this.assignmentID = assignmentID;
+    public void setAssignmentId(int assignmentId) {
+        this.assignmentId = assignmentId;
     }
 
-    public int getMentorID() {
-        return mentorID;
+    public NewHireInfo getMentor() {
+        return mentor;
     }
 
-    public void setMentorID(int mentorID) {
-        this.mentorID = mentorID;
+    public void setMentor(NewHireInfo mentor) {
+        this.mentor = mentor;
     }
 
-    public int getMenteeID() {
-        return menteeID;
+    public NewHireInfo getMentee() {
+        return mentee;
     }
 
-    public void setMenteeID(int menteeID) {
-        this.menteeID = menteeID;
+    public void setMentee(NewHireInfo mentee) {
+        this.mentee = mentee;
     }
 }

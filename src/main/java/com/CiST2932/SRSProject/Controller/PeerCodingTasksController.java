@@ -3,7 +3,9 @@
 package com.CiST2932.SRSProject.Controller;
 
 import com.CiST2932.SRSProject.Domain.PeerCodingTasks;
+import com.CiST2932.SRSProject.Domain.TaskWithAssigneeDTO;
 import com.CiST2932.SRSProject.Service.PeerCodingTasksService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,7 @@ public class PeerCodingTasksController {
 
     @Autowired
     private PeerCodingTasksService peerCodingTasksService;
+
 
     @GetMapping
     public List<PeerCodingTasks> getAllPeerCodingTasks() {
@@ -37,7 +40,7 @@ public class PeerCodingTasksController {
     @PutMapping("/{id}")
     public ResponseEntity<PeerCodingTasks> updatePeerCodingTasks(@PathVariable int id, @RequestBody PeerCodingTasks peerCodingTasks) {
         if (peerCodingTasksService.findById(id).isPresent()) {
-            peerCodingTasks.setTask_id(id);
+            peerCodingTasks.setTaskId(id);
             return ResponseEntity.ok(peerCodingTasksService.save(peerCodingTasks));
         }
         return ResponseEntity.notFound().build();
@@ -50,5 +53,14 @@ public class PeerCodingTasksController {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/mentor/{mentorId}/tasks")
+    public ResponseEntity<List<PeerCodingTasks>> getTasksByMentorAndMentees(@PathVariable int mentorId) {
+        List<PeerCodingTasks> tasks = peerCodingTasksService.findTasksByMentorAndMentees(mentorId);
+        if (tasks.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(tasks);
     }
 }
