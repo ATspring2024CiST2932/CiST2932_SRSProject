@@ -1,0 +1,13 @@
+// src/main/
+// For an administrator viewing details of a task
+
+package com.CiST2932.SRSProject.Domain; 
+
+public class AdminTaskInfoDTO {
+    private int taskId;
+    private String taskName;
+    private String employeeAssigned;
+    private String mentorAssigned; // If the employee is a mentee
+
+    // Constructors, Getters, and Setters
+}

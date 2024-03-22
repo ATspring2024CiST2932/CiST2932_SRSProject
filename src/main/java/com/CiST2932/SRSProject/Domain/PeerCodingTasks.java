@@ -1,9 +1,6 @@
 // src/main/java/com/CiST2932/SRSProject/Domain/PeerCodingTasks.java
 package com.CiST2932.SRSProject.Domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -12,6 +9,7 @@ import java.math.BigDecimal;
 @Table(name = "peercodingtasks")
 public class PeerCodingTasks {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "task_id")
     private int taskId;
 
@@ -27,9 +25,8 @@ public class PeerCodingTasks {
     @Column(name = "total_hours")
     private BigDecimal totalHours;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "employeeID", referencedColumnName = "EmployeeID")
-    @JsonManagedReference("assigned-tasks")
     private NewHireInfo assignee;
 
     // Constructors, getters, and setters

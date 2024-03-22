@@ -2,7 +2,6 @@
 package com.CiST2932.SRSProject.Domain;
 
 import java.sql.Timestamp;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -26,7 +25,6 @@ public class Users {
 
     @OneToOne
     @JoinColumn(name = "EmployeeID", referencedColumnName = "EmployeeID")
-    @JsonManagedReference("user-info")
     private NewHireInfo newHireInfo;
 
     public Users() {

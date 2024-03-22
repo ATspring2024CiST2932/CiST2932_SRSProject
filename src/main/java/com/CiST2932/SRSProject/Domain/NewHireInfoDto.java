@@ -4,6 +4,7 @@ public class NewHireInfoDto {
     private int employeeId;
     private String name;
     private String employmentType;
+    private boolean isMentor;
 
     public NewHireInfoDto(int employeeId, String name, String employmentType) {
         this.employeeId = employeeId;
@@ -33,5 +34,13 @@ public class NewHireInfoDto {
 
     public void setEmploymentType(String employmentType) {
         this.employmentType = employmentType;
+    }
+
+    public boolean getIsMentor() {
+        return isMentor;
+    }
+
+    public void setisMentor(boolean isMentor) {
+        this.isMentor = isMentor;
     }
 }

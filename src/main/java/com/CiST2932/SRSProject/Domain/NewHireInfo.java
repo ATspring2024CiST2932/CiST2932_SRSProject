@@ -1,8 +1,14 @@
 // src/main/java/com/CiST2932/SRSProject/Domain/NewHireInfo.java
 package com.CiST2932.SRSProject.Domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.Id;
+import jakarta.persistence.Column;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.FetchType;
 import java.util.List;
 
 @Entity
@@ -21,22 +27,17 @@ public class NewHireInfo {
     @Column(name = "Mentor")
     private boolean isMentor;
 
-    @OneToMany(mappedBy = "mentor")
-    @JsonBackReference("mentor-assignments")
+    @OneToMany(mappedBy = "mentor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<MentorAssignments> assignmentsAsMentor;
 
-    @OneToMany(mappedBy = "mentee")
-    @JsonBackReference("mentee-assignments")
+    @OneToMany(mappedBy = "mentee", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<MentorAssignments> assignmentsAsMentee;
 
-    @OneToMany(mappedBy = "assignee")
-    @JsonBackReference("assigned-tasks")
+    @OneToMany(mappedBy = "assignee", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<PeerCodingTasks> assignedTasks;
 
-    @OneToOne(mappedBy = "newHireInfo")
-    @JsonBackReference("user-info")
+    @OneToOne (mappedBy = "newHireInfo", cascade = CascadeType.ALL)
     private Users user;
-
 
     // Constructors, getters, and setters
     public NewHireInfo() {
