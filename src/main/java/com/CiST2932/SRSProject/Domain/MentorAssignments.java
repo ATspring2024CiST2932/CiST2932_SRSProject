@@ -12,7 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 
 @Entity
-@Table(name = "mentor_assignments")
+@Table(name = "mentorassignments")
 public class MentorAssignments {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
