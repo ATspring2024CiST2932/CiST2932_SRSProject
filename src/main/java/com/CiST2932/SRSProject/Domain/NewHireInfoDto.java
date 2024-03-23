@@ -1,15 +1,18 @@
 package com.CiST2932.SRSProject.Domain;
 
-public class NewHireInfoDto {
+import java.util.Optional;
+
+public class NewHireInfoDTO {
     private int employeeId;
     private String name;
     private String employmentType;
     private boolean isMentor;
 
-    public NewHireInfoDto(int employeeId, String name, String employmentType) {
+    public NewHireInfoDTO(int employeeId, String name, String employmentType, boolean isMentor) {
         this.employeeId = employeeId;
         this.name = name;
         this.employmentType = employmentType;
+        this.isMentor = isMentor;
     }
     
     public int getEmployeeId() {
@@ -36,11 +39,16 @@ public class NewHireInfoDto {
         this.employmentType = employmentType;
     }
 
-    public boolean getIsMentor() {
+    public boolean isMentor() {
         return isMentor;
     }
 
-    public void setisMentor(boolean isMentor) {
+    public void setMentor(boolean isMentor) {
         this.isMentor = isMentor;
+    }
+
+    public static Optional<MentorAssignments> findById(int mentorId) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'findById'");
     }
 }

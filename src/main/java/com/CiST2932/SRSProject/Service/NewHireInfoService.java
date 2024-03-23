@@ -3,6 +3,7 @@
 package com.CiST2932.SRSProject.Service;
 
 import com.CiST2932.SRSProject.Domain.NewHireInfo;
+import com.CiST2932.SRSProject.Domain.NewHireInfoDTO;
 import com.CiST2932.SRSProject.Repository.NewHireInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -47,4 +48,16 @@ public class NewHireInfoService {
         return newHireInfoRepository.findAllMentors();
     }
 
+public List<NewHireInfoDTO> findAllDtos() {
+    List<NewHireInfo> newHireInfos = newHireInfoRepository.findAll();
+    List<NewHireInfoDTO> newHireInfoDTOs = new java.util.ArrayList<>();
+    for (NewHireInfo newHireInfo : newHireInfos) {
+        newHireInfoDTOs.add(new NewHireInfoDTO(
+            newHireInfo.getEmployeeId(), 
+            newHireInfo.getName(), 
+            newHireInfo.getEmploymentType(), 
+            newHireInfo.getIsMentor()));
+        }
+    return newHireInfoDTOs;
+    }
 }

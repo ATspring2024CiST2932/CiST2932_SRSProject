@@ -74,11 +74,11 @@ public class NewHireInfo {
         this.employmentType = employmentType;
     }
 
-    public boolean isMentor() {
+    public boolean getIsMentor() {
         return isMentor;
-    }
+    }    
 
-    public void setMentor(boolean isMentor) {
+    public void setIsMentor(boolean isMentor) {
         this.isMentor = isMentor;
     }
 

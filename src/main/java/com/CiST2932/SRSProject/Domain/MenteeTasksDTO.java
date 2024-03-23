@@ -1,14 +1,29 @@
-// src/main
+// src/main/java/com/CiST2932/SRSProject/Domain/MenteeTasksDTO.java
 // For listing tasks associated with a mentee:
+package com.CiST2932.SRSProject.Domain;
 
 import java.util.List;
-
-package
 
 public class MenteeTasksDTO {
     private String menteeName;
     private List<TaskDTO> tasks;
 
-    // Constructors, Getters, and Setters
+    // Getter for menteeName
+    public String getMenteeName() {
+        return menteeName;
+    }
+    // Setter for menteeName
+    public void setMenteeName(String menteeName) {
+        this.menteeName = menteeName;
+    }
+    // Getter for tasks
+    public List<TaskDTO> getTasks() {
+        return tasks;
+    }
+    // Setter for tasks
+    public void setTasks(List<TaskDTO> tasks) {
+        this.tasks = tasks;
+    }
+    
 }
 
