@@ -24,12 +24,12 @@ public class MentorAssignments {
 
     @ManyToOne
     @JoinColumn(name = "mentorID", referencedColumnName = "EmployeeID")
-    @JsonBackReference
+    @JsonBackReference //("mentor-assignments-mentor")
     private NewHireInfo mentor;
 
     @ManyToOne
     @JoinColumn(name = "menteeID", referencedColumnName = "EmployeeID")
-    @JsonBackReference
+    @JsonBackReference //("mentor-assignments-mentee")
     private NewHireInfo mentee;
     
     // Constructors, getters, and setters
