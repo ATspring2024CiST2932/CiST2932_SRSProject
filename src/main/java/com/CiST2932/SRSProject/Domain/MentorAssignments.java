@@ -5,6 +5,9 @@ package com.CiST2932.SRSProject.Domain;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.Id;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
@@ -21,10 +24,12 @@ public class MentorAssignments {
 
     @ManyToOne
     @JoinColumn(name = "mentorID", referencedColumnName = "EmployeeID")
+    @JsonBackReference
     private NewHireInfo mentor;
 
     @ManyToOne
     @JoinColumn(name = "menteeID", referencedColumnName = "EmployeeID")
+    @JsonBackReference
     private NewHireInfo mentee;
     
     // Constructors, getters, and setters

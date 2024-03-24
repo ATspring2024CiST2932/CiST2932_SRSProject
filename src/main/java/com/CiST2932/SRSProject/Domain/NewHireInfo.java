@@ -11,6 +11,8 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.FetchType;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "newhireinfo")
 public class NewHireInfo {
@@ -28,15 +30,19 @@ public class NewHireInfo {
     private boolean isMentor;
 
     @OneToMany(mappedBy = "mentor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<MentorAssignments> assignmentsAsMentor;
 
     @OneToMany(mappedBy = "mentee", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<MentorAssignments> assignmentsAsMentee;
 
     @OneToMany(mappedBy = "assignee", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<PeerCodingTasks> assignedTasks;
 
     @OneToOne (mappedBy = "newHireInfo", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Users user;
 
     // Constructors, getters, and setters

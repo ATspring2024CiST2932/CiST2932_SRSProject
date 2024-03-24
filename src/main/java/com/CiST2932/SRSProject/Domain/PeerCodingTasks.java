@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = "peercodingtasks")
 public class PeerCodingTasks {
@@ -27,6 +29,7 @@ public class PeerCodingTasks {
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "employeeID", referencedColumnName = "EmployeeID")
+    @JsonBackReference
     private NewHireInfo assignee;
 
     // Constructors, getters, and setters
