@@ -3,7 +3,6 @@ package com.CiST2932.SRSProject.Service;
 
 import com.CiST2932.SRSProject.Domain.Users;
 import com.CiST2932.SRSProject.Repository.UsersRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import io.micrometer.common.lang.NonNullApi;
 
@@ -14,8 +13,7 @@ import java.util.Optional;
 @Service
 public class UsersService {
     private final UsersRepository usersRepository;
-
-    @Autowired
+    
     public UsersService(UsersRepository usersRepository) {
         this.usersRepository = usersRepository;
     }
