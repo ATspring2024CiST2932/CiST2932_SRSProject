@@ -29,19 +29,19 @@ public class NewHireInfo {
     @Column(name = "Mentor")
     private boolean isMentor;
 
-    @OneToMany(mappedBy = "mentor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "mentor")
     @JsonManagedReference
     private List<MentorAssignments> assignmentsAsMentor;
 
-    @OneToMany(mappedBy = "mentee", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "mentee")
     @JsonManagedReference
     private List<MentorAssignments> assignmentsAsMentee;
 
-    @OneToMany(mappedBy = "assignee", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "assignee")
     @JsonManagedReference
     private List<PeerCodingTasks> assignedTasks;
 
-    @OneToOne (mappedBy = "newHireInfo", cascade = CascadeType.ALL)
+    @OneToOne (mappedBy = "newHireInfo")
     @JsonManagedReference
     private Users user;
 

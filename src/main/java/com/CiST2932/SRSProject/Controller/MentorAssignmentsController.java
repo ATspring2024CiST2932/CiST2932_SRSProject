@@ -3,6 +3,8 @@
 package com.CiST2932.SRSProject.Controller;
 
 import com.CiST2932.SRSProject.Domain.MentorAssignments;
+import com.CiST2932.SRSProject.Domain.MentorAssignmentsDTO;
+import com.CiST2932.SRSProject.Domain.NewHireInfo;
 import com.CiST2932.SRSProject.Domain.TaskWithAssigneeDTO;
 import com.CiST2932.SRSProject.Service.MentorAssignmentsService;
 import com.CiST2932.SRSProject.Service.PeerCodingTasksService;
@@ -34,18 +36,24 @@ public class MentorAssignmentsController {
     }
 
     @PostMapping
-    public MentorAssignments createMentorAssignments(@RequestBody MentorAssignments mentorAssignments) {
+    public MentorAssignments createMentorAssignments(@RequestBody MentorAssignmentsDTO dto) {
+        MentorAssignments mentorAssignments = new MentorAssignments();
+        mentorAssignments.setMentor(mentorAssignmentsService.findNewHireInfoById(dto.getMentorId()));
+        mentorAssignments.setMentee(mentorAssignmentsService.findNewHireInfoById(dto.getMenteeId()));
         return mentorAssignmentsService.save(mentorAssignments);
     }
-
+    
     @PutMapping("/{id}")
-    public ResponseEntity<MentorAssignments> updateMentorAssignments(@PathVariable int id, @RequestBody MentorAssignments mentorAssignments) {
-        if (mentorAssignmentsService.findById(id).isPresent()) {
-            mentorAssignments.setAssignmentId(id);
-            return ResponseEntity.ok(mentorAssignmentsService.save(mentorAssignments));
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<MentorAssignmentsDTO> updateMentorAssignments(
+        @PathVariable int id, 
+        @RequestBody MentorAssignmentsDTO dto) {
+        
+        MentorAssignments updatedMentorAssignments = mentorAssignmentsService.update(id, dto);
+        MentorAssignmentsDTO updatedDto = MentorAssignmentsDTO.convertToDto(updatedMentorAssignments);
+        
+        return ResponseEntity.ok(updatedDto);
     }
+    
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMentorAssignments(@PathVariable int id) {

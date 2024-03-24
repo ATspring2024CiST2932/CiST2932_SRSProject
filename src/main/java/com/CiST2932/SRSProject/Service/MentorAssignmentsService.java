@@ -4,18 +4,25 @@ package com.CiST2932.SRSProject.Service;
 
 import com.CiST2932.SRSProject.Domain.MentorAssignments;
 import com.CiST2932.SRSProject.Domain.MentorAssignmentsDTO;
+import com.CiST2932.SRSProject.Domain.NewHireInfo;
 import com.CiST2932.SRSProject.Repository.MentorAssignmentsRepository;
+import com.CiST2932.SRSProject.Repository.NewHireInfoRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class MentorAssignmentsService {
 
     @Autowired
     private MentorAssignmentsRepository mentorAssignmentsRepository;
+    @Autowired
+    private NewHireInfoRepository newHireInfoRepository;
 
     public List<MentorAssignments> findAll() {
         return mentorAssignmentsRepository.findAll();
@@ -55,5 +62,19 @@ private MentorAssignmentsDTO convertToDto(MentorAssignments mentorAssignments) {
     }
     return dto;
 }
+    public NewHireInfo findNewHireInfoById(int id) {
+        return newHireInfoRepository.findById(id).orElseThrow(() -> new RuntimeException("NewHireInfo not found"));
+    }
+
+    public MentorAssignments update(int id, MentorAssignmentsDTO dto) {
+        MentorAssignments mentorAssignments = findById(id)
+            .orElseThrow(() -> new RuntimeException("MentorAssignments not found"));
+        
+        mentorAssignments.setMentor(findNewHireInfoById(dto.getMentorId()));
+        mentorAssignments.setMentee(findNewHireInfoById(dto.getMenteeId()));
+        
+        return save(mentorAssignments);
+    }
+    
 
 }
