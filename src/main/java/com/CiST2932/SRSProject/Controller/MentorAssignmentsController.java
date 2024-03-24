@@ -21,9 +21,6 @@ public class MentorAssignmentsController {
     private MentorAssignmentsService mentorAssignmentsService;
     private final PeerCodingTasksService peerCodingTasksService;
 
-    
-
-
     @GetMapping
     public List<MentorAssignments> getAllMentorAssignments() {
         return mentorAssignmentsService.findAll();
