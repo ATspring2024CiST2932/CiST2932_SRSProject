@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PeerCodingTasksService {
@@ -73,5 +74,17 @@ public class PeerCodingTasksService {
     
         return taskWithAssigneeDTOs;
     }
+    public List<TaskWithAssigneeDTO> findAllTasksWithAssigneeName() {
+        return peerCodingTasksRepository.findAll().stream()
+            .map(task -> new TaskWithAssigneeDTO(
+                task.getTaskId(),
+                task.getTaskUrl(),
+                task.getTaskNumber(),
+                task.getTaskType(),
+                task.getTotalHours(),
+                task.getAssigneeName() // Use the new method
+            ))
+            .collect(Collectors.toList());
+    }    
     
 }
