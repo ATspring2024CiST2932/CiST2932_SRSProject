@@ -59,8 +59,6 @@
     fetch('http://localhost:8080/peercodingtasks')
       .then(response => response.json())
       .then(data => {
-        console.log(data); // Log the data to see what's returned
-      // Update the state or DOM with the received data
         // Populate table with fetched data
         const tableBody = document.getElementById('taskRows');
         data.forEach(task => {
