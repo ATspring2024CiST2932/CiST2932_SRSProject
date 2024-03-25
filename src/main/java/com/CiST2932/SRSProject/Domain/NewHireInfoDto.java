@@ -51,4 +51,5 @@ public class NewHireInfoDTO {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'findById'");
     }
+    
 }
