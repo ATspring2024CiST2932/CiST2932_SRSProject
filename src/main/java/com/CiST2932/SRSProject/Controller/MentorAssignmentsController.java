@@ -4,7 +4,6 @@ package com.CiST2932.SRSProject.Controller;
 
 import com.CiST2932.SRSProject.Domain.MentorAssignments;
 import com.CiST2932.SRSProject.Domain.MentorAssignmentsDTO;
-import com.CiST2932.SRSProject.Domain.NewHireInfo;
 import com.CiST2932.SRSProject.Domain.TaskWithAssigneeDTO;
 import com.CiST2932.SRSProject.Service.MentorAssignmentsService;
 import com.CiST2932.SRSProject.Service.PeerCodingTasksService;

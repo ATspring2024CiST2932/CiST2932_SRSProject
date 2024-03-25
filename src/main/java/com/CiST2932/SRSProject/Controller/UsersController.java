@@ -3,7 +3,6 @@ package com.CiST2932.SRSProject.Controller;
 
 import com.CiST2932.SRSProject.Domain.Users;
 import com.CiST2932.SRSProject.Service.UsersService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +13,6 @@ import java.util.List;
 public class UsersController {
     private final UsersService usersService;
 
-    @Autowired
     public UsersController(UsersService usersService) {
         this.usersService = usersService;
     }

@@ -3,6 +3,7 @@
 package com.CiST2932.SRSProject.Controller;
 
 import com.CiST2932.SRSProject.Domain.PeerCodingTasks;
+import com.CiST2932.SRSProject.Domain.TaskAssigneeDTO;
 import com.CiST2932.SRSProject.Domain.TaskWithAssigneeDTO;
 import com.CiST2932.SRSProject.Service.PeerCodingTasksService;
 
@@ -19,12 +20,11 @@ public class PeerCodingTasksController {
     @Autowired
     private PeerCodingTasksService peerCodingTasksService;
 
-
     @GetMapping
-    public List<PeerCodingTasks> getAllPeerCodingTasks() {
-        return peerCodingTasksService.findAll();
-    }
-
+    public List<TaskWithAssigneeDTO> getAllPeerCodingTasks() {
+        return peerCodingTasksService.findAllTasksWithAssigneeName();
+    }    
+    
     @GetMapping("/{id}")
     public ResponseEntity<PeerCodingTasks> getPeerCodingTasksById(@PathVariable int id) {
         return peerCodingTasksService.findById(id)

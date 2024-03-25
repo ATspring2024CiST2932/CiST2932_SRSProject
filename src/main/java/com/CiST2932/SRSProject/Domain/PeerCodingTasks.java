@@ -92,4 +92,15 @@ public class PeerCodingTasks {
     public void setAssignee(NewHireInfo assignee) {
         this.assignee = assignee;
     }
+
+    public String getAssigneeName() {
+        return this.assignee != null ? this.assignee.getName() : null;
+    }
+
+    public void setAssigneeName(String assigneeName) {
+        if (this.assignee == null) {
+            this.assignee = new NewHireInfo();
+        }
+        this.assignee.setName(assigneeName);
+    }
 }
