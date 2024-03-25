@@ -1,4 +1,5 @@
-// src/main/java
+// src/main/java/com/CiST2932/SRSProject/Domain/TaskDTO.java
+// Task Data Transfer Object, may be a duplicate DTO
 package com.CiST2932.SRSProject.Domain;
 
 import java.math.BigDecimal;
