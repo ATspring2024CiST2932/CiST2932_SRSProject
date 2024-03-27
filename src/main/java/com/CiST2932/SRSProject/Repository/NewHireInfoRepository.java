@@ -5,6 +5,7 @@ package com.CiST2932.SRSProject.Repository;
 import com.CiST2932.SRSProject.Domain.NewHireInfo;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,5 +23,10 @@ public interface NewHireInfoRepository extends JpaRepository<NewHireInfo, Intege
     
     @Query("SELECT n FROM NewHireInfo n WHERE n.isMentor = true")
     List<NewHireInfo> findAllMentors();
+
+    Optional<NewHireInfo> findByName(String name);
+
+    @Query("SELECT n.name FROM NewHireInfo n")
+    List<String> findAllNames();
 
 }
