@@ -14,7 +14,7 @@ public class NewHireInfoDTO {
         this.employmentType = employmentType;
         this.isMentor = isMentor;
     }
-    
+
     public int getEmployeeId() {
         return employeeId;
     }
@@ -51,5 +51,5 @@ public class NewHireInfoDTO {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'findById'");
     }
-    
+
 }
