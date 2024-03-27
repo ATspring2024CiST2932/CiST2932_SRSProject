@@ -2,12 +2,14 @@
 
 package com.CiST2932.SRSProject.Controller;
 
+import com.CiST2932.SRSProject.Domain.CreatePeerCodingTasksDTO;
 import com.CiST2932.SRSProject.Domain.PeerCodingTasks;
 import com.CiST2932.SRSProject.Domain.TaskAssigneeDTO;
 import com.CiST2932.SRSProject.Domain.TaskWithAssigneeDTO;
 import com.CiST2932.SRSProject.Service.PeerCodingTasksService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,9 +35,10 @@ public class PeerCodingTasksController {
     }
 
     @PostMapping
-    public PeerCodingTasks createPeerCodingTasks(@RequestBody PeerCodingTasks peerCodingTasks) {
-        return peerCodingTasksService.save(peerCodingTasks);
-    }
+    public ResponseEntity<PeerCodingTasks> createPeerCodingTask(@RequestBody CreatePeerCodingTasksDTO createDto) {
+        PeerCodingTasks newTask = peerCodingTasksService.createTaskWithAssignee(createDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newTask);
+    }    
 
     @PutMapping("/{id}")
     public ResponseEntity<PeerCodingTasks> updatePeerCodingTasks(@PathVariable int id, @RequestBody PeerCodingTasks peerCodingTasks) {

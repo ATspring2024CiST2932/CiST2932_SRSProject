@@ -1,7 +1,9 @@
 package com.CiST2932.SRSProject.Service;
 
+import com.CiST2932.SRSProject.Domain.CreatePeerCodingTasksDTO;
 import com.CiST2932.SRSProject.Domain.NewHireInfo;
 import com.CiST2932.SRSProject.Domain.PeerCodingTasks;
+import com.CiST2932.SRSProject.Domain.TaskDTO;
 import com.CiST2932.SRSProject.Domain.TaskWithAssigneeDTO;
 import com.CiST2932.SRSProject.Repository.NewHireInfoRepository;
 import com.CiST2932.SRSProject.Repository.PeerCodingTasksRepository;
@@ -86,5 +88,39 @@ public class PeerCodingTasksService {
             ))
             .collect(Collectors.toList());
     }    
+
     
+    public TaskDTO convertToDto(PeerCodingTasks task) {
+        TaskDTO dto = new TaskDTO();
+            dto.setTaskId(task.getTaskId());
+            dto.setTaskUrl(task.getTaskUrl());
+            // Set other fields
+            if (task.getAssignee() != null) {
+                dto.setAssigneeName(task.getAssignee().getName());
+            }
+            return dto;
+        }
+    
+        public List<TaskDTO> findAllTasksWithAssignee() {
+            List<PeerCodingTasks> tasks = peerCodingTasksRepository.findAll();
+            return tasks.stream().map(this::convertToDto).collect(Collectors.toList());
+        }
+
+        public PeerCodingTasks createTaskWithAssignee(CreatePeerCodingTasksDTO createDto) {
+            NewHireInfo assignee = newHireInfoRepository.findByName(createDto.getAssigneeName())
+                    .orElseThrow(() -> new RuntimeException("Assignee not found"));
+        
+            PeerCodingTasks newTask = new PeerCodingTasks();
+            newTask.setTaskUrl(createDto.getTaskUrl());
+            newTask.setTaskNumber(createDto.getTaskNumber());
+            newTask.setTaskType(createDto.getTaskType());
+            newTask.setTotalHours(createDto.getTotalHours());
+            newTask.setAssignee(assignee);
+        
+            return peerCodingTasksRepository.save(newTask);
+        }        
+        
 }
+
+
+
