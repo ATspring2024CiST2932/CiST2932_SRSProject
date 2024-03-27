@@ -46,16 +46,21 @@ public class NewHireInfoService {
         return newHireInfoRepository.findAllMentors();
     }
 
-public List<NewHireInfoDTO> findAllDtos() {
-    List<NewHireInfo> newHireInfos = newHireInfoRepository.findAll();
-    List<NewHireInfoDTO> newHireInfoDTOs = new java.util.ArrayList<>();
-    for (NewHireInfo newHireInfo : newHireInfos) {
-        newHireInfoDTOs.add(new NewHireInfoDTO(
-            newHireInfo.getEmployeeId(), 
-            newHireInfo.getName(), 
-            newHireInfo.getEmploymentType(), 
-            newHireInfo.getIsMentor()));
-        }
-    return newHireInfoDTOs;
+    public List<NewHireInfoDTO> findAllDtos() {
+        List<NewHireInfo> newHireInfos = newHireInfoRepository.findAll();
+        List<NewHireInfoDTO> newHireInfoDTOs = new java.util.ArrayList<>();
+        for (NewHireInfo newHireInfo : newHireInfos) {
+            newHireInfoDTOs.add(new NewHireInfoDTO(
+                newHireInfo.getEmployeeId(), 
+                newHireInfo.getName(), 
+                newHireInfo.getEmploymentType(), 
+                newHireInfo.getIsMentor()));
+            }
+        return newHireInfoDTOs;
     }
+    public List<String> findAllNames() {
+        return newHireInfoRepository.findAllNames();
+    }
+    
+
 }

@@ -26,5 +26,7 @@ public interface NewHireInfoRepository extends JpaRepository<NewHireInfo, Intege
 
     Optional<NewHireInfo> findByName(String name);
 
+    @Query("SELECT n.name FROM NewHireInfo n")
+    List<String> findAllNames();
 
 }
