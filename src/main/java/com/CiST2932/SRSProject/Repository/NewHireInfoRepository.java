@@ -23,10 +23,12 @@ public interface NewHireInfoRepository extends JpaRepository<NewHireInfo, Intege
     
     @Query("SELECT n FROM NewHireInfo n WHERE n.isMentor = true")
     List<NewHireInfo> findAllMentors();
-
+    
     Optional<NewHireInfo> findByName(String name);
 
     @Query("SELECT n.name FROM NewHireInfo n")
     List<String> findAllNames();
+
+
 
 }

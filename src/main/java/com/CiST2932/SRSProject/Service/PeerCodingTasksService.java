@@ -88,9 +88,25 @@ public class PeerCodingTasksService {
                 task.getAssigneeName() // Use the new method
             ))
             .collect(Collectors.toList());
-    }    
-
+    }   
     
+    public PeerCodingTasks updateTaskWithAssignee(PeerCodingTasks task, UpdatePeerCodingTasksDTO updateDto) {
+        // Update the task fields with the data from the DTO
+        task.setTaskUrl(updateDto.getTaskUrl());
+        task.setTaskNumber(updateDto.getTaskNumber());
+        task.setTaskType(updateDto.getTaskType());
+        task.setTotalHours(updateDto.getTotalHours());
+        
+        // Find the assignee by name and set it
+        NewHireInfo assignee = newHireInfoRepository.findByName(updateDto.getAssigneeName())
+            .orElseThrow(() -> new RuntimeException("Assignee not found"));
+        task.setAssignee(assignee);
+
+        // Save and return the updated task
+        return peerCodingTasksRepository.save(task);
+    }
+
+        
     public TaskDTO convertToDto(PeerCodingTasks task) {
         TaskDTO dto = new TaskDTO();
             dto.setTaskId(task.getTaskId());
@@ -121,23 +137,7 @@ public class PeerCodingTasksService {
             return peerCodingTasksRepository.save(newTask);
         }        
         
-        public PeerCodingTasks updateTaskWithAssignee(PeerCodingTasks task, UpdatePeerCodingTasksDTO updateDto) {
-        // Update the task fields with the data from the DTO
-        task.setTaskUrl(updateDto.getTaskUrl());
-        task.setTaskNumber(updateDto.getTaskNumber());
-        task.setTaskType(updateDto.getTaskType());
-        task.setTotalHours(updateDto.getTotalHours());
+
+
     
-        // Find the assignee by name and set it
-        NewHireInfo assignee = newHireInfoRepository.findByName(updateDto.getAssigneeName())
-            .orElseThrow(() -> new RuntimeException("Assignee not found"));
-        task.setAssignee(assignee);
-
-        // Save and return the updated task
-        return peerCodingTasksRepository.save(task);
-    }
-
 }
-
-
-

@@ -78,14 +78,12 @@ public class NewHireInfoController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(unassignedMentees);
-    }
-    
+    }  
     @GetMapping("/names")
     public ResponseEntity<List<String>> getAllNames() {
         List<String> names = newHireInfoService.findAllNames();
         return ResponseEntity.ok(names);
     }
-
-
+    
 
 }

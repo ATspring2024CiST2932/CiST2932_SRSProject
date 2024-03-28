@@ -52,6 +52,7 @@ public class PeerCodingTasksController {
         return ResponseEntity.notFound().build();
     }
 
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePeerCodingTasks(@PathVariable int id) {
         if (peerCodingTasksService.findById(id).isPresent()) {
