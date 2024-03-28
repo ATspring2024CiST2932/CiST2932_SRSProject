@@ -12,6 +12,8 @@
   </head>
   <body>
     <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+    
     <section class="p-3">
       <div class="row">
         <div class="col-13">
@@ -72,7 +74,7 @@
 </div>
 
 <!-- Edit Employee Modal -->
-<div class="modal fade" id="editEmployeeModal">
+<div class="modal fade" id="editEmployee">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
@@ -84,6 +86,10 @@
           <input type="hidden" id="editEmployeeId">
           <div class="row">
             <div class="col-md-6">
+              div class="mb-3">
+                <label for="editEmployeeId" class="form-label">Employee ID:</label>
+                <input type="number" class="form-control" id="editEmployeeId" required>
+              </div>
               <div class="mb-3">
                 <label for="editName" class="form-label">Name:</label>
                 <input type="text" class="form-control" id="editName" required>
