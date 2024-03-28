@@ -106,38 +106,54 @@ public class PeerCodingTasksService {
         return peerCodingTasksRepository.save(task);
     }
 
-        
+    // public TaskDTO createTaskWithAssignee(CreatePeerCodingTasksDTO createDto) {
+    //     // Find the assignee by name
+    //     NewHireInfo assignee = newHireInfoRepository.findByName(createDto.getAssigneeName())
+    //             .orElseThrow(() -> new RuntimeException("Assignee not found"));
+
+    //     // Create a new task
+    //     PeerCodingTasks task = new PeerCodingTasks();
+    //     task.setTaskUrl(createDto.getTaskUrl());
+    //     // Set other fields
+    //     task.setAssignee(assignee);
+
+    //     // Save the task
+    //     PeerCodingTasks savedTask = peerCodingTasksRepository.save(task);
+
+    //     // Convert to DTO and return
+    //     return convertToDto(savedTask);
+    // }
+
+    public PeerCodingTasks createTaskWithAssignee(CreatePeerCodingTasksDTO createDto) {
+        NewHireInfo assignee = newHireInfoRepository.findByName(createDto.getAssigneeName())
+                .orElseThrow(() -> new RuntimeException("Assignee not found"));
+    
+        PeerCodingTasks newTask = new PeerCodingTasks();
+        newTask.setTaskUrl(createDto.getTaskUrl());
+        newTask.setTaskNumber(createDto.getTaskNumber());
+        newTask.setTaskType(createDto.getTaskType());
+        newTask.setTotalHours(createDto.getTotalHours());
+        newTask.setAssignee(assignee);
+    
+        return peerCodingTasksRepository.save(newTask);
+    }
+    
+    
+
     public TaskDTO convertToDto(PeerCodingTasks task) {
         TaskDTO dto = new TaskDTO();
-            dto.setTaskId(task.getTaskId());
-            dto.setTaskUrl(task.getTaskUrl());
-            // Set other fields
-            if (task.getAssignee() != null) {
-                dto.setAssigneeName(task.getAssignee().getName());
-            }
-            return dto;
+        dto.setTaskId(task.getTaskId());
+        dto.setTaskUrl(task.getTaskUrl());
+        // Set other fields
+        if (task.getAssignee() != null) {
+            dto.setAssigneeName(task.getAssignee().getName());
         }
-    
-        public List<TaskDTO> findAllTasksWithAssignee() {
-            List<PeerCodingTasks> tasks = peerCodingTasksRepository.findAll();
-            return tasks.stream().map(this::convertToDto).collect(Collectors.toList());
-        }
+        return dto;
+    }
 
-        public PeerCodingTasks createTaskWithAssignee(CreatePeerCodingTasksDTO createDto) {
-            NewHireInfo assignee = newHireInfoRepository.findByName(createDto.getAssigneeName())
-                    .orElseThrow(() -> new RuntimeException("Assignee not found"));
-        
-            PeerCodingTasks newTask = new PeerCodingTasks();
-            newTask.setTaskUrl(createDto.getTaskUrl());
-            newTask.setTaskNumber(createDto.getTaskNumber());
-            newTask.setTaskType(createDto.getTaskType());
-            newTask.setTotalHours(createDto.getTotalHours());
-            newTask.setAssignee(assignee);
-        
-            return peerCodingTasksRepository.save(newTask);
-        }        
-        
-
-
+    public List<TaskDTO> findAllTasksWithAssignee() {
+        List<PeerCodingTasks> tasks = peerCodingTasksRepository.findAll();
+        return tasks.stream().map(this::convertToDto).collect(Collectors.toList());
+    }
     
 }

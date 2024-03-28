@@ -5,6 +5,7 @@ package com.CiST2932.SRSProject.Controller;
 import com.CiST2932.SRSProject.Domain.CreatePeerCodingTasksDTO;
 import com.CiST2932.SRSProject.Domain.PeerCodingTasks;
 import com.CiST2932.SRSProject.Domain.TaskAssigneeDTO;
+import com.CiST2932.SRSProject.Domain.TaskDTO;
 import com.CiST2932.SRSProject.Domain.TaskWithAssigneeDTO;
 import com.CiST2932.SRSProject.Domain.UpdatePeerCodingTasksDTO;
 import com.CiST2932.SRSProject.Service.PeerCodingTasksService;
@@ -40,7 +41,11 @@ public class PeerCodingTasksController {
     public ResponseEntity<PeerCodingTasks> createPeerCodingTask(@RequestBody CreatePeerCodingTasksDTO createDto) {
         PeerCodingTasks newTask = peerCodingTasksService.createTaskWithAssignee(createDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(newTask);
-    }    
+    }
+    
+    
+    
+     
 
     @PutMapping("/{id}")
     public ResponseEntity<PeerCodingTasks> updatePeerCodingTasks(@PathVariable int id, @RequestBody UpdatePeerCodingTasksDTO updateDto) {
@@ -51,7 +56,11 @@ public class PeerCodingTasksController {
         }
         return ResponseEntity.notFound().build();
     }
-
+    
+    @GetMapping("/tasks")
+    public List<TaskDTO> getAllTasksWithAssignee() {
+        return peerCodingTasksService.findAllTasksWithAssignee();
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePeerCodingTasks(@PathVariable int id) {

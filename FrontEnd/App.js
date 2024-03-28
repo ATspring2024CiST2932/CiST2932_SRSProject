@@ -181,6 +181,9 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
+// Add functions for fetchAllEmployees, createEmployee, updateEmployee, etc.
+
+
 // Function to delete an employee
 function deleteEmployee(employeeId) {
     if (confirm('Are you sure you want to delete this employee?')) {
