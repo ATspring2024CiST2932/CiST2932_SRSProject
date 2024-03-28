@@ -58,9 +58,9 @@ public class NewHireInfoService {
             }
         return newHireInfoDTOs;
     }
+    
     public List<String> findAllNames() {
         return newHireInfoRepository.findAllNames();
     }
     
-
 }

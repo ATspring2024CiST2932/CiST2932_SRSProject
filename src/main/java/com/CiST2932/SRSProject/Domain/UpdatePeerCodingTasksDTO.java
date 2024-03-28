@@ -9,7 +9,8 @@ public class UpdatePeerCodingTasksDTO {
     private BigDecimal totalHours;
     private String assigneeName;
 
-    // Constructors
+    // Constructors, getters, and setters
+
     public UpdatePeerCodingTasksDTO() {
     }
 
@@ -21,7 +22,6 @@ public class UpdatePeerCodingTasksDTO {
         this.assigneeName = assigneeName;
     }
 
-    // Getters and setters
     public String getTaskUrl() {
         return taskUrl;
     }
@@ -61,6 +61,6 @@ public class UpdatePeerCodingTasksDTO {
     public void setAssigneeName(String assigneeName) {
         this.assigneeName = assigneeName;
     }
-    
-}
 
+   
+}
