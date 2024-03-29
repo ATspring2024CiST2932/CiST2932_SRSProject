@@ -57,4 +57,5 @@ public class NewHireInfoDTO {
             .filter(mentorAssignment -> mentorAssignment.getId() == mentorId)
             .findFirst();
     }
+    
 }
