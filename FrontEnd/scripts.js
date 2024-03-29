@@ -1,3 +1,4 @@
+// FrontEnd/scripts.js
 // Function for sorting table
 function sortTable(columnIndex) {
     console.log(`Sorting column ${columnIndex}`);
