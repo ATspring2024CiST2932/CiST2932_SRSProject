@@ -25,6 +25,7 @@ public class NewHireInfoService {
         return newHireInfoRepository.findById(id);
     }
 
+    @SuppressWarnings("null")
     public NewHireInfo save(NewHireInfo newHireInfo) {
         return newHireInfoRepository.save(newHireInfo);
     }
