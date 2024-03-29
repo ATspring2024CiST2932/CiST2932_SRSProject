@@ -32,7 +32,6 @@ public class MentorAssignmentsService {
         return mentorAssignmentsRepository.findById(id);
     }
 
-    @SuppressWarnings("null")
     public MentorAssignments save(MentorAssignments mentorAssignments) {
         return mentorAssignmentsRepository.save(mentorAssignments);
     }

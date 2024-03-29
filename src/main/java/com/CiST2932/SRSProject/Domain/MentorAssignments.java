@@ -65,4 +65,8 @@ public class MentorAssignments {
     public void setMentee(NewHireInfo mentee) {
         this.mentee = mentee;
     }
+
+    public int getId() {
+        return this.assignmentId;
+    }
 }

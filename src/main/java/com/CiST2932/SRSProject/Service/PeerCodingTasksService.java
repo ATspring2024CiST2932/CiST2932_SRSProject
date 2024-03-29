@@ -33,7 +33,6 @@ public class PeerCodingTasksService {
         return peerCodingTasksRepository.findById(id);
     }
 
-    @SuppressWarnings("null")
     public PeerCodingTasks save(PeerCodingTasks peerCodingTasks) {
         return peerCodingTasksRepository.save(peerCodingTasks);
     }
