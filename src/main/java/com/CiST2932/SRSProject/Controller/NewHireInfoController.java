@@ -2,6 +2,7 @@
 
 package com.CiST2932.SRSProject.Controller;
 
+import com.CiST2932.SRSProject.Domain.NewEmployeeDTO;
 import com.CiST2932.SRSProject.Domain.NewHireInfo;
 import com.CiST2932.SRSProject.Service.NewHireInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,5 +86,9 @@ public class NewHireInfoController {
         return ResponseEntity.ok(names);
     }
     
-
+    @PostMapping("/newemployee")
+public ResponseEntity<NewHireInfo> createNewHireInfo(@RequestBody NewEmployeeDTO newEmployeeDTO) {
+    NewHireInfo newHireInfo = newHireInfoService.createNewHireInfo(newEmployeeDTO);
+    return ResponseEntity.status(HttpStatus.CREATED).body(newHireInfo);
+}
 }
