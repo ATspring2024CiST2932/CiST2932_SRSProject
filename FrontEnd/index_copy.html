@@ -154,24 +154,41 @@
                 </div>
             </div>
         </div>
-        <!-- Edit Employee Modal -->
-        <div class="modal fade" id="editEmployeeModal" tabindex="-1" aria-labelledby="editEmployeeModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editEmployeeModalLabel">Edit Employee</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<!-- Edit Employee Modal -->
+<div class="modal fade" id="editEmployeeModal" tabindex="-1" aria-labelledby="editEmployeeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editEmployeeModalLabel">Edit Employee</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editEmployeeForm">
+                    <input type="text" id="editEmployeeId">
+                    <div class="mb-3">
+                        <label for="editName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="editName">
                     </div>
-                    <div class="modal-body">
-                        <form id="editEmployeeForm">
-                            <input type="hidden" id="editEmployeeId">
-                            <!-- Form fields for editing employee details -->
-                            <button type="submit" class="btn btn-primary">Update</button>
-                        </form>
+                    <div class="mb-3">
+                        <label for="editIsMentor" class="form-label">Is Mentor?</label>
+                        <input type="checkbox" class="form-check-input" id="editIsMentor">
                     </div>
-                </div>
+                    <div class="mb-3">
+                        <label for="editEmploymentType" class="form-label">Employment Type</label>
+                        <select class="form-select" id="editEmploymentType">
+                            <option value="Apprentice">Apprentice</option>
+                            <option value="Full-time">Full-time</option>
+                            <option value="Part-time">Part-time</option>
+                            <option value="Contractor">Contractor</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
             </div>
         </div>
+    </div>
+</div>
+
         <!-- Delete Employee Modal -->
         <div class="modal fade" id="deleteEmployeeModal" tabindex="-1" aria-labelledby="deleteEmployeeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">

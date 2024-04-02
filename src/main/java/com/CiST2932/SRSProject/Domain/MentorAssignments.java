@@ -7,6 +7,8 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Id;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.ManyToOne;
@@ -16,6 +18,7 @@ import jakarta.persistence.GenerationType;
 
 @Entity
 @Table(name = "mentorassignments")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "assignmentId")
 public class MentorAssignments {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

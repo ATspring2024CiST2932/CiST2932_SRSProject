@@ -5,7 +5,10 @@ package com.CiST2932.SRSProject.Controller;
 import com.CiST2932.SRSProject.Domain.NewEmployeeDTO;
 import com.CiST2932.SRSProject.Domain.NewHireInfo;
 import com.CiST2932.SRSProject.Service.NewHireInfoService;
+
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +21,8 @@ public class NewHireInfoController {
 
     @Autowired
     private NewHireInfoService newHireInfoService;
+    @Autowired
+    private ModelMapper modelMapper;
 
     @GetMapping
     public ResponseEntity<List<NewHireInfo>> getAllNewHireInfo() {
@@ -41,17 +46,14 @@ public class NewHireInfoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedNewHireInfo);
     }
 
-
-
     @PutMapping("/{id}")
-    public ResponseEntity<NewHireInfo> updateNewHireInfo(@PathVariable int id, @RequestBody NewHireInfo newHireInfo) {
-        if (newHireInfoService.findById(id).isPresent()) {
-            newHireInfo.setEmployeeId(id);
-            return ResponseEntity.ok(newHireInfoService.save(newHireInfo));
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<NewEmployeeDTO> updateEmployee(@PathVariable int id, @RequestBody NewEmployeeDTO employeeDTO) {
+        NewHireInfo updatedEmployee = newHireInfoService.updateEmployee(id, employeeDTO);
+        NewEmployeeDTO updatedEmployeeDTO = modelMapper.map(updatedEmployee, NewEmployeeDTO.class);
+        return ResponseEntity.ok(updatedEmployeeDTO);
     }
-
+    
+    
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteNewHireInfo(@PathVariable int id) {
         if (newHireInfoService.findById(id).isPresent()) {

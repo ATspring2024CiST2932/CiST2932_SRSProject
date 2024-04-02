@@ -8,9 +8,17 @@ import com.CiST2932.SRSProject.Domain.NewHireInfoDTO;
 import com.CiST2932.SRSProject.Domain.Users;
 import com.CiST2932.SRSProject.Repository.NewHireInfoRepository;
 import com.CiST2932.SRSProject.Repository.UsersRepository;
-
+import org.modelmapper.ModelMapper;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
+
+
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +30,8 @@ public class NewHireInfoService {
     private NewHireInfoRepository newHireInfoRepository;
     @Autowired
     private UsersRepository usersRepository;
+    @Autowired
+    private ModelMapper modelMapper;
 
     public List<NewHireInfo> findAll() {
         return newHireInfoRepository.findAll();
@@ -92,5 +102,16 @@ public class NewHireInfoService {
     
         return newHireInfo;
     }
+    
+    public NewHireInfo updateEmployee(int id, NewEmployeeDTO employeeDTO) {
+        NewHireInfo employee = newHireInfoRepository.findById(id)
+                .orElseThrow(() -> new ResourceAccessException("Employee not found with id " + id));
+        modelMapper.map(employeeDTO, employee);
+        return newHireInfoRepository.save(employee);
+    }
+    
+    
+
+
     
 }

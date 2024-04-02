@@ -3,7 +3,157 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 // import 'bootstrap-icons/font/bootstrap-icons.css';
 
-// Fetch all employees and display them in the table
+document.addEventListener('DOMContentLoaded', function () {
+  // Fetch all employees and populate the table
+  fetchAllEmployees();
+
+  // Event listener for the 'New Employee' form submission
+  document.getElementById('newEmployeeForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const formData = {
+          name: document.getElementById('newEmployeeName').value,
+          email: document.getElementById('newEmployeeEmail').value,
+          isMentor: document.getElementById('newEmployeeIsMentor').checked,
+          username: document.getElementById('newEmployeeUsername').value,
+          password: document.getElementById('newEmployeePassword').value,
+          employmentType: document.getElementById('newEmployeeEmploymentType').value
+      };
+      createEmployee(formData);
+  });
+
+  // Event listener for the 'Edit Employee' form submission
+  document.getElementById('editEmployeeForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const employeeId = document.getElementById('editEmployeeId').value;
+      const updatedEmployeeData = {
+          name: document.getElementById('editName').value,
+          isMentor: document.getElementById('editIsMentor').checked,
+          employmentType: document.getElementById('editEmploymentType').value
+      };
+      updateEmployee(employeeId, updatedEmployeeData);
+  });
+
+  // Event listener for the 'Add Task' button
+  document.getElementById('addTaskButton').addEventListener('click', function() {
+      $('#addTaskModal').modal('show');
+  });
+
+  // Event listener for the 'Add Task' form submission
+  document.getElementById('addTaskForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const taskData = {
+          description: document.getElementById('taskDescription').value,
+          type: document.getElementById('taskType').value,
+          // Include other task details as needed
+      };
+      // Send taskData to your backend to add the new task
+      // For example, using fetch() if you're using a REST API
+      fetch('http://localhost:8080/peercodingtasks', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(taskData)
+      })
+      .then(response => {
+          if (response.ok) {
+              // Handle success, such as refreshing the task list or closing the modal
+              $('#addTaskModal').modal('hide');
+          } else {
+              // Handle errors
+              alert('Failed to add task.');
+          }
+      });
+  });
+
+  // Event delegation for employee actions
+  document.getElementById('employeeTableBody').addEventListener('click', function(event) {
+    if (event.target.classList.contains('view-btn')) {
+        const employeeId = event.target.dataset.employeeId;
+        viewEmployee(employeeId);
+    } else if (event.target.classList.contains('edit-btn')) {
+        const employeeId = event.target.dataset.employeeId;
+        editEmployee(employeeId);
+    } else if (event.target.classList.contains('archive-btn')) {
+        const employeeId = event.target.dataset.employeeId;
+        archiveEmployee(employeeId);
+    }
+});
+
+
+  // Call toggleMentorAssignmentSection when the checkbox changes
+  document.getElementById('newEmployeeIsMentor').addEventListener('change', toggleMentorAssignmentSection);
+  });
+
+// Function to populate mentor assignments for an employee
+function populateMentorAssignments(employeeId) {
+  fetch(`http://localhost:8080/newhireinfo/${employeeId}`)
+    .then(response => response.json())
+    .then(employee => {
+      const mentorAssignmentsSelect = document.getElementById('viewMentorAssignments');
+      mentorAssignmentsSelect.innerHTML = ''; // Clear existing options
+
+      if (employee.isMentor) {
+        // If the employee is a mentor, fetch and list their mentees
+        fetch(`http://localhost:8080/newhireinfo/${employeeId}/mentees`)
+          .then(response => response.json())
+          .then(mentees => {
+            console.log('Mentees:', mentees)
+            employee.assignmentsAsMentor.forEach(assignment => {
+              const li = document.createElement('li');
+              li.textContent = `Assignment ID: ${assignment.assignmentId}, Mentee ID: ${assignment.menteeId}`;
+              viewMentorAssignments.appendChild(li);
+            });            
+          });
+      } else {
+        // If the employee is a mentee, note their mentor
+        fetch(`http://localhost:8080/newhireinfo/${employeeId}/mentees`)
+          .then(response => response.json())
+          .then(assignment => {
+            console.log('Mentor assignment:', assignment)
+            if (assignment) {
+              const option = document.createElement('option');
+              option.value = assignment.mentor.employeeId;
+              option.textContent = `${assignment.mentor.name} (Mentor)`;
+              option.selected = true;
+              mentorAssignmentsSelect.appendChild(option);
+            } else {
+              // If the mentee is unassigned, provide a list of mentors to choose from
+              fetch(`http://localhost:8080/newhireinfo/mentors`)
+                .then(response => response.json())
+                .then(mentors => {
+                  console.log('Select Mentor:', mentors)
+                  mentors.forEach(mentor => {
+                    const option = document.createElement('option');
+                    option.value = mentor.employeeId;
+                    option.textContent = `${mentor.name} (Mentor)`;
+                    mentorAssignmentsSelect.appendChild(option);
+                  });
+                });
+            }
+          });
+      }
+    });
+}
+
+// Function to populate tasks for an employee
+function populateTasks(employeeId) {
+  fetch(`http://localhost:8080/peercodingtasks/mentor/${employeeId}/tasks`)
+      .then(response => response.json())
+      .then(tasks => {
+        console.log('Tasks:', tasks);
+        const tasksList = document.getElementById('viewTasks');
+        tasksList.innerHTML = ''; // Clear existing list items
+  
+        tasks.forEach(task => {
+          const li = document.createElement('li');
+          li.textContent = `Task ID: ${task.taskId}, Task Type: ${task.taskType}, Total Hours: ${task.totalHours}`;
+          tasksList.appendChild(li);
+        });
+      });
+}
+
+  // Fetch all employees and display them in the table
 function fetchAllEmployees() {
   fetch('http://localhost:8080/newhireinfo')
     .then(response => response.json())
@@ -150,10 +300,11 @@ function updateEmployee(employeeId, employeeData) {
       alert('Failed to update employee.');
     }
   });
-}
+
+};
 
 // Function to edit an employee's details
-export function editEmployee(employeeId) {
+ function editEmployee(employeeId) {
   console.log(`Editing employee with ID: ${employeeId}`);
   fetch(`http://localhost:8080/newhireinfo/${employeeId}`)
     .then(response => response.json())
@@ -175,28 +326,29 @@ export function editEmployee(employeeId) {
         })
         // .catch(error => console.error('Error fetching employee details:', error));
 }
+window.editEmployee = editEmployee;
 
-// Function to view an employee's details
-export function viewEmployee(employeeId) {
-    console.log(`Viewing employee with ID: ${employeeId}`);
-    fetch(`http://localhost:8080/newhireinfo/${employeeId}`)
-        .then(response => response.json())
-        .then(employee => {
-            // Populate the view modal with the employee's details
-            document.getElementById('viewEmployeeId').textContent = employee.employeeId;
-            document.getElementById('viewName').textContent = employee.name;
-            document.getElementById('viewIsMentor').textContent = employee.isMentor ? 'Yes' : 'No';
-            document.getElementById('viewEmploymentType').textContent = employee.employmentType;
+function viewEmployee(employeeId) {
+  console.log(`Viewing employee with ID: ${employeeId}`);
+  fetch(`http://localhost:8080/newhireinfo/${employeeId}`)
+      .then(response => response.json())
+      .then(employee => {
+          // Populate the view modal with the employee's details
+          document.getElementById('viewEmployeeId').textContent = employee.employeeId;
+          document.getElementById('viewName').textContent = employee.name;
+          document.getElementById('viewIsMentor').textContent = employee.isMentor;
+          document.getElementById('viewEmploymentType').textContent = employee.employmentType;
 
-            // Populate mentor assignments and tasks for viewing
-            populateMentorAssignments(employeeId);
-            populateTasks(employeeId);
+          // Populate mentor assignments and tasks for viewing
+          populateMentorAssignments(employeeId);
+          populateTasks(employeeId);
 
-            // Show the view modal
-            $('#viewEmployeeModal').modal('show');
-        })
-        .catch(error => console.error('Error fetching employee details:', error));
+          // Show the view modal
+          $('#viewEmployeeModal').modal('show');
+      })
+      .catch(error => console.error('Error fetching employee details:', error));
 }
+window.viewEmployee = viewEmployee;
 
   // Function to archive an employee
   function archiveEmployee(employeeId) {
@@ -206,9 +358,11 @@ export function viewEmployee(employeeId) {
       renderEmployees();
     }
   }
+  window.archiveEmployee = archiveEmployee;
+
 
 // Function to delete an employee
-export function deleteEmployee(employeeId) {
+function deleteEmployee(employeeId) {
   console.log(`Deleting employee with ID: ${employeeId}`);
   if (confirm('Are you sure you want to delete this employee?')) {
     fetch(`http://localhost:8080/newhireinfo/${employeeId}`, {
@@ -225,65 +379,7 @@ export function deleteEmployee(employeeId) {
   }
 }
 
-// Function to populate mentor assignments for an employee
-function populateMentorAssignments(employeeId) {
-  fetch(`http://localhost:8080/newhireinfo/${employeeId}`)
-    .then(response => response.json())
-    .then(employee => {
-      const mentorAssignmentsSelect = document.getElementById('editMentorAssignments');
-      mentorAssignmentsSelect.innerHTML = ''; // Clear existing options
 
-      if (employee.isMentor) {
-        // If the employee is a mentor, fetch and list their mentees
-        fetch(`http://localhost:8080/newhireinfo/${employeeId}/mentees`)
-          .then(response => response.json())
-          .then(mentees => {
-            mentees.forEach(mentee => {
-              const option = document.createElement('option');
-              option.value = mentee.employeeId;
-              option.textContent = `${mentee.name} (Mentee)`;
-              mentorAssignmentsSelect.appendChild(option);
-            });
-          });
-      } else {
-        // If the employee is a mentee, note their mentor
-        fetch(`http://localhost:8080/mentorassignments/mentee/${employeeId}`)
-          .then(response => response.json())
-          .then(assignment => {
-            if (assignment) {
-              const option = document.createElement('option');
-              option.value = assignment.mentor.employeeId;
-              option.textContent = `${assignment.mentor.name} (Mentor)`;
-              option.selected = true;
-              mentorAssignmentsSelect.appendChild(option);
-            } else {
-              // If the mentee is unassigned, provide a list of mentors to choose from
-              fetch(`http://localhost:8080/newhireinfo/mentors`)
-                .then(response => response.json())
-                .then(mentors => {
-                  mentors.forEach(mentor => {
-                    const option = document.createElement('option');
-                    option.value = mentor.employeeId;
-                    option.textContent = `${mentor.name} (Mentor)`;
-                    mentorAssignmentsSelect.appendChild(option);
-                  });
-                });
-            }
-          });
-      }
-    });
-}
-
-// Function to populate tasks for an employee
-function populateTasks(employeeId) {
-  fetch(`http://localhost:8080/employee/${employeeId}/tasks`)
-      .then(response => response.json())
-      .then(tasks => {
-          const tasksTextArea = document.getElementById('editEmployeeTasks');
-          tasksTextArea.value = tasks.map(task => `Task ID: ${task.task_id}, Task Type: ${task.task_type}`).join('\n');
-          // Additional logic to color code tasks based on the task owner
-      });
-}
 
 
 function handleNewEmployeeSubmit(event) {
@@ -311,177 +407,3 @@ function handleEditEmployeeSubmit(event) {
   };
   updateEmployee(employeeId, updatedEmployeeData);
 }
-
-document.addEventListener('DOMContentLoaded', function () {
-  // Fetch all employees and populate the table
-  fetchAllEmployees();
-
-  // Event listener for the 'New Employee' form submission
-  document.getElementById('newEmployeeForm').addEventListener('submit', function(event) {
-      event.preventDefault();
-      const formData = {
-          name: document.getElementById('newEmployeeName').value,
-          email: document.getElementById('newEmployeeEmail').value,
-          isMentor: document.getElementById('newEmployeeIsMentor').checked,
-          username: document.getElementById('newEmployeeUsername').value,
-          password: document.getElementById('newEmployeePassword').value,
-          employmentType: document.getElementById('newEmployeeEmploymentType').value
-      };
-      createEmployee(formData);
-  });
-
-  // Event listener for the 'Edit Employee' form submission
-  document.getElementById('editEmployeeForm').addEventListener('submit', function(event) {
-      event.preventDefault();
-      const employeeId = document.getElementById('editEmployeeId').value;
-      const updatedEmployeeData = {
-          name: document.getElementById('editName').value,
-          isMentor: document.getElementById('editIsMentor').checked,
-          employmentType: document.getElementById('editEmploymentType').value
-      };
-      updateEmployee(employeeId, updatedEmployeeData);
-  });
-
-  // Event listener for the 'Add Task' button
-  document.getElementById('addTaskButton').addEventListener('click', function() {
-      $('#addTaskModal').modal('show');
-  });
-
-  // Event listener for the 'Add Task' form submission
-  document.getElementById('addTaskForm').addEventListener('submit', function(event) {
-      event.preventDefault();
-      const taskData = {
-          description: document.getElementById('taskDescription').value,
-          type: document.getElementById('taskType').value,
-          // Include other task details as needed
-      };
-      // Send taskData to your backend to add the new task
-      // For example, using fetch() if you're using a REST API
-      fetch('http://localhost:8080/peercodingtasks', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(taskData)
-      })
-      .then(response => {
-          if (response.ok) {
-              // Handle success, such as refreshing the task list or closing the modal
-              $('#addTaskModal').modal('hide');
-          } else {
-              // Handle errors
-              alert('Failed to add task.');
-          }
-      });
-  });
-
-  // Call toggleMentorAssignmentSection when the checkbox changes
-  document.getElementById('newEmployeeIsMentor').addEventListener('change', toggleMentorAssignmentSection);
-  });
-
-  document.addEventListener('DOMContentLoaded', function() {
-    var form = document.getElementById('newEmployeeForm');
-    if(form) {
-      form.addEventListener('submit', function(event) {
-        // Your code here
-      });
-    }
-  }); 
-
-// // Call toggleMentorAssignmentSection when the checkbox changes
-// document.getElementById('newEmployeeIsMentor').addEventListener('change', toggleMentorAssignmentSection);
-
-// // Event listener for the 'New Employee' form submission
-// document.getElementById('newEmployeeForm').addEventListener('submit', function(event) {
-//   event.preventDefault();
-//   const formData = {
-//       name: document.getElementById('newEmployeeName').value,
-//       email: document.getElementById('newEmployeeEmail').value,
-//       isMentor: document.getElementById('newEmployeeIsMentor').checked,
-//       username: document.getElementById('newEmployeeUsername').value,
-//       password: document.getElementById('newEmployeePassword').value,
-//       employmentType: document.getElementById('newEmployeeEmploymentType').value
-//   };
-//   fetch('http://localhost:8080/newhireinfo', {
-//       method: 'POST',
-//       headers: {
-//           'Content-Type': 'application/json'
-//       },
-//       body: JSON.stringify(formData)
-//   })
-//   .then(response => {
-//       if (response.ok) {
-//           // Handle success
-//           console.log('Employee added successfully');
-//           // Optionally, refresh the page or update the UI
-//       } else {
-//           // Handle errors
-//           console.error('Failed to add employee');
-//       }
-//   })
-//   .catch(error => {
-//       console.error('Error:', error);
-//   });
-// });
-
-// // Function to handle the form submission for updating an employee
-// document.getElementById('editEmployeeForm').addEventListener('submit', function(event) {
-//   event.preventDefault();
-//   const employeeId = document.getElementById('editEmployeeId').value;
-//   const updatedEmployeeData = {
-//     name: document.getElementById('editName').value,
-//     isMentor: document.getElementById('editIsMentor').checked,
-//     employmentType: document.getElementById('editEmploymentType').value
-//   };
-//   updateEmployee(employeeId, updatedEmployeeData);
-// });
-
-// // Call fetchAllEmployees on page load to populate the table
-// document.addEventListener('DOMContentLoaded', function () {
-//   fetchAllEmployees();
-//     document.getElementById('newEmployeeForm').addEventListener('submit', handleNewEmployeeSubmit);
-//     document.getElementById('editEmployeeForm').addEventListener('submit', handleEditEmployeeSubmit);
-
-//   var newEmployeeForm = document.getElementById('newEmployeeForm');
-//   if (newEmployeeForm) {
-//       newEmployeeForm.addEventListener('submit', function (event) {
-//           event.preventDefault();
-//           // Your code to create a new employee...
-//       });
-//   }
-// });
-
-// document.getElementById('addTaskButton').addEventListener('click', function() {
-//   $('#addTaskModal').modal('show');
-// });
-
-// document.getElementById('addTaskForm').addEventListener('submit', function(event) {
-//   event.preventDefault();
-
-//   const taskData = {
-//       description: document.getElementById('taskDescription').value,
-//       type: document.getElementById('taskType').value,
-//       // Include other task details as needed
-//   };
-
-//   // Send taskData to your backend to add the new task
-//   // For example, using fetch() if you're using a REST API
-//   fetch('http://localhost:8080/peercodingtasks', {
-//       method: 'POST',
-//       headers: {
-//           'Content-Type': 'application/json'
-//       },
-//       body: JSON.stringify(taskData)
-//   })
-//   .then(response => {
-//       if (response.ok) {
-//           // Handle success, such as refreshing the task list or closing the modal
-//           $('#addTaskModal').modal('hide');
-//       } else {
-//           // Handle errors
-//           alert('Failed to add task.');
-//       }
-//   });
-// });
-
-

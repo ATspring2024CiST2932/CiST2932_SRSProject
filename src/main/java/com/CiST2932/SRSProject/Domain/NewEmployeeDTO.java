@@ -1,6 +1,7 @@
 package com.CiST2932.SRSProject.Domain;
 
 public class NewEmployeeDTO {
+    private int employeeId;
     private String name;
     private String email;
     private boolean isMentor;
@@ -8,6 +9,12 @@ public class NewEmployeeDTO {
     private String password;
     private String employmentType;
     // Getters and setters
+    public int getEmployeeId() {
+        return employeeId;
+    }
+    public void setEmployeeId(int employeeId) {
+        this.employeeId = employeeId;
+    }
     public String getName() {
         return name;
     }
