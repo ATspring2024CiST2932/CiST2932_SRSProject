@@ -98,10 +98,13 @@ function populateMentorAssignments(employeeId) {
         fetch(`http://localhost:8080/newhireinfo/${employeeId}/mentees`)
           .then(response => response.json())
           .then(mentees => {
-            console.log('Mentees:', mentees)
-            employee.assignmentsAsMentor.forEach(assignment => {
+            console.log('Mentees:', mentees);
+            const viewMentorAssignments = document.getElementById('viewMentorAssignments');
+            viewMentorAssignments.innerHTML = ''; // Clear existing list items
+
+            mentees.forEach(mentee => {
               const li = document.createElement('li');
-              li.textContent = `Assignment ID: ${assignment.assignmentId}, Mentee ID: ${assignment.menteeId}`;
+              li.textContent = `Mentee: ${mentee.name} - ${mentee.employmentType} `;
               viewMentorAssignments.appendChild(li);
             });            
           });
@@ -147,7 +150,7 @@ function populateTasks(employeeId) {
   
         tasks.forEach(task => {
           const li = document.createElement('li');
-          li.textContent = `Task ID: ${task.taskId}, Task Type: ${task.taskType}, Total Hours: ${task.totalHours}`;
+          li.innerHTML = `Task ID: ${task.taskId}, Task URL: <a href="${task.taskUrl}" target="_blank">${task.taskUrl}</a>, Task Type: ${task.taskType}, Total Hours: ${task.totalHours}`;
           tasksList.appendChild(li);
         });
       });
