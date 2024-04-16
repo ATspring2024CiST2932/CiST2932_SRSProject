@@ -1,8 +1,6 @@
 // src/main/java/com/CiST2932/SRSProject/Service/UsersService.java
 package com.CiST2932.SRSProject.Service;
 
-import com.CiST2932.SRSProject.Domain.NewEmployeeDTO;
-import com.CiST2932.SRSProject.Domain.NewHireInfo;
 import com.CiST2932.SRSProject.Domain.Users;
 import com.CiST2932.SRSProject.Repository.UsersRepository;
 import org.springframework.stereotype.Service;

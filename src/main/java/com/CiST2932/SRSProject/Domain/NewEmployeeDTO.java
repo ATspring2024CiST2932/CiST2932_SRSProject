@@ -1,13 +1,17 @@
 package com.CiST2932.SRSProject.Domain;
 
+import java.sql.Timestamp;
+
 public class NewEmployeeDTO {
     private int employeeId;
     private String name;
     private String email;
     private boolean isMentor;
     private String username;
-    private String password;
+    private String passwordHash;
     private String employmentType;
+    private Timestamp registrationDate;
+
     // Getters and setters
     public int getEmployeeId() {
         return employeeId;
@@ -39,17 +43,25 @@ public class NewEmployeeDTO {
     public void setUsername(String username) {
         this.username = username;
     }
-    public String getPassword() {
-        return password;
+    public String getPasswordHash() {
+        return passwordHash;
     }
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
     public String getEmploymentType() {
         return employmentType;
     }
     public void setEmploymentType(String employmentType) {
         this.employmentType = employmentType;
+    }
+
+    public Timestamp getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(Timestamp registrationDate) {
+        this.registrationDate = registrationDate;
     }
     
 }

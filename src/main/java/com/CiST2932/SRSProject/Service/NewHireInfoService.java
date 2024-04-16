@@ -9,19 +9,15 @@ import com.CiST2932.SRSProject.Domain.Users;
 import com.CiST2932.SRSProject.Repository.NewHireInfoRepository;
 import com.CiST2932.SRSProject.Repository.UsersRepository;
 import org.modelmapper.ModelMapper;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.ModelMap;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.ResourceAccessException;
-import org.springframework.web.server.ResponseStatusException;
-
 import java.util.List;
 import java.util.Optional;
+import java.sql.Timestamp;
 
 @Service
 public class NewHireInfoService {
@@ -85,32 +81,61 @@ public class NewHireInfoService {
         newHireInfo.setIsMentor(newEmployeeDTO.getIsMentor());
         newHireInfo.setEmploymentType(newEmployeeDTO.getEmploymentType());
     
-        // Save the NewHireInfo entity
-        newHireInfoRepository.save(newHireInfo);
-    
-        // If there is username and password, create a new Users entity
-        if (newEmployeeDTO.getUsername() != null && newEmployeeDTO.getPassword() != null) {
+        // If username and password are provided, create the Users object first
+        if (newEmployeeDTO.getUsername() != null && newEmployeeDTO.getPasswordHash() != null) {
             Users user = new Users();
             user.setEmail(newEmployeeDTO.getEmail());
             user.setUsername(newEmployeeDTO.getUsername());
-            user.setPasswordHash(newEmployeeDTO.getPassword()); // Consider using a hashed password
-            user.setNewHireInfo(newHireInfo); // Set the relationship
+            user.setPasswordHash(newEmployeeDTO.getPasswordHash()); // Consider using a hashed password
+            user.setRegistrationDate(new Timestamp(System.currentTimeMillis()));
     
-            // Save the Users entity
-            usersRepository.save(user);
+            // Associate User with NewHireInfo
+            newHireInfo.setUser(user);
+            user.setNewHireInfo(newHireInfo);
         }
     
-        return newHireInfo;
+        // Save the NewHireInfo entity, cascade should save Users too
+        return newHireInfoRepository.save(newHireInfo);
     }
-    
-    public NewHireInfo updateEmployee(int id, NewEmployeeDTO employeeDTO) {
+        
+    public NewHireInfo updateEmployee(int id, NewEmployeeDTO newEmployeeDTO) {
         NewHireInfo employee = newHireInfoRepository.findById(id)
                 .orElseThrow(() -> new ResourceAccessException("Employee not found with id " + id));
-        modelMapper.map(employeeDTO, employee);
+        modelMapper.map(newEmployeeDTO, employee);
         return newHireInfoRepository.save(employee);
     }
     
-    
+    @Transactional
+    public NewHireInfo updateOrCreateEmployee(int id, NewEmployeeDTO newEmployeeDTO) {
+        // First, fetch the existing NewHireInfo or create a new one
+        NewHireInfo newHireInfo = newHireInfoRepository.findById(id).orElse(new NewHireInfo());
+
+        // Update properties from DTO
+        newHireInfo.setIsMentor(newEmployeeDTO.getIsMentor());
+        newHireInfo.setEmploymentType(newEmployeeDTO.getEmploymentType());  // Assuming these are included in DTO
+        newHireInfo.setName(newEmployeeDTO.getName()); // Assume name is also updatable
+
+        // Save the NewHireInfo entity and ensure it has an ID
+        newHireInfo = newHireInfoRepository.save(newHireInfo);
+
+        // Handle the Users entity
+        Users user = usersRepository.findById(id).orElse(new Users());
+
+        // Set properties from the DTO
+        user.setEmail(newEmployeeDTO.getEmail());
+        user.setUsername(newEmployeeDTO.getUsername());
+        user.setPasswordHash(newEmployeeDTO.getPasswordHash());
+        user.setRegistrationDate(new Timestamp(System.currentTimeMillis()));
+
+        // Link User to NewHireInfo
+        user.setNewHireInfo(newHireInfo);
+        newHireInfo.setUser(user);
+
+        // Save or update the User
+        usersRepository.save(user);
+
+        return newHireInfo;
+    } 
 
 
     
