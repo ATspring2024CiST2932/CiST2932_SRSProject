@@ -93,7 +93,7 @@ public class NewHireInfoService {
         if (newEmployeeDTO.getUsername() != null && newEmployeeDTO.getPasswordHash() != null) {
             Users user = new Users();
             // Set the EmployeeID from NewHireInfo
-            user.setEmployeeId(newHireInfo.getEmployeeId());
+            user. setNewHireInfo(newHireInfo);
             user.setEmail(newEmployeeDTO.getEmail());
             user.setUsername(newEmployeeDTO.getUsername());
             user.setPasswordHash(newEmployeeDTO.getPasswordHash()); // Consider using a hashed password
@@ -143,6 +143,7 @@ public class NewHireInfoService {
         Users user = usersRepository.findById(id).orElse(new Users());
 
         // Set properties from the DTO
+        user.setNewHireInfo(newHireInfo);
         user.setEmail(newEmployeeDTO.getEmail());
         user.setUsername(newEmployeeDTO.getUsername());
         user.setPasswordHash(newEmployeeDTO.getPasswordHash());
