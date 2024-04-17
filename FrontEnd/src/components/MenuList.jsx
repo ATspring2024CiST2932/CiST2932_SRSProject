@@ -1,20 +1,21 @@
-import React from 'react';
-import {Menu} from 'antd';
-import { ProfileOutlined, UserOutlined, SettingOutlined } from '@ant-design/icons';
-
-
-
-
+import { ProfileOutlined, SettingOutlined } from '@ant-design/icons';
+import { Menu } from 'antd';
 
 const MenuList = ({ darkTheme }) => {
-    return (
-        <Menu theme={darkTheme ? 'dark' : 'light'} mode="inline" className="menu-bar">
-             <Menu.Item key="tasks" icon={<ProfileOutlined />}>
+  const menuItems = [
+    {
+      key: 'tasks',
+      icon: <ProfileOutlined />,
+      label: (
         <a href="/tasks.html" target="" rel="noopener noreferrer">
           Tasks
         </a>
-        </Menu.Item>
-        <Menu.Item key="Employees" icon={<ProfileOutlined />}>
+      ),
+    },
+    {
+      key: 'Employees',
+      icon: <ProfileOutlined />,
+      label: (
         <a href="/index.html" target="" rel="noopener noreferrer">
           Employees
         </a>
@@ -29,4 +30,4 @@ const MenuList = ({ darkTheme }) => {
     
 }
 
-export default MenuList
+export default MenuList;

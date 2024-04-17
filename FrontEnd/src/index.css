@@ -60,14 +60,13 @@ position: relative;
   
 }
 
-.row{
+.custom-row {
   position: absolute;
   z-index: 2;
   width: 80%;
   left: 270px;
   top: 200px;
   height: 100px;
-  
 }
 
 .col-13{
@@ -75,3 +74,8 @@ position: relative;
   left: 10px;
   top: -130px;
 }
+
+.modal-content {
+  background-color: white;
+}
+

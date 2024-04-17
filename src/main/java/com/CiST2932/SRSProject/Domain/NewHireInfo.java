@@ -2,18 +2,27 @@
 package com.CiST2932.SRSProject.Domain;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Table;
 import jakarta.persistence.Id;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
 
 @Entity
 @Table(name = "newhireinfo")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "employeeId")
 public class NewHireInfo {
+
     @Id
     @Column(name = "EmployeeID")
     private int employeeId;
@@ -39,7 +48,7 @@ public class NewHireInfo {
     @JsonManagedReference
     private List<PeerCodingTasks> assignedTasks;
 
-    @OneToOne (mappedBy = "newHireInfo")
+    @OneToOne(mappedBy = "newHireInfo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private Users user;
 

@@ -53,5 +53,5 @@ public class UsersService {
         return user.getUsername() != null && user.getPasswordHash() != null && user.getEmail() != null;
     }
     
-    // Additional business logic methods can be added here
+    
 }

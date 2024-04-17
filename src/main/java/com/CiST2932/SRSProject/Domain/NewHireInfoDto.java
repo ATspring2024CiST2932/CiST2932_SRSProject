@@ -1,6 +1,8 @@
 // src/main/java/com/CiST2932/SRSProject/Domain/NewHireInfoDto.java
 package com.CiST2932.SRSProject.Domain;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class NewHireInfoDTO {
@@ -48,9 +50,12 @@ public class NewHireInfoDTO {
         this.isMentor = isMentor;
     }
 
+    private static List<MentorAssignments> mentorAssignmentsList = new ArrayList<>();
+
     public static Optional<MentorAssignments> findById(int mentorId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findById'");
+        return mentorAssignmentsList.stream()
+            .filter(mentorAssignment -> mentorAssignment.getId() == mentorId)
+            .findFirst();
     }
     
 }
