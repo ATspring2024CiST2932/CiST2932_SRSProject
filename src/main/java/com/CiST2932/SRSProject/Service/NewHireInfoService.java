@@ -80,19 +80,40 @@ public class NewHireInfoService {
         newHireInfo.setName(newEmployeeDTO.getName());
         newHireInfo.setIsMentor(newEmployeeDTO.getIsMentor());
         newHireInfo.setEmploymentType(newEmployeeDTO.getEmploymentType());
-    
+        newHireInfo.setEmployeeId(newEmployeeDTO.getEmployeeId());
+
+        // Save the newHireInfo
+        newHireInfo = newHireInfoRepository.save(newHireInfo);
+
+        // Print out the newHireInfo employeeId
+        System.out.println("Employee ID: " + newHireInfo.getEmployeeId());
+
+
         // If username and password are provided, create the Users object first
         if (newEmployeeDTO.getUsername() != null && newEmployeeDTO.getPasswordHash() != null) {
             Users user = new Users();
+            // Set the EmployeeID from NewHireInfo
+            user.setEmployeeId(newHireInfo.getEmployeeId());
             user.setEmail(newEmployeeDTO.getEmail());
             user.setUsername(newEmployeeDTO.getUsername());
             user.setPasswordHash(newEmployeeDTO.getPasswordHash()); // Consider using a hashed password
             user.setRegistrationDate(new Timestamp(System.currentTimeMillis()));
-    
-            // Associate User with NewHireInfo
-            newHireInfo.setUser(user);
-            user.setNewHireInfo(newHireInfo);
+
+        // Link User with NewHireInfo
+        user.setNewHireInfo(newHireInfo);
+        newHireInfo.setUser(user);
+
+        // Save the Users entity, it should now have the correct employeeId
+        usersRepository.save(user);
+
         }
+
+        // print out the username
+        System.out.println("Username: " + newEmployeeDTO.getUsername());
+        // refresh the newHireInfo
+        newHireInfo = newHireInfoRepository.findById(newHireInfo.getEmployeeId()).get();
+        System.out.println("Employee ID: " + newHireInfo.getEmployeeId());
+
     
         // Save the NewHireInfo entity, cascade should save Users too
         return newHireInfoRepository.save(newHireInfo);
@@ -128,7 +149,6 @@ public class NewHireInfoService {
         user.setRegistrationDate(new Timestamp(System.currentTimeMillis()));
 
         // Link User to NewHireInfo
-        user.setNewHireInfo(newHireInfo);
         newHireInfo.setUser(user);
 
         // Save or update the User

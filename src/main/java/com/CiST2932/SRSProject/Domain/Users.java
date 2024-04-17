@@ -34,12 +34,13 @@ public class Users {
     public Users() {
     }
 
-    public Users(int employeeId, String username, String passwordHash, String email, Timestamp registrationDate) {
+    public Users(int employeeId, String username, String passwordHash, String email, Timestamp registrationDate, NewHireInfo newHireInfo) {
         this.employeeId = employeeId;
         this.username = username;
         this.passwordHash = passwordHash;
         this.email = email;
         this.registrationDate = registrationDate;
+        this.newHireInfo = newHireInfo;
     }
 
     public int getEmployeeId() {
@@ -89,4 +90,5 @@ public class Users {
     public void setNewHireInfo(NewHireInfo newHireInfo) {
         this.newHireInfo = newHireInfo;
     }
+    
 }
