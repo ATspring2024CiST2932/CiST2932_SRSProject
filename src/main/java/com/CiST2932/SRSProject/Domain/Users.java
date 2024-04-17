@@ -3,16 +3,18 @@ package com.CiST2932.SRSProject.Domain;
 
 import java.sql.Timestamp;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "users")
 public class Users {
     @Id
-    @Column(name = "EmployeeID")
-    private int employeeId;
+    private int employeeId; // This will be populated automatically from newHireInfo's ID.
+
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "EmployeeID")
+    private NewHireInfo newHireInfo;
 
     @Column(name = "username")
     private String username;
@@ -26,28 +28,29 @@ public class Users {
     @Column(name = "registration_date")
     private Timestamp registrationDate;
 
-    @OneToOne
-    @JoinColumn(name = "EmployeeID", referencedColumnName = "EmployeeID")
-    @JsonBackReference
-    private NewHireInfo newHireInfo;
-
     public Users() {
     }
 
-    public Users(int employeeId, String username, String passwordHash, String email, Timestamp registrationDate) {
+    public Users(int employeeId, String username, String passwordHash, String email, Timestamp registrationDate, NewHireInfo newHireInfo) {
         this.employeeId = employeeId;
         this.username = username;
         this.passwordHash = passwordHash;
         this.email = email;
         this.registrationDate = registrationDate;
+        this.newHireInfo = newHireInfo;
     }
 
     public int getEmployeeId() {
-        return employeeId;
+        return employeeId; // Automatically mirrors the ID of newHireInfo
     }
 
-    public void setEmployeeId(int employeeId) {
-        this.employeeId = employeeId;
+    public NewHireInfo getNewHireInfo() {
+        return newHireInfo;
+    }
+
+    public void setNewHireInfo(NewHireInfo newHireInfo) {
+        this.newHireInfo = newHireInfo;
+        // The employeeId is automatically managed through the @MapsId, no need to set it explicitly
     }
 
     public String getUsername() {
@@ -81,12 +84,5 @@ public class Users {
     public void setRegistrationDate(Timestamp registrationDate) {
         this.registrationDate = registrationDate;
     }
-
-    public NewHireInfo getNewHireInfo() {
-        return newHireInfo;
-    }
-
-    public void setNewHireInfo(NewHireInfo newHireInfo) {
-        this.newHireInfo = newHireInfo;
-    }
+    
 }
