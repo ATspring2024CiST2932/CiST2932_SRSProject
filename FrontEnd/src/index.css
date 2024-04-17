@@ -70,12 +70,41 @@ position: relative;
 }
 
 .col-13{
-  position: relative;
-  left: 10px;
-  top: -130px;
+  position: absolute;
+  z-index: 2;
+  width: 80%;
+  left: 270px;
+  top: 100px;
+  height: 100px;
 }
 
 .modal-content {
   background-color: white;
 }
 
+.table {
+  position: absolute;
+  z-index: 2;
+  width: 80%;
+  left: 270px;
+  top: 200px;
+  height: 100px;
+}
+
+.col-9 {
+  position: absolute;
+  z-index: 2;
+  width: 80%;
+  left: 270px;
+  top: 100px;
+  height: 100px;
+}
+
+.col-3 {
+  position: absolute;
+  z-index: 2;
+  width: 25%;
+  left: 1200px;
+  top: 100px;
+  height: 100px;
+}
