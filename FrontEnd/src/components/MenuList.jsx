@@ -19,7 +19,11 @@ const MenuList = ({ darkTheme }) => {
           Employees
         </a>
         </Menu.Item>
-            <Menu.Item key="settings" icon={<SettingOutlined />}>Settings</Menu.Item>
+            <Menu.Item key="Login" icon={<SettingOutlined />}>
+            <a href="/login.html" target="" rel="noopener noreferrer">
+              Login
+              </a>
+              </Menu.Item>
         </Menu>
     )
     
