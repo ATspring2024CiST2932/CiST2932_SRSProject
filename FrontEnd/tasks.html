@@ -293,13 +293,13 @@ function sortTable(columnIndex, currentDir) {
       y = rows[i + 1].getElementsByTagName("td")[columnIndex];
 
       // Compare the content of the cells based on the current direction
-      if (currentDir == "asc") {
-        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+      if (currentDir == "desc") {
+        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
           shouldSwitch = true;
           break;
         }
       } else {
-        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
           shouldSwitch = true;
           break;
         }
