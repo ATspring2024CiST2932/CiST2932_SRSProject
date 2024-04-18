@@ -1,4 +1,4 @@
-// FrontEnd/App.jsjsx
+// FrontEnd/App.js
 // Script to handle all user-related operations
 import 'bootstrap/dist/css/bootstrap.min.css';
 // import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -185,8 +185,14 @@ function fetchAllEmployees() {
     });
 }
 
-// Function to create a new employee
+// Function to create a new employee including mentor assignment
 function createEmployee(employeeData) {
+  // Extend employeeData with mentor assignment
+  // const mentorId = document.getElementById('newMentorAssignments').value;
+  // if (mentorId) {
+  //     employeeData.mentor = mentorId; // Assuming 'mentor' is the field expected by your backend API
+  // }
+
   fetch('http://localhost:8080/newhireinfo', {
     method: 'POST',
     headers: {
@@ -196,13 +202,22 @@ function createEmployee(employeeData) {
   })
   .then(response => {
     if (response.ok) {
-      fetchAllEmployees(); // Refresh the employee list
-      document.getElementById('newEmployeeForm').reset(); // Reset the form
-      $('#newEmployeeModal').modal('hide'); // Close the modal
+      response.json().then(data => {
+        console.log('Success:', data);
+        fetchAllEmployees(); // Refresh the employee list
+        document.getElementById('newEmployeeForm').reset(); // Reset the form
+        $('#newEmployeeModal').modal('hide'); // Close the modal
+      });
     } else {
-      // Handle errors
-      alert('Failed to create employee.');
+      response.json().then(data => {
+        console.error('Failed to create employee:', data);
+        alert('Failed to create employee. Please check the input data.');
+      });
     }
+  })
+  .catch(error => {
+    console.error('Network error:', error);
+    alert('Failed to connect to the server.');
   });
 }
 
@@ -235,54 +250,49 @@ function toggleMentorAssignmentSection() {
 }
 
 
-// Event listener for when the 'New Employee' modal is shown
+// Add this event listener when the 'New Employee' modal is shown
 $('#newEmployeeModal').on('show.bs.modal', function () {
-  // Clear the mentor dropdown
+  // Reset and populate the mentor dropdown if the employee is not a mentor
   const mentorSelect = document.getElementById('newMentorAssignments');
   mentorSelect.innerHTML = '<option value="">Select Mentor</option>';
-
-  // Fetch and populate mentors
-  fetchMentors();
+  if (!document.getElementById('newEmployeeIsMentor').checked) {
+      fetchMentors(); // This should fetch and populate the mentor dropdown
+  }
 });
 
-// Function to fetch mentors and populate the dropdown
+// Modify the fetchMentors function to handle auto-select logic if necessary
 function fetchMentors() {
   fetch('http://localhost:8080/newhireinfo/mentors')
-    .then(response => response.json())
-    .then(mentors => {
+  .then(response => response.json())
+  .then(mentors => {
       const mentorSelect = document.getElementById('newMentorAssignments');
-      mentorSelect.innerHTML = '<option value="">Select Mentor</option>'; // Clear existing options
-
-      // Filter out duplicate mentors based on employeeId
-      const uniqueMentors = mentors.filter((mentor, index, self) =>
-        index === self.findIndex((m) => (
-          m.employeeId === mentor.employeeId
-        ))
-      );
-
-      // Populate the dropdown with unique mentors
-      uniqueMentors.forEach(mentor => {
-        const option = document.createElement('option');
-        option.value = mentor.employeeId;
-        option.textContent = mentor.name;
-        mentorSelect.appendChild(option);
+      mentors.forEach(mentor => {
+          const option = document.createElement('option');
+          option.value = mentor.employeeId;
+          option.textContent = mentor.name;
+          mentorSelect.appendChild(option);
       });
-    })
-    .catch(error => console.error('Error fetching mentors:', error));
+      // Optionally auto-select a default mentor if required
+      // mentorSelect.value = 'defaultMentorId';
+  })
+  .catch(error => console.error('Error fetching mentors:', error));
 }
 
-// function to fetch mentees and populate the dropdown
+// Function to fetch mentees and populate the dropdown, auto-select first unassigned
 function fetchMentees() {
-    fetch('http://localhost:8080/newhireinfo/unassigned-mentees')
-        .then(response => response.json())
-        .then(data => {
-            const select = document.getElementById('newMentorAssignments');
-            data.forEach(mentee => {
-                let option = new Option(mentee.name, mentee.id);
-                select.appendChild(option);
-            });
-        })
-        .catch(error => console.error('Error fetching mentees:', error));
+  fetch('http://localhost:8080/newhireinfo/unassigned-mentees')
+    .then(response => response.json())
+    .then(mentees => {
+      const menteeSelect = document.getElementById('newMentorAssignments');
+      mentees.forEach((mentee, index) => {
+        const option = document.createElement('option');
+        option.value = mentee.employeeId;
+        option.textContent = mentee.name;
+        option.selected = index === 0; // Auto-select the first unassigned mentee
+        menteeSelect.appendChild(option);
+      });
+    })
+    .catch(error => console.error('Error fetching mentees:', error));
 }
 
 // Function to update an existing employee

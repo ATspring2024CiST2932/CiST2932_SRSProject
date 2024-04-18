@@ -2,12 +2,14 @@
 
 package com.CiST2932.SRSProject.Service;
 
+import com.CiST2932.SRSProject.Domain.MentorAssignments;
 import com.CiST2932.SRSProject.Domain.NewEmployeeDTO;
 import com.CiST2932.SRSProject.Domain.NewHireInfo;
 import com.CiST2932.SRSProject.Domain.NewHireInfoDTO;
 import com.CiST2932.SRSProject.Domain.Users;
 import com.CiST2932.SRSProject.Repository.NewHireInfoRepository;
 import com.CiST2932.SRSProject.Repository.UsersRepository;
+import com.CiST2932.SRSProject.Repository.MentorAssignmentsRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -26,6 +28,8 @@ public class NewHireInfoService {
     private NewHireInfoRepository newHireInfoRepository;
     @Autowired
     private UsersRepository usersRepository;
+    @Autowired
+    private MentorAssignmentsRepository mentorAssignmentsRepository;
     @Autowired
     private ModelMapper modelMapper;
 
@@ -82,8 +86,8 @@ public class NewHireInfoService {
         newHireInfo.setEmploymentType(newEmployeeDTO.getEmploymentType());
         newHireInfo.setEmployeeId(newEmployeeDTO.getEmployeeId());
 
-        // Save the newHireInfo
-        newHireInfo = newHireInfoRepository.save(newHireInfo);
+        // Save the NewHireInfo entity
+        NewHireInfo savedNewHireInfo = newHireInfoRepository.save(newHireInfo);
 
         // Print out the newHireInfo employeeId
         System.out.println("Employee ID: " + newHireInfo.getEmployeeId());
@@ -99,14 +103,35 @@ public class NewHireInfoService {
             user.setPasswordHash(newEmployeeDTO.getPasswordHash()); // Consider using a hashed password
             user.setRegistrationDate(new Timestamp(System.currentTimeMillis()));
 
-        // Link User with NewHireInfo
-        user.setNewHireInfo(newHireInfo);
+        // Associate User with NewHireInfo
         newHireInfo.setUser(user);
+        user.setNewHireInfo(newHireInfo);
 
         // Save the Users entity, it should now have the correct employeeId
         usersRepository.save(user);
 
         }
+
+    // Handle mentorship assignment
+    if (newEmployeeDTO.getMentor() != 0) {
+        MentorAssignments mentorAssignment = new MentorAssignments();
+        NewHireInfo mentor = newHireInfoRepository.findById(newEmployeeDTO.getMentor()).orElse(null);
+        mentorAssignment.setMentor(mentor);
+        mentorAssignment.setMentee(savedNewHireInfo);
+
+        if (mentor != null) {
+            mentorAssignment.setMentor(mentor);
+            mentorAssignment.setMentee(savedNewHireInfo);
+            mentorAssignmentsRepository.save(mentorAssignment);
+            System.out.println("Mentor Assignment Saved: Mentor ID - " + mentor.getEmployeeId() + " Mentee ID - " + savedNewHireInfo.getEmployeeId());
+        } else {
+            System.out.println("Mentor ID not found: " + newEmployeeDTO.getMentor());
+        }
+        
+
+        // Save the mentorship assignment
+        mentorAssignmentsRepository.save(mentorAssignment);
+    }
 
         // print out the username
         System.out.println("Username: " + newEmployeeDTO.getUsername());
@@ -117,6 +142,7 @@ public class NewHireInfoService {
     
         // Save the NewHireInfo entity, cascade should save Users too
         return newHireInfoRepository.save(newHireInfo);
+        
     }
         
     public NewHireInfo updateEmployee(int id, NewEmployeeDTO newEmployeeDTO) {
