@@ -61,6 +61,12 @@ public class NewHireInfoController {
         return ResponseEntity.ok(mentees);
     }
 
+    @GetMapping("/{menteeId}/mentor")
+    public ResponseEntity<List<NewHireInfo>> getMentorByMenteeId(@PathVariable int menteeId) {
+        List<NewHireInfo> mentor = newHireInfoService.findMentorByMenteeId(menteeId);
+        return ResponseEntity.ok(mentor);
+    }
+
     @GetMapping("/mentors")
     public ResponseEntity<List<NewHireInfo>> getAllMentors() {
         List<NewHireInfo> mentors = newHireInfoService.findAllMentors();

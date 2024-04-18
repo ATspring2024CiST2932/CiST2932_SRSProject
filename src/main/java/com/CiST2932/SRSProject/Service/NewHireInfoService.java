@@ -54,6 +54,10 @@ public class NewHireInfoService {
         return newHireInfoRepository.findMenteesByMentorId(mentorId);
     }
 
+    public List<NewHireInfo> findMentorByMenteeId(int menteeId) {
+        return newHireInfoRepository.findMentorByMenteeId(menteeId);
+    }
+
     public List<NewHireInfo> findUnassignedMentees() {
         return newHireInfoRepository.findUnassignedMentees();
     }   
