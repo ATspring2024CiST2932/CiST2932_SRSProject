@@ -8,19 +8,18 @@
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
 }
-.sidebar {
-  color: #fff
-}
-.logo{
+
+.logo-icon{
   display: flex;
   align-items: center;
   padding: 30px;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
+  width: 50px;
+  height: 10px;
+  border-radius: 100%;
   position: relative;
   right: 20px;
-  top: 20px
+  top: 25px;
+  
 }
 
 .menu-bar {
@@ -58,6 +57,24 @@ position: relative;
   left: 10px;
   top: -130px;
   
+}
+
+.addbutton {
+  position: absolute;
+  z-index: 2;
+  width: 80%;
+  left: 270px;
+  top: 100px;
+  height: 100px;
+}
+
+.etable {
+  position: absolute;
+  z-index: 2;
+  width: 80%;
+  left: 10px;
+  top: -20px;
+  height: 100px;
 }
 
 .custom-row {
@@ -108,3 +125,8 @@ position: relative;
   top: 100px;
   height: 100px;
 }
+
+.logo{
+  overflow: hidden;
+}
+
