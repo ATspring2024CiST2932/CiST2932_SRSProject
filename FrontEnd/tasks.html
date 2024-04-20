@@ -293,41 +293,58 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
 
-// Function for sorting table
-function sortTable(columnIndex, currentDir) {
-  var table, rows, switching, i, x, y;
-  table = document.getElementById("tasksTable");
-  switching = true;
+    function sortTable(columnIndex, currentDir) {
+    var table, rows, switching, i, x, y;
+    table = document.getElementById("tasksTable");
+    switching = true;
 
-  while (switching) {
-    switching = false;
-    rows = table.rows;
+    while (switching) {
+        switching = false;
+        rows = table.rows;
 
-    for (i = 1; i < (rows.length - 1); i++) {
-      var shouldSwitch = false;
-      x = rows[i].getElementsByTagName("td")[columnIndex];
-      y = rows[i + 1].getElementsByTagName("td")[columnIndex];
+        for (i = 1; i < (rows.length - 1); i++) {
+            var shouldSwitch = false;
+            x = rows[i].getElementsByTagName("td")[columnIndex];
+            y = rows[i + 1].getElementsByTagName("td")[columnIndex];
 
-      // Compare the content of the cells based on the current direction
-      if (currentDir == "desc") {
-        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-          shouldSwitch = true;
-          break;
+            // Compare the content of the cells based on the current direction
+            var xValue, yValue;
+
+            // Check if it's columns 0 or 4
+            if (columnIndex === 0) {
+                xValue = parseInt(x.innerHTML);
+                yValue = parseInt(y.innerHTML);
+            } else if (columnIndex === 4) {
+                xValue = parseFloat(x.innerHTML);
+                yValue = parseFloat(y.innerHTML);
+            } else {
+                xValue = x.innerHTML.toLowerCase();
+                yValue = y.innerHTML.toLowerCase();
+            }
+
+            // Compare based on data type
+            if (isNaN(xValue) || isNaN(yValue)) {
+                // Alphabetic comparison
+                if (currentDir === "desc" ? xValue < yValue : xValue > yValue) {
+                    shouldSwitch = true;
+                    break;
+                }
+            } else {
+                // Numeric comparison
+                if (currentDir === "desc" ? xValue < yValue : xValue > yValue) {
+                    shouldSwitch = true;
+                    break;
+                }
+            }
         }
-      } else {
-        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-          shouldSwitch = true;
-          break;
-        }
-      }
-    }
 
-    if (shouldSwitch) {
-      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-      switching = true;
+        if (shouldSwitch) {
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+        }
     }
-  }
 }
+
 
 // Event listener for the edit form submission
 document.getElementById('editTaskForm').addEventListener('submit', function(event) {
