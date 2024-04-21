@@ -18,15 +18,14 @@ const MenuList = ({ darkTheme }) => {
         <a href="/index.html" target="" rel="noopener noreferrer">
           Employees
         </a>
-        </Menu.Item>
-            <Menu.Item key="Login" icon={<SettingOutlined />}>
-            <a href="/login.html" target="" rel="noopener noreferrer">
-              Login
-              </a>
-              </Menu.Item>
-        </Menu>
-    )
-    
+      </Menu.Item>
+      <Menu.Item key="Login" icon={<SettingOutlined />}>
+        <a href="/login.html" target="_blank" rel="noopener noreferrer">
+          Login
+        </a>
+      </Menu.Item>
+    </Menu>
+  );
 }
 
 export default MenuList

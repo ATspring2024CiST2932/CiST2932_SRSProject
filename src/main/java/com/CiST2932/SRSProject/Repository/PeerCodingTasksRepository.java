@@ -13,9 +13,10 @@ import java.util.List;
 @Repository
 public interface PeerCodingTasksRepository extends JpaRepository<PeerCodingTasks, Integer> {
 
+    @Query("SELECT t FROM PeerCodingTasks t WHERE t.assignee.employeeId = :employeeId") 
     List<PeerCodingTasks> findByAssigneeEmployeeId(int employeeId);
 
     @Query("SELECT t FROM PeerCodingTasks t WHERE t.assignee.employeeId = :mentorId OR t.assignee.employeeId IN (SELECT ma.mentee.employeeId FROM MentorAssignments ma WHERE ma.mentor.employeeId = :mentorId)")
     List<PeerCodingTasks> findTasksByMentorAndMentees(@Param("mentorId") int mentorId);
-
+    
 }
