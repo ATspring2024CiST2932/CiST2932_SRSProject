@@ -37,14 +37,14 @@ public class NewHireInfoController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
     
-    @PostMapping
-    public ResponseEntity<NewHireInfo> createNewHireInfo(@RequestBody NewHireInfo newHireInfo) {
-        // Save the new hire information to the database
-        NewHireInfo savedNewHireInfo = newHireInfoService.save(newHireInfo);
+    // @PostMapping
+    // public ResponseEntity<NewHireInfo> createNewHireInfo(@RequestBody NewHireInfo newHireInfo) {
+    //     // Save the new hire information to the database
+    //     NewHireInfo savedNewHireInfo = newHireInfoService.save(newHireInfo);
 
-        // Return a response entity with the saved object and a status of CREATED
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedNewHireInfo);
-    }    
+    //     // Return a response entity with the saved object and a status of CREATED
+    //     return ResponseEntity.status(HttpStatus.CREATED).body(savedNewHireInfo);
+    // }    
     
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteNewHireInfo(@PathVariable int id) {
@@ -80,12 +80,12 @@ public class NewHireInfoController {
         return ResponseEntity.ok(names);
     }
     
-    @PostMapping("/newemployee")
+    @PostMapping
     public ResponseEntity<NewHireInfo> createNewHireInfo(@RequestBody NewEmployeeDTO newEmployeeDTO) {
         NewHireInfo newHireInfo = newHireInfoService.createNewHireInfo(newEmployeeDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(newHireInfo);
     }
-    @PutMapping("/updateEmployee/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<NewHireInfo> updateOrCreateEmployee(@PathVariable int id, @RequestBody NewEmployeeDTO employeeDTO) {
         try {
             NewHireInfo updatedInfo = newHireInfoService.updateOrCreateEmployee(id, employeeDTO);

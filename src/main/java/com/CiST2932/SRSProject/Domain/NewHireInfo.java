@@ -3,12 +3,16 @@ package com.CiST2932.SRSProject.Domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Table;
 import jakarta.persistence.Id;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrimaryKeyJoinColumn;
+
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -22,9 +26,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @Table(name = "newhireinfo")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "employeeId")
 public class NewHireInfo {
-
+    
     @Id
-    @Column(name = "EmployeeID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int employeeId;
 
     @Column(name = "Name")
@@ -48,8 +52,8 @@ public class NewHireInfo {
     @JsonManagedReference
     private List<PeerCodingTasks> assignedTasks;
 
-    @OneToOne(mappedBy = "newHireInfo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @PrimaryKeyJoinColumn
     private Users user;
 
     // Constructors, getters, and setters

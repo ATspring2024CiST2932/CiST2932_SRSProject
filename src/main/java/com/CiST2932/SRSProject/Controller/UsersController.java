@@ -36,13 +36,17 @@ public class UsersController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Users> updateUser(@PathVariable int id, @RequestBody Users user) {
-        if (usersService.findById(id).isPresent()) {
-            user.setEmployeeId(id);
-            return ResponseEntity.ok(usersService.save(user));
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<Users> updateUser(@PathVariable int id, @RequestBody Users userUpdates) {
+        return usersService.findById(id).map(existingUser -> {
+            existingUser.setUsername(userUpdates.getUsername());
+            existingUser.setPasswordHash(userUpdates.getPasswordHash());
+            existingUser.setEmail(userUpdates.getEmail());
+            existingUser.setRegistrationDate(userUpdates.getRegistrationDate());
+            // Assuming you handle updating/setting NewHireInfo elsewhere as needed
+            return ResponseEntity.ok(usersService.save(existingUser));
+        }).orElseGet(() -> ResponseEntity.notFound().build());
     }
+    
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable int id) {
