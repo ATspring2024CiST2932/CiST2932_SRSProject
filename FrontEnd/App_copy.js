@@ -1,4 +1,4 @@
-// FrontEnd/App.jsjsx
+// FrontEnd/App.js
 // Script to handle all user-related operations
 import 'bootstrap/dist/css/bootstrap.min.css';
 // import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -8,18 +8,20 @@ document.addEventListener('DOMContentLoaded', function () {
   fetchAllEmployees();
 
   // Event listener for the 'New Employee' form submission
-  document.getElementById('newEmployeeForm').addEventListener('submit', function(event) {
-      event.preventDefault();
-      const formData = {
-          name: document.getElementById('newEmployeeName').value,
-          email: document.getElementById('newEmployeeEmail').value,
-          isMentor: document.getElementById('newEmployeeIsMentor').checked,
-          username: document.getElementById('newEmployeeUsername').value,
-          password: document.getElementById('newEmployeePassword').value,
-          employmentType: document.getElementById('newEmployeeEmploymentType').value
-      };
-      createEmployee(formData);
-  });
+  document.getElementById('newEmployeeModal').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const formData = {
+        name: document.getElementById('newEmployeeName').value,
+        email: document.getElementById('newEmployeeEmail').value,
+        isMentor: document.getElementById('newEmployeeIsMentor').checked,
+        username: document.getElementById('newEmployeeUsername').value,
+        passwordHash: document.getElementById('newEmployeePassword').value,
+        employmentType: document.getElementById('newEmployeeEmploymentType').value,
+        mentor: document.getElementById('mentorSelect').value, // Assuming you have a select element with id 'mentorSelect'
+        mentee: document.getElementById('menteeSelect').value // Assuming you have a select element for mentees
+    };
+    createEmployee(formData);
+});
 
   // Event listener for the 'Edit Employee' form submission
   document.getElementById('editEmployeeForm').addEventListener('submit', function(event) {
@@ -31,11 +33,6 @@ document.addEventListener('DOMContentLoaded', function () {
           employmentType: document.getElementById('editEmploymentType').value
       };
       updateEmployee(employeeId, updatedEmployeeData);
-  });
-
-  // Event listener for the 'Add Task' button
-  document.getElementById('addTaskButton').addEventListener('click', function() {
-      $('#addTaskModal').modal('show');
   });
 
   // Event listener for the 'Add Task' form submission
@@ -67,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   // Event delegation for employee actions
-  document.getElementById('employeeTableBody').addEventListener('click', function(event) {
+  document.getElementById('employeeTable').addEventListener('click', function(event) {
     if (event.target.classList.contains('view-btn')) {
         const employeeId = event.target.dataset.employeeId;
         viewEmployee(employeeId);
@@ -100,7 +97,7 @@ function populateMentorAssignments(employeeId) {
           .then(mentees => {
             console.log('Mentees:', mentees);
             const viewMentorAssignments = document.getElementById('viewMentorAssignments');
-            viewMentorAssignments.innerHTML = ''; // Clear existing list items
+            viewMentorAssignments.textContent = ''; // Clear existing list items
 
             mentees.forEach(mentee => {
               const li = document.createElement('li');
@@ -110,30 +107,18 @@ function populateMentorAssignments(employeeId) {
           });
       } else {
         // If the employee is a mentee, note their mentor
-        fetch(`http://localhost:8080/newhireinfo/${employeeId}/mentees`)
+        fetch(`http://localhost:8080/newhireinfo/${employeeId}/mentor`)
           .then(response => response.json())
-          .then(assignment => {
-            console.log('Mentor assignment:', assignment)
-            if (assignment) {
-              const option = document.createElement('option');
-              option.value = assignment.mentor.employeeId;
-              option.textContent = `${assignment.mentor.name} (Mentor)`;
-              option.selected = true;
-              mentorAssignmentsSelect.appendChild(option);
-            } else {
-              // If the mentee is unassigned, provide a list of mentors to choose from
-              fetch(`http://localhost:8080/newhireinfo/mentors`)
-                .then(response => response.json())
-                .then(mentors => {
-                  console.log('Select Mentor:', mentors)
-                  mentors.forEach(mentor => {
-                    const option = document.createElement('option');
-                    option.value = mentor.employeeId;
-                    option.textContent = `${mentor.name} (Mentor)`;
-                    mentorAssignmentsSelect.appendChild(option);
-                  });
-                });
-            }
+          .then(mentors => {
+            console.log('Mentors:', mentors);
+            const viewMentorAssignments = document.getElementById('viewMentorAssignments');
+            viewMentorAssignments.textContent = ''; // Clear existing list items
+
+            mentors.forEach(mentor => {
+              const li = document.createElement('li');
+              li.textContent = `Mentor: ${mentor.name} - ${mentor.employmentType} `;
+              viewMentorAssignments.appendChild(li);
+            });            
           });
       }
     });
@@ -141,7 +126,29 @@ function populateMentorAssignments(employeeId) {
 
 // Function to populate tasks for an employee
 function populateTasks(employeeId) {
+  fetch(`http://localhost:8080/newhireinfo/${employeeId}`)
+  .then(response => response.json())
+  .then(employee => {
+    const mentorAssignmentsSelect = document.getElementById('viewMentorAssignments');
+    mentorAssignmentsSelect.innerHTML = ''; // Clear existing options
+  //if the employee is a mentor, fetch and list their tasks
+  if (employee.isMentor) {
   fetch(`http://localhost:8080/peercodingtasks/mentor/${employeeId}/tasks`)
+      .then(response => response.json())
+      .then(tasks => {
+        console.log('Tasks:', tasks);
+        const tasksList = document.getElementById('viewTasks');
+        tasksList.innerHTML = ''; // Clear existing list items
+  
+        tasks.forEach(task => {
+          const li = document.createElement('li');
+          li.innerHTML = `Assignment: ${task.assigneeName}, Task ID: ${task.taskId}, Task URL: <a href="${task.taskUrl}" target="_blank">${task.taskUrl}</a>, Task Type: ${task.taskType}, Total Hours: ${task.totalHours}`;
+          tasksList.appendChild(li);
+        });
+      });
+    } else {
+      // If the employee is a mentee list their tasks
+      fetch(`http://localhost:8080/peercodingtasks/${employeeId}`)
       .then(response => response.json())
       .then(tasks => {
         console.log('Tasks:', tasks);
@@ -154,6 +161,9 @@ function populateTasks(employeeId) {
           tasksList.appendChild(li);
         });
       });
+      
+    }
+  });    
 }
 
   // Fetch all employees and display them in the table
@@ -185,25 +195,29 @@ function fetchAllEmployees() {
     });
 }
 
-// Function to create a new employee
+// Function to create a new employee including mentor assignment
 function createEmployee(employeeData) {
   fetch('http://localhost:8080/newhireinfo', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(employeeData)
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(employeeData)
   })
   .then(response => {
-    if (response.ok) {
-      fetchAllEmployees(); // Refresh the employee list
-      document.getElementById('newEmployeeForm').reset(); // Reset the form
-      $('#newEmployeeModal').modal('hide'); // Close the modal
-    } else {
-      // Handle errors
-      alert('Failed to create employee.');
-    }
-  });
+      if (response.ok) {
+          console.log('Employee created successfully');
+          fetchAllEmployees(); // Refresh the employee list
+          document.getElementById('newEmployeeForm').reset(); // Reset the form
+          $('#newEmployeeModal').modal('hide'); // Close the modal
+      } else {
+          response.json().then(data => {
+              console.log('Failed to create employee:', data.message);
+              alert('Failed to create employee: ' + data.message);
+          });
+      }
+  })
+  .catch(error => console.error('Error creating employee:', error));
 }
 
 // // Function to toggle mentor assignment section based on the 'isMentor' checkbox
@@ -235,54 +249,49 @@ function toggleMentorAssignmentSection() {
 }
 
 
-// Event listener for when the 'New Employee' modal is shown
+// Add this event listener when the 'New Employee' modal is shown
 $('#newEmployeeModal').on('show.bs.modal', function () {
-  // Clear the mentor dropdown
+  // Reset and populate the mentor dropdown if the employee is not a mentor
   const mentorSelect = document.getElementById('newMentorAssignments');
   mentorSelect.innerHTML = '<option value="">Select Mentor</option>';
-
-  // Fetch and populate mentors
-  fetchMentors();
+  if (!document.getElementById('newEmployeeIsMentor').checked) {
+      fetchMentors(); // This should fetch and populate the mentor dropdown
+  }
 });
 
-// Function to fetch mentors and populate the dropdown
+// Modify the fetchMentors function to handle auto-select logic if necessary
 function fetchMentors() {
   fetch('http://localhost:8080/newhireinfo/mentors')
-    .then(response => response.json())
-    .then(mentors => {
+  .then(response => response.json())
+  .then(mentors => {
       const mentorSelect = document.getElementById('newMentorAssignments');
-      mentorSelect.innerHTML = '<option value="">Select Mentor</option>'; // Clear existing options
-
-      // Filter out duplicate mentors based on employeeId
-      const uniqueMentors = mentors.filter((mentor, index, self) =>
-        index === self.findIndex((m) => (
-          m.employeeId === mentor.employeeId
-        ))
-      );
-
-      // Populate the dropdown with unique mentors
-      uniqueMentors.forEach(mentor => {
-        const option = document.createElement('option');
-        option.value = mentor.employeeId;
-        option.textContent = mentor.name;
-        mentorSelect.appendChild(option);
+      mentors.forEach(mentor => {
+          const option = document.createElement('option');
+          option.value = mentor.employeeId;
+          option.textContent = mentor.name;
+          mentorSelect.appendChild(option);
       });
-    })
-    .catch(error => console.error('Error fetching mentors:', error));
+      // Optionally auto-select a default mentor if required
+      // mentorSelect.value = 'defaultMentorId';
+  })
+  .catch(error => console.error('Error fetching mentors:', error));
 }
 
-// function to fetch mentees and populate the dropdown
+// Function to fetch mentees and populate the dropdown, auto-select first unassigned
 function fetchMentees() {
-    fetch('http://localhost:8080/newhireinfo/unassigned-mentees')
-        .then(response => response.json())
-        .then(data => {
-            const select = document.getElementById('newMentorAssignments');
-            data.forEach(mentee => {
-                let option = new Option(mentee.name, mentee.id);
-                select.appendChild(option);
-            });
-        })
-        .catch(error => console.error('Error fetching mentees:', error));
+  fetch('http://localhost:8080/newhireinfo/unassigned-mentees')
+    .then(response => response.json())
+    .then(mentees => {
+      const menteeSelect = document.getElementById('newMentorAssignments');
+      mentees.forEach((mentee, index) => {
+        const option = document.createElement('option');
+        option.value = mentee.employeeId;
+        option.textContent = mentee.name;
+        option.selected = index === 0; // Auto-select the first unassigned mentee
+        menteeSelect.appendChild(option);
+      });
+    })
+    .catch(error => console.error('Error fetching mentees:', error));
 }
 
 // Function to update an existing employee
