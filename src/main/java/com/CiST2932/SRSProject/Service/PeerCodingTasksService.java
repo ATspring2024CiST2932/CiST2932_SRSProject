@@ -42,7 +42,7 @@ public class PeerCodingTasksService {
         peerCodingTasksRepository.deleteById(id);
     }
 
-    public List<PeerCodingTasks> findByAssigneeEmployeeId(int employeeId) {
+    public List<PeerCodingTasks> getTasksByAssignee(int employeeId) {
         return peerCodingTasksRepository.findByAssigneeEmployeeId(employeeId);
     }
 
