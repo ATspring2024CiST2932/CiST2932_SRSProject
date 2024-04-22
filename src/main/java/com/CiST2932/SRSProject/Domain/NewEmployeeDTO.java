@@ -1,6 +1,8 @@
+//src/main/java/com/CiST2932/SRSProject/Domain/NewEmployeeDTO.java
 package com.CiST2932.SRSProject.Domain;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 public class NewEmployeeDTO {
     private int employeeId;
@@ -11,6 +13,8 @@ public class NewEmployeeDTO {
     private String passwordHash;
     private String employmentType;
     private Timestamp registrationDate;
+    private List<Integer> assignmentsAsMentorIds;
+    private List<Integer> assignmentsAsMenteeIds;
     private Integer mentorOrMenteeId; // This will store either mentor ID or mentee ID based on the role
     private int mentor;  // Mentor's employee ID
     private int mentee;  // Mentee's employee ID
@@ -65,6 +69,22 @@ public class NewEmployeeDTO {
 
     public void setRegistrationDate(Timestamp registrationDate) {
         this.registrationDate = registrationDate;
+    }
+
+    public List<Integer> getAssignmentsAsMentorIds() {
+        return assignmentsAsMentorIds;
+    }
+
+    public void setAssignmentsAsMentorIds(List<Integer> assignmentsAsMentorIds) {
+        this.assignmentsAsMentorIds = assignmentsAsMentorIds;
+    }
+
+    public List<Integer> getAssignmentsAsMenteeIds() {
+        return assignmentsAsMenteeIds;
+    }
+
+    public void setAssignmentsAsMenteeIds(List<Integer> assignmentsAsMenteeIds) {
+        this.assignmentsAsMenteeIds = assignmentsAsMenteeIds;
     }
 
     public Integer getMentorOrMenteeId() {

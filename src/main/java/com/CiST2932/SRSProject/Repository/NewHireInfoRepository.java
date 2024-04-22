@@ -32,6 +32,8 @@ public interface NewHireInfoRepository extends JpaRepository<NewHireInfo, Intege
     @Query("SELECT n.name FROM NewHireInfo n")
     List<String> findAllNames();
 
+    // @Modifying
+    // void archiveNewHireInfoById(@Param("employeeId") int employeeId);
 
 
 }

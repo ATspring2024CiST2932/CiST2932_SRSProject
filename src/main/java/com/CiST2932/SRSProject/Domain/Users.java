@@ -13,7 +13,7 @@ public class Users {
 
     @OneToOne
     @MapsId
-    @JoinColumn(name = "EmployeeID")
+    @JoinColumn(name = "EmployeeID", referencedColumnName = "EmployeeID")
     private NewHireInfo newHireInfo;
 
     @Column(name = "username")

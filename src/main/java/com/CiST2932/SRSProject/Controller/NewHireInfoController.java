@@ -47,12 +47,13 @@ public class NewHireInfoController {
     // }    
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteNewHireInfo(@PathVariable int id) {
-        if (newHireInfoService.findById(id).isPresent()) {
-            newHireInfoService.deleteById(id);
+    public ResponseEntity<?> deleteNewHireInfo(@PathVariable int id) {
+        try {
+            newHireInfoService.deleteNewHireInfoAndRelatedData(id);
             return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete new hire info: " + e.getMessage());
         }
-        return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/{mentorId}/mentees")
@@ -92,9 +93,9 @@ public class NewHireInfoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newHireInfo);
     }
     @PutMapping("/{id}")
-    public ResponseEntity<NewHireInfo> updateOrCreateEmployee(@PathVariable int id, @RequestBody NewEmployeeDTO employeeDTO) {
+    public ResponseEntity<NewHireInfo> updateOrCreateEmployee(@PathVariable int id, @RequestBody NewEmployeeDTO newEmployeeDTO) {
         try {
-            NewHireInfo updatedInfo = newHireInfoService.updateOrCreateEmployee(id, employeeDTO);
+            NewHireInfo updatedInfo = newHireInfoService.updateOrCreateEmployee(id, newEmployeeDTO);
             return ResponseEntity.ok(updatedInfo);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
