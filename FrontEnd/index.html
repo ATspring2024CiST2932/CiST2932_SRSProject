@@ -18,6 +18,19 @@
     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#taskForm">
         New Task <i class="bi bi-journal-plus"></i>
       </button>    
+        <!-- Employee Table -->
+        <table class="table table-striped mt-5" id="employeeTable">
+        <thead>
+            <tr>
+                <th>Employee ID</th>
+                <th>Name</th>
+                <th>Employment Type</th>
+                <th>Is Mentor</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="employeeData"></tbody>
+        </table>
         <!-- New Employee Modal -->
         <div class="modal fade" id="newEmployeeModal" tabindex="-1" aria-labelledby="newEmployeeModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -85,20 +98,6 @@
             </div>
             </div>
         </div>
-
-        <!-- Employee Table -->
-        <table class="table table-striped mt-5" id="employeeTable">
-            <thead>
-                <tr>
-                    <th>Employee ID</th>
-                    <th>Name</th>
-                    <th>Employment Type</th>
-                    <th>Is Mentor</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="employeeData"></tbody>
-        </table>
         <!-- View Employee Modal -->
         <div class="modal fade" id="viewEmployeeModal" tabindex="-1" aria-labelledby="viewEmployeeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -181,7 +180,6 @@
                 </div>
             </div>
         </div>
-
         <!-- Delete Employee Modal -->
         <div class="modal fade" id="deleteEmployeeModal" tabindex="-1" aria-labelledby="deleteEmployeeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -197,46 +195,44 @@
                 </div>
             </div>
         </div>
-
-     <!-- New Task Modal -->
-                <div class="modal fade" id="taskForm" tabindex="-1" aria-labelledby="newTaskModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-lg">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h4 class="modal-title">Complete Task Form</h4>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                          <form id="taskFormElement" method="post">
-                            <div class="mb-3">
-                              <label for="taskUrl" class="form-label">Task URL:</label>
-                              <input type="text" id="taskUrl" name="taskUrl" required class="form-control">
-                            </div>
-                            <div class="mb-3">
-                              <label for="taskNumber" class="form-label">Task Number:</label>
-                              <input type="text" id="taskNumber" name="taskNumber" required class="form-control">
-                            </div>
-                            <div class="mb-3">
-                              <label for="taskType" class="form-label">Task Type:</label>
-                              <input type="text" id="taskType" name="taskType" required class="form-control">
-                            </div>
-                            <div class="mb-3">
-                              <label for="totalHours" class="form-label">Total Hours:</label>
-                              <input type="number" step="0.1" id="totalHours" name="totalHours" required class="form-control">
-                            </div>
-                            <div class="mb-3">
-                              <label for="assigneeName" class="form-label">Assignee:</label>
-                              <select id="assigneeName" name="assigneeName" required class="form-control">
-                                <option value="">Select Assignee</option>
-                              </select>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
+        <!-- New Task Modal -->
+        <div class="modal fade" id="taskForm" tabindex="-1" aria-labelledby="newTaskModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Complete Task Form</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="taskFormElement" method="post">
+                <div class="mb-3">
+                    <label for="taskUrl" class="form-label">Task URL:</label>
+                    <input type="text" id="taskUrl" name="taskUrl" required class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="taskNumber" class="form-label">Task Number:</label>
+                    <input type="text" id="taskNumber" name="taskNumber" required class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="taskType" class="form-label">Task Type:</label>
+                    <input type="text" id="taskType" name="taskType" required class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="totalHours" class="form-label">Total Hours:</label>
+                    <input type="number" step="0.1" id="totalHours" name="totalHours" required class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="assigneeName" class="form-label">Assignee:</label>
+                    <select id="assigneeName" name="assigneeName" required class="form-control">
+                    <option value="">Select Assignee</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+            </div>
+        </div>
+        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -247,13 +243,15 @@
     <script src="https://cdn.jsdelivr.net/npm/@babel/polyfill@7.12.1/dist/polyfill.min.js"></script>
     <!-- React Script -->
     <script type="module" src="/src/main.jsx" defer></script>
-
-
     <!-- Vanilla JavaScript Script -->
     <script src="App.js" type="module"></script>
-    <stript src="src/TaskModal.js" type="module"></script>
+    <script src="taskFormScript.js"></script>
     <!-- Bootstrap Bundle -->
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+  </body>
+  </html>
+  
