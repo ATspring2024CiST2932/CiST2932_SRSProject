@@ -94,9 +94,7 @@ public class NewHireInfoService {
         newHireInfo.setIsMentor(newEmployeeDTO.getIsMentor());
         newHireInfo.setEmploymentType(newEmployeeDTO.getEmploymentType());
         newHireInfo.setEmployeeId(newEmployeeDTO.getEmployeeId());
-        newHireInfo.setAssignmentsAsMentor(new java.util.ArrayList<>());
-        newHireInfo.setAssignmentsAsMentee(new java.util.ArrayList<>());
-    
+        
         // Save to get the generated ID
         NewHireInfo savedNewHireInfo = newHireInfoRepository.save(newHireInfo);
         
@@ -116,51 +114,39 @@ public class NewHireInfoService {
         }
     
 // // Handle mentor or mentee assignment
-// if (newEmployeeDTO.getMentorOrMenteeId() != null) {
-//     NewHireInfo mentorOrMentee = newHireInfoRepository.findById(newEmployeeDTO.getMentorOrMenteeId())
-//         .orElseThrow(() -> new RuntimeException("Mentor/Mentee not found"));
+    if (newEmployeeDTO.getIsMentor()) {
+        // This new employee is a mentor; we should add mentees.
+        // Assuming mentees IDs are passed in some form, like a list in NewEmployeeDTO.
+        for (Integer menteeId : newEmployeeDTO.getMenteeIds()) {
+            assignMentee(savedNewHireInfo, menteeId);
+        }
+    } else {
+        // This new employee is a mentee; assign a mentor to them.
+        assignMentor(savedNewHireInfo, newEmployeeDTO.getMentorId());
+    }
 
-//     MentorAssignments mentorAssignment = new MentorAssignments();
-
-//     if (savedNewHireInfo.getIsMentor()) {
-//         // New hire is a mentor, assign them a mentee
-//         mentorAssignment.setMentor(savedNewHireInfo);
-//         mentorAssignment.setMentee(mentorOrMentee);
-//         savedNewHireInfo.getAssignmentsAsMentor().add(mentorAssignment);
-//         mentorOrMentee.getAssignmentsAsMentee().add(mentorAssignment);
-//     } else {
-//         // New hire is a mentee, assign them a mentor
-//         mentorAssignment.setMentor(mentorOrMentee);
-//         mentorAssignment.setMentee(savedNewHireInfo);
-//         mentorOrMentee.getAssignmentsAsMentor().add(mentorAssignment);
-//         savedNewHireInfo.getAssignmentsAsMentee().add(mentorAssignment);
-//     }
-//     mentorAssignmentsRepository.save(mentorAssignment);
-// }
-    
-//         return savedNewHireInfo;
-//     }
+    return savedNewHireInfo;
 
 // Handle mentorship assignment
-if (newEmployeeDTO.getMentor() != 0) {
-    MentorAssignments mentorAssignment = new MentorAssignments();
-    NewHireInfo mentor = newHireInfoRepository.findById(newEmployeeDTO.getMentor()).orElse(null);
-    mentorAssignment.setMentor(mentor);
-    mentorAssignment.setMentee(savedNewHireInfo);
+// if (newEmployeeDTO.getMentor() != 0) {
+//     MentorAssignments mentorAssignment = new MentorAssignments();
+//     NewHireInfo mentor = newHireInfoRepository.findById(newEmployeeDTO.getMentor()).orElse(null);
+//     mentorAssignment.setMentor(mentor);
+//     mentorAssignment.setMentee(savedNewHireInfo);
   
-    if (mentor != null) {
-        mentorAssignment.setMentor(mentor);
-        mentorAssignment.setMentee(savedNewHireInfo);
-        mentorAssignmentsRepository.save(mentorAssignment);
-        System.out.println("Mentor Assignment Saved: Mentor ID - " + mentor.getEmployeeId() + " Mentee ID - " + savedNewHireInfo.getEmployeeId());
-    } else {
-        System.out.println("Mentor ID not found: " + newEmployeeDTO.getMentor());
-    }
+//     if (mentor != null) {
+//         mentorAssignment.setMentor(mentor);
+//         mentorAssignment.setMentee(savedNewHireInfo);
+//         mentorAssignmentsRepository.save(mentorAssignment);
+//         System.out.println("Handle mentorship assignment'Mentor Assignment Saved: Mentor ID - " + mentor.getEmployeeId() + " Mentee ID - " + savedNewHireInfo.getEmployeeId());
+//     } else {
+//         System.out.println("Mentor ID not found: " + newEmployeeDTO.getMentor());
+//     }
     
   
-    // Save the mentorship assignment
-    mentorAssignmentsRepository.save(mentorAssignment);
-  }
+//     // Save the mentorship assignment
+//     mentorAssignmentsRepository.save(mentorAssignment);
+//   }
   
     // print out the username
     System.out.println("Username: " + newEmployeeDTO.getUsername());
@@ -168,11 +154,22 @@ if (newEmployeeDTO.getMentor() != 0) {
     newHireInfo = newHireInfoRepository.findById(newHireInfo.getEmployeeId()).get();
     System.out.println("Employee ID: " + newHireInfo.getEmployeeId());
   
-  
     // Save the NewHireInfo entity, cascade should save Users too
     return newHireInfoRepository.save(newHireInfo);
     
   }
+
+  private void assignMentee(NewHireInfo mentor, Integer menteeId) {
+    NewHireInfo mentee = newHireInfoRepository.findById(menteeId).orElseThrow(() -> new RuntimeException("Mentee not found"));
+    MentorAssignments assignment = new MentorAssignments(mentor, mentee);
+    mentorAssignmentsRepository.save(assignment);
+}
+
+private void assignMentor(NewHireInfo mentee, Integer mentorId) {
+    NewHireInfo mentor = newHireInfoRepository.findById(mentorId).orElseThrow(() -> new RuntimeException("Mentor not found"));
+    MentorAssignments assignment = new MentorAssignments(mentor, mentee);
+    mentorAssignmentsRepository.save(assignment);
+}
         
     @Transactional
     public NewHireInfo updateOrCreateEmployee(NewEmployeeDTO newEmployeeDTO) {

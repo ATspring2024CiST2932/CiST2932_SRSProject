@@ -261,7 +261,7 @@ $('#newEmployeeModal').on('show.bs.modal', function () {
 
 // Modify the fetchMentors function to handle auto-select logic if necessary
 function fetchMentors() {
-  fetch('http://localhost:8080/newhireinfo/mentors')
+  fetch('http://localhost:8080/newhireinfo/fetchMentors')
   .then(response => response.json())
   .then(mentors => {
       const mentorSelect = document.getElementById('newMentorAssignments');
@@ -279,7 +279,7 @@ function fetchMentors() {
 
 // Function to fetch mentees and populate the dropdown, auto-select first unassigned
 function fetchMentees() {
-  fetch('http://localhost:8080/newhireinfo/unassigned-mentees')
+  fetch('http://localhost:8080/newhireinfo/fetchMentees')
     .then(response => response.json())
     .then(mentees => {
       const menteeSelect = document.getElementById('newMentorAssignments');

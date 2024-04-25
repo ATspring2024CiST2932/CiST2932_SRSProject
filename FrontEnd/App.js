@@ -1,5 +1,3 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-
 // Document ready function
 document.addEventListener('DOMContentLoaded', function () {
     console.log("Initializing application...");
@@ -73,6 +71,8 @@ function attachEventListeners() {
         mentees.forEach(mentee => {
           const option = new Option(mentee.name, mentee.employeeId);
           assignmentsDropdown.appendChild(option);
+          console.log("Option: ", option);
+          console.log("Assignments Dropdown: ", assignmentsDropdown);
         });
       }).catch(error => console.error('Error fetching mentees:', error));
     } else {
@@ -116,7 +116,7 @@ function attachEventListeners() {
     const employmentType = document.getElementById(`${suffix}EmployeeEmploymentType`);
     const username = document.getElementById(`${suffix}EmployeeUsername`);
     const password = document.getElementById(`${suffix}EmployeePassword`);
-    const registrationDate = document.getElementById(`${suffix}EmployeeRegistrationDate`);
+    // const registrationDate = document.getElementById(`${suffix}EmployeeRegistrationDate`);
     const mentorAssignments = document.getElementById(`${suffix}MentorAssignments`);
     const menteeAssignments = document.getElementById(`${suffix}MenteeAssignments`);
 
@@ -134,11 +134,11 @@ function attachEventListeners() {
       employmentType: employmentType.value,
       username: username.value,
       password: password.value,
-      registrationDate: registrationDate.value,
+      // registrationDate: registrationDate.value,
       mentor: isEdit ? document.getElementById('editMentorAssignments').value : null,
       mentee: isEdit ? document.getElementById('editMenteeAssignments').value : null
-
     };
+    console.log("Employee Data: ", employeeData);
   }
 
 // handleTableClick(event)
@@ -278,7 +278,7 @@ function editEmployee(employeeId) {
       $('#editEmployeeModal').modal('show');
 
       // Show the edit modal
-      // new bootstrap.Modal(document.getElementById('editEmployeeModal')).show();
+      new bootstrap.Modal(document.getElementById('editEmployeeModal')).show();
     })
     .catch(error => console.error('Error fetching employee details:', error));
 }
@@ -311,7 +311,7 @@ function deleteEmployee(employeeId) {
 // fetchMentors()
 // Fetches mentor list from the server and populates the mentor dropdown.
 function fetchMentors() {
-  fetch('http://localhost:8080/newhireinfo/mentors')
+  fetch('http://localhost:8080/newhireinfo/fetchMentors')
   .then(response => response.json())
   .then(mentors => {
       const mentorSelect = document.getElementById('newMentorAssignments');
@@ -330,7 +330,7 @@ function fetchMentors() {
 // fetchMentees()
 // Retrieves mentee list from the server and updates the mentee dropdown.
 function fetchMentees() {
-  fetch('http://localhost:8080/newhireinfo/unassigned-mentees')
+  fetch('http://localhost:8080/newhireinfo/fetchMentees')
     .then(response => response.json())
     .then(mentees => {
       const menteeSelect = document.getElementById('newMentorAssignments');

@@ -68,12 +68,12 @@ public class NewHireInfoController {
         return ResponseEntity.ok(mentor);
     }
 
-    @GetMapping("/mentors")
+    @GetMapping("/fetchMentors")
     public ResponseEntity<List<NewHireInfo>> getAllMentors() {
         List<NewHireInfo> mentors = newHireInfoService.findAllMentors();
         return ResponseEntity.ok(mentors);
     }
-    @GetMapping("/unassigned-mentees")
+    @GetMapping("/fetchMentees")
     public ResponseEntity<List<NewHireInfo>> getUnassignedMentees() {
         List<NewHireInfo> unassignedMentees = newHireInfoService.findUnassignedMentees();
         if (unassignedMentees.isEmpty()) {
