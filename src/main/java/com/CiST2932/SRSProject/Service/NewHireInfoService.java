@@ -150,48 +150,36 @@ if (newEmployeeDTO.getMentorOrMenteeId() != null && newEmployeeDTO.getMentorOrMe
     return newHireInfoRepository.save(newHireInfo);
 }
     
-    @Transactional
-    public NewHireInfo updateOrCreateEmployee(NewEmployeeDTO newEmployeeDTO) {
-        NewHireInfo newHireInfo = newHireInfoRepository.findById(newEmployeeDTO.getEmployeeId())
-                                        .orElse(new NewHireInfo());
-    
-        newHireInfo.setName(newEmployeeDTO.getName());
-        newHireInfo.setIsMentor(newEmployeeDTO.getIsMentor());
-        newHireInfo.setEmploymentType(newEmployeeDTO.getEmploymentType());
-    
-        if (newEmployeeDTO.getUsername() != null && newEmployeeDTO.getPasswordHash() != null) {
-            Users user = Optional.ofNullable(newHireInfo.getUser()).orElse(new Users());
-            user.setNewHireInfo(newHireInfo);
-            user.setUsername(newEmployeeDTO.getUsername());
-            user.setPasswordHash(newEmployeeDTO.getPasswordHash());
-            user.setEmail(newEmployeeDTO.getEmail());
-            user.setRegistrationDate(new Timestamp(System.currentTimeMillis()));
-            newHireInfo.setUser(user);
-            usersRepository.save(user);
-        }
-    
-        if (newEmployeeDTO.getMentorOrMenteeId() != 0) {
-            MentorAssignments mentorAssignment = new MentorAssignments();
-            NewHireInfo mentor = newHireInfoRepository.findById(newEmployeeDTO.getMentorOrMenteeId()).orElse(null);
-            if (mentor != null) {
-                if (newHireInfo.getIsMentor()) {
-                    mentorAssignment.setMentor(newHireInfo);
-                    mentorAssignment.setMentee(mentor);
-                } else {
-                    mentorAssignment.setMentor(mentor);
-                    mentorAssignment.setMentee(newHireInfo);
-                }
-                mentorAssignmentsRepository.save(mentorAssignment);
-            } else {
-                System.out.println("Mentor ID not found: " + newEmployeeDTO.getMentor());
-            }
-        }
-    
-        NewHireInfo savedNewHireInfo = newHireInfoRepository.save(newHireInfo);
-        System.out.println("Saved or updated New Hire Info: " + savedNewHireInfo);
-        return savedNewHireInfo;
+@Transactional
+public NewHireInfo updateOrCreateEmployee(NewEmployeeDTO newEmployeeDTO) {
+    NewHireInfo newHireInfo = newHireInfoRepository.findById(newEmployeeDTO.getEmployeeId())
+                                                    .orElseGet(() -> new NewHireInfo());
+    updateNewHireInfoFromDto(newHireInfo, newEmployeeDTO);
+    handleUserUpdate(newHireInfo, newEmployeeDTO);
+    handleMentorOrMenteeAssignment(newHireInfo, newEmployeeDTO);
+    return newHireInfoRepository.save(newHireInfo);
+}
+
+private void handleUserUpdate(NewHireInfo newHireInfo, NewEmployeeDTO newEmployeeDTO) {
+    Users user = newHireInfo.getUser();
+    if (user == null) {
+        user = new Users();
+        user.setNewHireInfo(newHireInfo);
     }
-    
+    user.setUsername(newEmployeeDTO.getUsername());
+    user.setEmail(newEmployeeDTO.getEmail());
+    user.setPasswordHash(newEmployeeDTO.getPasswordHash());
+    user.setRegistrationDate(new Timestamp(System.currentTimeMillis()));
+    usersRepository.save(user);
+    newHireInfo.setUser(user);
+}
+
+private void updateNewHireInfoFromDto(NewHireInfo newHireInfo, NewEmployeeDTO dto) {
+    newHireInfo.setName(dto.getName());
+    newHireInfo.setIsMentor(dto.getIsMentor());
+    newHireInfo.setEmploymentType(dto.getEmploymentType());
+}
+
     private void handleMentorOrMenteeAssignment(NewHireInfo newHireInfo, NewEmployeeDTO newEmployeeDTO) {
         Optional<NewHireInfo> mentorOrMenteeOpt = newHireInfoRepository.findById(newEmployeeDTO.getMentorOrMenteeId());
         if (mentorOrMenteeOpt.isPresent()) {
@@ -255,37 +243,40 @@ public NewEmployeeDTO getEmployeeDetails(int employeeId) {
     }
 
     if (employee.getIsMentor()) {
+        // Assume that each mentor has multiple mentees
         List<Integer> menteeIds = newHireInfoRepository.findMenteesByMentorId(employeeId)
-            .stream()
-            .map(NewHireInfo::getEmployeeId)
-            .collect(Collectors.toList());
-        dto.setAssignmentsAsMentorIds(menteeIds);
+        .stream()
+        .map(NewHireInfo::getEmployeeId)
+        .collect(Collectors.toList());
+    dto.setAssignmentsAsMentorIds(menteeIds); // If multiple, pick first or adjust as needed
     } else {
-        Integer mentorId = newHireInfoRepository.findMentorByMenteeId(employeeId).orElse(null);
-        dto.setMentorOrMenteeId(mentorId);
-    }
-
-    List<TaskDTO> tasks = peerCodingTasksRepository.findByAssigneeId(employeeId)
-            .stream()
-            .map(this::convertToTaskDto)
-            .collect(Collectors.toList());
-    dto.setTasks(tasks);
-
-    return dto;
-}
-
-private TaskDTO convertToTaskDto(PeerCodingTasks task) {
-    TaskDTO dto = new TaskDTO();
-    dto.setTaskId(task.getTaskId());
-    dto.setTaskUrl(task.getTaskUrl());
-    dto.setTaskNumber(task.getTaskNumber());
-    dto.setTaskType(task.getTaskType());
-    dto.setTotalHours(task.getTotalHours());
-    if (task.getAssignee() != null) {
-        dto.setAssigneeName(task.getAssignee().getName());
-    }
-    return dto;
-}
+        // Assume each mentee has one mentor
+        Optional<Integer> mentorId = newHireInfoRepository.findMentorByMenteeId(employeeId)
+        .stream()
+        .map(NewHireInfo::getEmployeeId)
+        .findFirst(); // Only get the first (or only) mentor ID
+            dto.setMentorOrMenteeId(mentorId.orElse(null)); // Set the mentor ID in the DTO, handling null if not found
+        }
+        
+        List<TaskDTO> tasks = peerCodingTasksRepository.findByAssigneeId(employeeId)
+                .stream()
+                .map(this::convertToTaskDto)
+                .collect(Collectors.toList());
+        dto.setTasks(tasks);
+        
+        return dto;
+        }
+        
+        private TaskDTO convertToTaskDto(PeerCodingTasks task) {
+        TaskDTO dto = new TaskDTO();
+        dto.setTaskId(task.getTaskId());
+        dto.setTaskUrl(task.getTaskUrl());
+        dto.setTaskNumber(task.getTaskNumber());
+        dto.setTaskType(task.getTaskType());
+        dto.setTotalHours(task.getTotalHours());
+        dto.setAssigneeName(task.getAssignee().getName()); // Assuming Task has a reference to Assignee which is an Employee
+        return dto;
+        }
 
 }
 

@@ -12,18 +12,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-@SpringBootApplication
 
 @Entity
 @Table(name = "newhireinfo")

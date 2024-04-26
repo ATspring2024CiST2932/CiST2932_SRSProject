@@ -21,14 +21,17 @@ public class NewHireInfoController {
 
     @Autowired
     private NewHireInfoService newHireInfoService;
+    @Autowired
+    private ModelMapper modelMapper;
+    
     @GetMapping
-    public ResponseEntity<List<NewHireInfo>> getAllNewHireInfo() {
-        List<NewHireInfo> newHireInfoList = newHireInfoService.findAll();
-        return ResponseEntity.ok(newHireInfoList);
+    public ResponseEntity<List<NewHireInfo>> getAllNewEmployeeDTO() {
+        List<NewHireInfo> getAllNewEmployeeDTOList = newHireInfoService.findAll();
+        return ResponseEntity.ok(getAllNewEmployeeDTOList);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<NewHireInfo> getNewHireInfoById(@PathVariable int id) {
+    public ResponseEntity<NewHireInfo> getAllNewEmployeeDTOById(@PathVariable int id) {
         return newHireInfoService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -91,6 +94,15 @@ public class NewHireInfoController {
         NewHireInfo newHireInfo = newHireInfoService.createNewHireInfo(newEmployeeDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(newHireInfo);
     }
+//     @PutMapping("/{id}")
+//     public ResponseEntity<NewHireInfo> updateOrCreateEmployee(@PathVariable int id, @RequestBody NewEmployeeDTO newEmployeeDTO) {
+//         try {
+//             NewHireInfo updatedInfo = newHireInfoService.updateOrCreateEmployee(id, newEmployeeDTO);
+//             return ResponseEntity.ok(updatedInfo);
+//         } catch (Exception e) {
+//             return ResponseEntity.badRequest().build();
+//         }
+// }
 
     @GetMapping("/{employeeId}/details")
     public ResponseEntity<?> getEmployeeDetails(@PathVariable int employeeId) {
