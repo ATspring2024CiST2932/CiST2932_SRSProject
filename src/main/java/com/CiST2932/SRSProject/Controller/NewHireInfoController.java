@@ -21,9 +21,6 @@ public class NewHireInfoController {
 
     @Autowired
     private NewHireInfoService newHireInfoService;
-    @Autowired
-    private ModelMapper modelMapper;
-
     @GetMapping
     public ResponseEntity<List<NewHireInfo>> getAllNewHireInfo() {
         List<NewHireInfo> newHireInfoList = newHireInfoService.findAll();
@@ -56,23 +53,25 @@ public class NewHireInfoController {
         }
     }
 
+    // fetch mentees by mentor id
     @GetMapping("/{mentorId}/mentees")
     public ResponseEntity<List<NewHireInfo>> getMenteesByMentor(@PathVariable int mentorId) {
         List<NewHireInfo> mentees = newHireInfoService.findMenteesByMentorId(mentorId);
         return ResponseEntity.ok(mentees);
     }
-
+    // fetch mentor by mentee id
     @GetMapping("/{menteeId}/mentor")
     public ResponseEntity<List<NewHireInfo>> getMentorByMenteeId(@PathVariable int menteeId) {
         List<NewHireInfo> mentor = newHireInfoService.findMentorByMenteeId(menteeId);
         return ResponseEntity.ok(mentor);
     }
-
+    // fetch list of mentors
     @GetMapping("/fetchMentors")
     public ResponseEntity<List<NewHireInfo>> getAllMentors() {
         List<NewHireInfo> mentors = newHireInfoService.findAllMentors();
         return ResponseEntity.ok(mentors);
     }
+    // fetch list of unassigned mentees
     @GetMapping("/fetchMentees")
     public ResponseEntity<List<NewHireInfo>> getUnassignedMentees() {
         List<NewHireInfo> unassignedMentees = newHireInfoService.findUnassignedMentees();
@@ -92,16 +91,19 @@ public class NewHireInfoController {
         NewHireInfo newHireInfo = newHireInfoService.createNewHireInfo(newEmployeeDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(newHireInfo);
     }
-    @PutMapping("/{id}")
-    public ResponseEntity<NewHireInfo> updateOrCreateEmployee(@PathVariable int id, @RequestBody NewEmployeeDTO newEmployeeDTO) {
+
+    @GetMapping("/{employeeId}/details")
+    public ResponseEntity<?> getEmployeeDetails(@PathVariable int employeeId) {
         try {
-            NewHireInfo updatedInfo = newHireInfoService.updateOrCreateEmployee(id, newEmployeeDTO);
-            return ResponseEntity.ok(updatedInfo);
+            NewEmployeeDTO employeeDetails = newHireInfoService.getEmployeeDetails(employeeId);
+            if (employeeDetails != null) {
+                return ResponseEntity.ok(employeeDetails);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
         } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving employee details: " + e.getMessage());
         }
-}
-
-
+    }
 
 }

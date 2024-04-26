@@ -56,7 +56,7 @@ public class NewHireInfo {
     private List<PeerCodingTasks> assignedTasks = new ArrayList<>();
 
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "newHireInfo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
     private Users user;
 

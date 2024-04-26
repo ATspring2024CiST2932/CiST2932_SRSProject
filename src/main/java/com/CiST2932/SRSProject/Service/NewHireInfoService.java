@@ -6,6 +6,8 @@ import com.CiST2932.SRSProject.Domain.MentorAssignments;
 import com.CiST2932.SRSProject.Domain.NewEmployeeDTO;
 import com.CiST2932.SRSProject.Domain.NewHireInfo;
 import com.CiST2932.SRSProject.Domain.NewHireInfoDTO;
+import com.CiST2932.SRSProject.Domain.PeerCodingTasks;
+import com.CiST2932.SRSProject.Domain.TaskDTO;
 import com.CiST2932.SRSProject.Domain.Users;
 import com.CiST2932.SRSProject.Repository.NewHireInfoRepository;
 import com.CiST2932.SRSProject.Repository.PeerCodingTasksRepository;
@@ -19,7 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.ResourceAccessException;
 import java.util.List;
+import java.util.stream.Stream;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.sql.Timestamp;
 
 @Service
@@ -94,7 +98,9 @@ public class NewHireInfoService {
         newHireInfo.setIsMentor(newEmployeeDTO.getIsMentor());
         newHireInfo.setEmploymentType(newEmployeeDTO.getEmploymentType());
         newHireInfo.setEmployeeId(newEmployeeDTO.getEmployeeId());
-        
+        newHireInfo.setAssignmentsAsMentor(new java.util.ArrayList<>());
+        newHireInfo.setAssignmentsAsMentee(new java.util.ArrayList<>());
+    
         // Save to get the generated ID
         NewHireInfo savedNewHireInfo = newHireInfoRepository.save(newHireInfo);
         
@@ -113,40 +119,25 @@ public class NewHireInfoService {
             usersRepository.save(user);
         }
     
-// // Handle mentor or mentee assignment
-    if (newEmployeeDTO.getIsMentor()) {
-        // This new employee is a mentor; we should add mentees.
-        // Assuming mentees IDs are passed in some form, like a list in NewEmployeeDTO.
-        for (Integer menteeId : newEmployeeDTO.getMenteeIds()) {
-            assignMentee(savedNewHireInfo, menteeId);
-        }
-    } else {
-        // This new employee is a mentee; assign a mentor to them.
-        assignMentor(savedNewHireInfo, newEmployeeDTO.getMentorId());
-    }
-
-    return savedNewHireInfo;
-
 // Handle mentorship assignment
-// if (newEmployeeDTO.getMentor() != 0) {
-//     MentorAssignments mentorAssignment = new MentorAssignments();
-//     NewHireInfo mentor = newHireInfoRepository.findById(newEmployeeDTO.getMentor()).orElse(null);
-//     mentorAssignment.setMentor(mentor);
-//     mentorAssignment.setMentee(savedNewHireInfo);
-  
-//     if (mentor != null) {
-//         mentorAssignment.setMentor(mentor);
-//         mentorAssignment.setMentee(savedNewHireInfo);
-//         mentorAssignmentsRepository.save(mentorAssignment);
-//         System.out.println("Handle mentorship assignment'Mentor Assignment Saved: Mentor ID - " + mentor.getEmployeeId() + " Mentee ID - " + savedNewHireInfo.getEmployeeId());
-//     } else {
-//         System.out.println("Mentor ID not found: " + newEmployeeDTO.getMentor());
-//     }
+if (newEmployeeDTO.getMentorOrMenteeId() != null && newEmployeeDTO.getMentorOrMenteeId() != 0) {
+    MentorAssignments mentorAssignment = new MentorAssignments();
+    // Assuming newEmployeeDTO.getMentorOrMenteeId() returns the mentor's ID
+    NewHireInfo mentor = newHireInfoRepository.findById(newEmployeeDTO.getMentorOrMenteeId()).orElse(null);
+    mentorAssignment.setMentor(mentor);
+    mentorAssignment.setMentee(savedNewHireInfo);
+
+    if (mentor != null) {
+        mentorAssignmentsRepository.save(mentorAssignment);
+        System.out.println("Mentor Assignment Saved: Mentor ID - " + mentor.getEmployeeId() + ", Mentee ID - " + savedNewHireInfo.getEmployeeId());
+    } else {
+        System.out.println("Mentor ID not found: " + newEmployeeDTO.getMentorOrMenteeId());
+    }
     
   
-//     // Save the mentorship assignment
-//     mentorAssignmentsRepository.save(mentorAssignment);
-//   }
+    // Save the mentorship assignment
+    mentorAssignmentsRepository.save(mentorAssignment);
+  }
   
     // print out the username
     System.out.println("Username: " + newEmployeeDTO.getUsername());
@@ -154,23 +145,11 @@ public class NewHireInfoService {
     newHireInfo = newHireInfoRepository.findById(newHireInfo.getEmployeeId()).get();
     System.out.println("Employee ID: " + newHireInfo.getEmployeeId());
   
+  
     // Save the NewHireInfo entity, cascade should save Users too
     return newHireInfoRepository.save(newHireInfo);
+}
     
-  }
-
-  private void assignMentee(NewHireInfo mentor, Integer menteeId) {
-    NewHireInfo mentee = newHireInfoRepository.findById(menteeId).orElseThrow(() -> new RuntimeException("Mentee not found"));
-    MentorAssignments assignment = new MentorAssignments(mentor, mentee);
-    mentorAssignmentsRepository.save(assignment);
-}
-
-private void assignMentor(NewHireInfo mentee, Integer mentorId) {
-    NewHireInfo mentor = newHireInfoRepository.findById(mentorId).orElseThrow(() -> new RuntimeException("Mentor not found"));
-    MentorAssignments assignment = new MentorAssignments(mentor, mentee);
-    mentorAssignmentsRepository.save(assignment);
-}
-        
     @Transactional
     public NewHireInfo updateOrCreateEmployee(NewEmployeeDTO newEmployeeDTO) {
         NewHireInfo newHireInfo = newHireInfoRepository.findById(newEmployeeDTO.getEmployeeId())
@@ -191,9 +170,9 @@ private void assignMentor(NewHireInfo mentee, Integer mentorId) {
             usersRepository.save(user);
         }
     
-        if (newEmployeeDTO.getMentor() != 0) {
+        if (newEmployeeDTO.getMentorOrMenteeId() != 0) {
             MentorAssignments mentorAssignment = new MentorAssignments();
-            NewHireInfo mentor = newHireInfoRepository.findById(newEmployeeDTO.getMentor()).orElse(null);
+            NewHireInfo mentor = newHireInfoRepository.findById(newEmployeeDTO.getMentorOrMenteeId()).orElse(null);
             if (mentor != null) {
                 if (newHireInfo.getIsMentor()) {
                     mentorAssignment.setMentor(newHireInfo);
@@ -254,9 +233,60 @@ private void assignMentor(NewHireInfo mentee, Integer mentorId) {
     }
 }
 
-    public NewHireInfo updateOrCreateEmployee(int id, NewEmployeeDTO employeeDTO) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateOrCreateEmployee'");
+@Transactional(readOnly = true)
+public NewEmployeeDTO getEmployeeDetails(int employeeId) {
+    NewHireInfo employee = newHireInfoRepository.findById(employeeId).orElse(null);
+    if (employee == null) {
+        return null;
+    }
+    NewEmployeeDTO dto = new NewEmployeeDTO();
+    dto.setEmployeeId(employee.getEmployeeId());
+    dto.setName(employee.getName());
+    dto.setIsMentor(employee.getIsMentor());
+    dto.setEmploymentType(employee.getEmploymentType());
+
+    // Access the Users entity through the NewHireInfo entity
+    Users user = employee.getUser();
+    if (user != null) {
+        dto.setUsername(user.getUsername());
+        dto.setEmail(user.getEmail());
+        dto.setPasswordHash(user.getPasswordHash());
+        dto.setRegistrationDate(user.getRegistrationDate());
     }
 
+    if (employee.getIsMentor()) {
+        List<Integer> menteeIds = newHireInfoRepository.findMenteesByMentorId(employeeId)
+            .stream()
+            .map(NewHireInfo::getEmployeeId)
+            .collect(Collectors.toList());
+        dto.setAssignmentsAsMentorIds(menteeIds);
+    } else {
+        Integer mentorId = newHireInfoRepository.findMentorByMenteeId(employeeId).orElse(null);
+        dto.setMentorOrMenteeId(mentorId);
+    }
+
+    List<TaskDTO> tasks = peerCodingTasksRepository.findByAssigneeId(employeeId)
+            .stream()
+            .map(this::convertToTaskDto)
+            .collect(Collectors.toList());
+    dto.setTasks(tasks);
+
+    return dto;
 }
+
+private TaskDTO convertToTaskDto(PeerCodingTasks task) {
+    TaskDTO dto = new TaskDTO();
+    dto.setTaskId(task.getTaskId());
+    dto.setTaskUrl(task.getTaskUrl());
+    dto.setTaskNumber(task.getTaskNumber());
+    dto.setTaskType(task.getTaskType());
+    dto.setTotalHours(task.getTotalHours());
+    if (task.getAssignee() != null) {
+        dto.setAssigneeName(task.getAssignee().getName());
+    }
+    return dto;
+}
+
+}
+
+    

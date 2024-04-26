@@ -17,6 +17,9 @@ public interface PeerCodingTasksRepository extends JpaRepository<PeerCodingTasks
     @Query("SELECT t FROM PeerCodingTasks t WHERE t.assignee.employeeId = :employeeId") 
     List<PeerCodingTasks> findByAssigneeEmployeeId(int employeeId);
 
+        // Find tasks by assignee's employee ID
+        List<PeerCodingTasks> findByAssigneeId(int assigneeId);
+
     @Query("SELECT t FROM PeerCodingTasks t WHERE t.assignee.employeeId = :mentorId OR t.assignee.employeeId IN (SELECT ma.mentee.employeeId FROM MentorAssignments ma WHERE ma.mentor.employeeId = :mentorId)")
     List<PeerCodingTasks> findTasksByMentorAndMentees(@Param("mentorId") int mentorId);
     
