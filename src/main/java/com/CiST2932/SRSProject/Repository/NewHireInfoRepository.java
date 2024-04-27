@@ -17,11 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface NewHireInfoRepository extends JpaRepository<NewHireInfo, Integer> {
-    @Query("SELECT ma.mentee FROM MentorAssignments ma WHERE ma.mentor.employeeId = :mentorId")
-    List<NewHireInfo> findMenteesByMentorId(@Param("mentorId") int mentorId);
-
-    @Query("SELECT ma.mentor FROM MentorAssignments ma WHERE ma.mentee.employeeId = :menteeId")
-    List<NewHireInfo> findMentorByMenteeId(@Param("menteeId") int menteeId);
 
     @Query("SELECT n FROM NewHireInfo n WHERE n.isMentor = false AND n.id NOT IN (SELECT ma.mentee.id FROM MentorAssignments ma)")
     List<NewHireInfo> findUnassignedMentees(); 
@@ -46,7 +41,8 @@ public interface NewHireInfoRepository extends JpaRepository<NewHireInfo, Intege
     @Modifying
     @Query("DELETE FROM NewHireInfo n WHERE n.id = :id")    
     void deleteById(@Param("id") int id);
-
-
+  
+    @Query("SELECT ma.mentor FROM MentorAssignments ma WHERE ma.mentee.employeeId = :menteeId")
+    List<NewHireInfo> findMentorByMenteeId(@Param("menteeId") int menteeId);
 
 }

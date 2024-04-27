@@ -2,6 +2,7 @@
 package com.CiST2932.SRSProject.Domain;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 public class NewEmployeeDTO {
     private int employeeId;
@@ -12,11 +13,17 @@ public class NewEmployeeDTO {
     private String passwordHash;
     private String employmentType;
     private Timestamp registrationDate;
-    private Integer mentorOrMenteeId; // This will store either mentor ID or mentee ID based on the role
-    private int mentor;  // Mentor's employee ID
-    private int mentee;  // Mentee's employee ID
+    
+    // Detailed relationship fields
+    private List<Integer> assignmentsAsMentorIds;
+    private List<Integer> assignmentsAsMenteeIds;
+    private Integer mentorOrMenteeId; // ID of the mentor or mentee
+    private List<NewHireInfo> mentees; // List of mentees if the employee is a mentor
+    private List<NewHireInfo> mentor; // List of mentor if the employee is a mentee
+    private List<TaskDTO> tasks; // Tasks associated with the employee
 
     // Getters and setters
+  
     public int getEmployeeId() { return employeeId; }
     public void setEmployeeId(int employeeId) { this.employeeId = employeeId; }
    
@@ -25,6 +32,7 @@ public class NewEmployeeDTO {
 
     public String getEmail() { return email;}
     public void setEmail(String email) { this.email = email;}
+
 
     public boolean getIsMentor() { return isMentor;}
     public void setIsMentor(boolean isMentor) { this.isMentor = isMentor;}
@@ -49,5 +57,5 @@ public class NewEmployeeDTO {
     
     public int getMentee() { return mentee;}
     public void setMentee(int mentee) { this.mentee = mentee;}
-    
+
 }
