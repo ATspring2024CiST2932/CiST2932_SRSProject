@@ -12,13 +12,18 @@ import jakarta.persistence.Column;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
 
 @Entity
 @Table(name = "newhireinfo")
@@ -38,20 +43,19 @@ public class NewHireInfo {
     @Column(name = "Mentor")
     private boolean isMentor;
 
-    @OneToMany(mappedBy = "mentor", cascade = CascadeType.REMOVE)
-    @JsonManagedReference
-    private List<MentorAssignments> assignmentsAsMentor = new ArrayList<>();
+    @OneToMany(mappedBy = "mentor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("mentor-assignment-mentor")
+    private List<MentorAssignments> assignmentsAsMentor = new ArrayList<>();;
 
-    @OneToMany(mappedBy = "mentee", cascade = CascadeType.REMOVE)
-    @JsonManagedReference
-    private List<MentorAssignments> assignmentsAsMentee = new ArrayList<>();
+    @OneToMany(mappedBy = "mentee", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("mentor-assignment-mentee")
+    private List<MentorAssignments> assignmentsAsMentee = new ArrayList<>();;
 
-    @OneToMany(mappedBy = "assignee", cascade = CascadeType.REMOVE)
-    @JsonManagedReference
-    private List<PeerCodingTasks> assignedTasks = new ArrayList<>();
+    @OneToMany(mappedBy = "assignee", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("task-assignee")
+    private List<PeerCodingTasks> assignedTasks = new ArrayList<>();;
 
-
-    @OneToOne(mappedBy = "newHireInfo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
     private Users user;
 
@@ -130,11 +134,12 @@ public class NewHireInfo {
         this.user = user;
     }
 
+    
     public Set<MentorAssignments> getMentorAssignments() {
-        Set<MentorAssignments> allAssignments = new HashSet<>();
-        allAssignments.addAll(assignmentsAsMentor);
-        allAssignments.addAll(assignmentsAsMentee);
-        return allAssignments;
-    }
+    Set<MentorAssignments> allAssignments = new HashSet<>();
+    allAssignments.addAll(getAssignmentsAsMentor());
+    allAssignments.addAll(getAssignmentsAsMentee());
+    return allAssignments;
+}
 
 }

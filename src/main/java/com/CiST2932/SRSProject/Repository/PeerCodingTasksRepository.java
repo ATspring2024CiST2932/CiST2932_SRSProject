@@ -42,4 +42,3 @@ public interface PeerCodingTasksRepository extends JpaRepository<PeerCodingTasks
     void deleteById(@Param("id") int id);
 
 }
-
