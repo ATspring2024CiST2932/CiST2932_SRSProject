@@ -55,28 +55,27 @@ public class NewHireInfoService {
 
     @Transactional
     public void deleteNewHireInfoAndRelatedData(int employeeId) {
-        // Fetch NewHireInfo along with related data
         NewHireInfo newHireInfo = newHireInfoRepository.findById(employeeId).orElseThrow(() ->
             new IllegalStateException("Employee not found with id: " + employeeId));
-
-        // Delete related data first to avoid foreign key constraints
-        if (!newHireInfo.getAssignedTasks().isEmpty()) {
-            peerCodingTasksRepository.deleteAll(newHireInfo.getAssignedTasks());
+    
+        // Attempt to delete User first if exists
+        try {
+            if (newHireInfo.getUser() != null) {
+                usersRepository.deleteByEmployeeId(newHireInfo.getUser().getEmployeeId());
+            }
+    
+            // Then delete related data to avoid foreign key constraints
+            peerCodingTasksRepository.deleteByEmployeeId(employeeId);
+            mentorAssignmentsRepository.deleteByEmployeeId(employeeId);
+    
+            // Finally, delete the NewHireInfo record itself
+            newHireInfoRepository.deleteById(employeeId);
+        } catch (Exception e) {
+            // Log error or handle it as necessary
+            throw new RuntimeException("Error deleting employee and related data: " + e.getMessage(), e);
         }
-        if (!newHireInfo.getAssignmentsAsMentor().isEmpty()) {
-            mentorAssignmentsRepository.deleteAll(newHireInfo.getAssignmentsAsMentor());
-        }
-        if (!newHireInfo.getAssignmentsAsMentee().isEmpty()) {
-            mentorAssignmentsRepository.deleteAll(newHireInfo.getAssignmentsAsMentee());
-        }
-        if (newHireInfo.getUser() != null) {
-            usersRepository.deleteById(newHireInfo.getUser().getEmployeeId());
-        }
-
-        // Finally, delete the NewHireInfo record itself
-        newHireInfoRepository.deleteById(employeeId);
     }
-
+ 
     public List<NewHireInfo> findMenteesByMentorId(int mentorId) {
         return newHireInfoRepository.findMenteesByMentorId(mentorId);
     }

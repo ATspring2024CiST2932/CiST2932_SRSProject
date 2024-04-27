@@ -4,6 +4,8 @@ package com.CiST2932.SRSProject.Repository;
 
 import com.CiST2932.SRSProject.Domain.NewHireInfo;
 
+import jakarta.transaction.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -41,6 +43,7 @@ public interface NewHireInfoRepository extends JpaRepository<NewHireInfo, Intege
     @Query("SELECT n.name FROM NewHireInfo n")
     List<String> findAllNames();
 
+    @Transactional
     @Modifying
     @Query("DELETE FROM NewHireInfo n WHERE n.id = :id")    
     void deleteById(@Param("id") int id);

@@ -37,9 +37,16 @@ public class MentorAssignmentsService {
         return mentorAssignmentsRepository.save(mentorAssignments);
     }
 
+    @Transactional
     public void deleteById(int id) {
         mentorAssignmentsRepository.deleteById(id);
     }
+
+    @Transactional
+    public void deleteMentorAssignmentsByEmployeeId(int employeeId) {
+        mentorAssignmentsRepository.deleteByEmployeeId(employeeId);
+    }
+    
 
     public List<MentorAssignments> findByMentorEmployeeId(int mentorEmployeeId) {
         return mentorAssignmentsRepository.findByMentorEmployeeId(mentorEmployeeId);

@@ -8,6 +8,8 @@ import com.CiST2932.SRSProject.Domain.TaskWithAssigneeDTO;
 import com.CiST2932.SRSProject.Domain.UpdatePeerCodingTasksDTO;
 import com.CiST2932.SRSProject.Repository.NewHireInfoRepository;
 import com.CiST2932.SRSProject.Repository.PeerCodingTasksRepository;
+import org.springframework.transaction.annotation.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,8 +40,14 @@ public class PeerCodingTasksService {
         return peerCodingTasksRepository.save(peerCodingTasks);
     }
 
+    @Transactional
     public void deleteById(int id) {
         peerCodingTasksRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void deleteTasksByEmployeeId(int employeeId) {
+        peerCodingTasksRepository.deleteByEmployeeId(employeeId);
     }
 
     public List<PeerCodingTasks> getTasksByAssignee(int employeeId) {

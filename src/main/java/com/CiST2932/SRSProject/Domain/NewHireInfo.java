@@ -13,6 +13,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -42,17 +43,17 @@ public class NewHireInfo {
     @Column(name = "Mentor")
     private boolean isMentor;
 
-    @OneToMany(mappedBy = "mentor")
-    @JsonManagedReference
-    private List<MentorAssignments> assignmentsAsMentor;
+    @OneToMany(mappedBy = "mentor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("mentor-assignment-mentor")
+    private List<MentorAssignments> assignmentsAsMentor = new ArrayList<>();;
 
-    @OneToMany(mappedBy = "mentee")
-    @JsonManagedReference
-    private List<MentorAssignments> assignmentsAsMentee;
+    @OneToMany(mappedBy = "mentee", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("mentor-assignment-mentee")
+    private List<MentorAssignments> assignmentsAsMentee = new ArrayList<>();;
 
-    @OneToMany(mappedBy = "assignee")
-    @JsonManagedReference
-    private List<PeerCodingTasks> assignedTasks;
+    @OneToMany(mappedBy = "assignee", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("task-assignee")
+    private List<PeerCodingTasks> assignedTasks = new ArrayList<>();;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
