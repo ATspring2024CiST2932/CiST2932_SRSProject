@@ -126,17 +126,22 @@
 
         <!-- Employee Table -->
         <div class="etable">
-        <table class="table table-striped mt-5" id="employeeTable">
+          <table class="table table-striped mt-5" id="employeeTable">
             <thead>
                 <tr>
-                    <th>Employee ID</th>
-                    <th>Name</th>
-                    <th>Employment Type</th>
-                    <th>Is Mentor</th>
+                    <th class="sortable" onclick="sortTable(0)" data-dir="asc">Employee ID</th>
+                    <th class="sortable" onclick="sortTable(1)" data-dir="asc">Name</th>
+                    <th class="sortable" onclick="sortTable(2)" data-dir="asc">Employment Type</th>
+                    <th class="sortable" onclick="sortTable(3)" data-dir="asc">Is Mentor</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody id="employeeData">
+              <!-- <td>
+                <button class="btn btn-success" onclick="viewEmployee(1)">Update</button>
+                <button class="btn btn-primary" onclick="editEmployee(1)">Edit</i></button>
+                <button class="btn btn-danger" onclick="archiveEmployee(1)">Delete</i></button>
+              </td> -->
             </tbody>
         </table>
       </div>
@@ -241,6 +246,79 @@
     <!-- React Script -->
     <script type="module" src="/src/main.jsx" defer></script>
 
+    <script>
+    function filterTable() {
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("filterInput");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("employeeTable");
+      tr = table.getElementsByTagName("tr");
+      for (i = 1; i < tr.length; i++) {
+        let found = false;
+        td = tr[i].getElementsByTagName("td");
+        for (let j = 0; j < td.length; j++) {
+          if (td[j]) {
+            txtValue = td[j].textContent || td[j].innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+              found = true;
+              break;
+            }
+          }
+        }
+        if (found) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+
+    function sortTable(columnIndex) {
+        var table, rows, switching, i, x, y;
+        table = document.getElementById("employeeTable");
+        switching = true;
+        var currentDir = table.getAttribute("data-dir");
+
+        if (!currentDir || currentDir === "asc") {
+            table.setAttribute("data-dir", "desc");
+        } else {
+            table.setAttribute("data-dir", "asc");
+        }
+
+        while (switching) {
+            switching = false;
+            rows = table.rows;
+
+            for (i = 1; i < rows.length - 1; i++) {
+                var shouldSwitch = false;
+                x = rows[i].getElementsByTagName("td")[columnIndex];
+                y = rows[i + 1].getElementsByTagName("td")[columnIndex];
+
+                // Compare the content of the cells based on the current direction
+                var xValue, yValue;
+
+                // Check if it's the first column (Employee ID)
+                if (columnIndex === 0) {
+                    xValue = parseFloat(x.innerHTML);
+                    yValue = parseFloat(y.innerHTML);
+                } else {
+                    xValue = x.innerHTML.toLowerCase();
+                    yValue = y.innerHTML.toLowerCase();
+                }
+
+                if (currentDir === "asc" ? xValue > yValue : xValue < yValue) {
+                    shouldSwitch = true;
+                    break;
+                }
+            }
+
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+            }
+        }
+    }
+    </script>
 
     <!-- Vanilla JavaScript Script -->
     <script src="App_copy.js" type="module"></script>

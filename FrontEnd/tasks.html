@@ -40,7 +40,7 @@
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#taskForm">New Task <i class="bi bi-journal-plus"></i></button>
       </div>
       <div class="col-3">
-        <input type="text" class="form-control" id="filterInput" placeholder="Search tasks...">
+        <input type="text" class="form-control" id="filterInput" onkeyup="filterTable()" placeholder="Search tasks...">
       </div>
     </div>
 
@@ -256,15 +256,6 @@ document.addEventListener("DOMContentLoaded", function () {
               document.getElementById("editTotalHours").value = task.totalHours;
               document.getElementById("editAssigneeName").value = task.assigneeName;
 
-              // Collect the data from the form to send to the server
-              const updatedTask = {
-                taskUrl: document.getElementById("editTaskUrl").value,
-                taskNumber: document.getElementById("editTaskNumber").value,
-                taskType: document.getElementById("editTaskType").value,
-                totalHours: document.getElementById("editTotalHours").value,
-                assigneeName: document.getElementById("editAssigneeName").value
-              };
-    
               // Show the edit task modal
               var editTaskModal = new bootstrap.Modal(document.getElementById('editTaskForm'));
               editTaskModal.show();
@@ -276,42 +267,84 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(error => console.error('Error fetching tasks:', error));
     });
     
-
-// Function for sorting table
-function sortTable(columnIndex, currentDir) {
-  var table, rows, switching, i, x, y;
-  table = document.getElementById("tasksTable");
-  switching = true;
-
-  while (switching) {
-    switching = false;
-    rows = table.rows;
-
-    for (i = 1; i < (rows.length - 1); i++) {
-      var shouldSwitch = false;
-      x = rows[i].getElementsByTagName("td")[columnIndex];
-      y = rows[i + 1].getElementsByTagName("td")[columnIndex];
-
-      // Compare the content of the cells based on the current direction
-      if (currentDir == "asc") {
-        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-          shouldSwitch = true;
-          break;
+    function filterTable() {
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("filterInput");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("tasksTable");
+      tr = table.getElementsByTagName("tr");
+      for (i = 1; i < tr.length; i++) {
+        let found = false;
+        td = tr[i].getElementsByTagName("td");
+        for (let j = 0; j < td.length; j++) {
+          if (td[j]) {
+            txtValue = td[j].textContent || td[j].innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+              found = true;
+              break;
+            }
+          }
         }
-      } else {
-        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-          shouldSwitch = true;
-          break;
+        if (found) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
         }
       }
     }
 
-    if (shouldSwitch) {
-      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-      switching = true;
+    function sortTable(columnIndex, currentDir) {
+    var table, rows, switching, i, x, y;
+    table = document.getElementById("tasksTable");
+    switching = true;
+
+    while (switching) {
+        switching = false;
+        rows = table.rows;
+
+        for (i = 1; i < (rows.length - 1); i++) {
+            var shouldSwitch = false;
+            x = rows[i].getElementsByTagName("td")[columnIndex];
+            y = rows[i + 1].getElementsByTagName("td")[columnIndex];
+
+            // Compare the content of the cells based on the current direction
+            var xValue, yValue;
+
+            // Check if it's columns 0 or 4
+            if (columnIndex === 0) {
+                xValue = parseInt(x.innerHTML);
+                yValue = parseInt(y.innerHTML);
+            } else if (columnIndex === 4) {
+                xValue = parseFloat(x.innerHTML);
+                yValue = parseFloat(y.innerHTML);
+            } else {
+                xValue = x.innerHTML.toLowerCase();
+                yValue = y.innerHTML.toLowerCase();
+            }
+
+            // Compare based on data type
+            if (isNaN(xValue) || isNaN(yValue)) {
+                // Alphabetic comparison
+                if (currentDir === "desc" ? xValue < yValue : xValue > yValue) {
+                    shouldSwitch = true;
+                    break;
+                }
+            } else {
+                // Numeric comparison
+                if (currentDir === "desc" ? xValue < yValue : xValue > yValue) {
+                    shouldSwitch = true;
+                    break;
+                }
+            }
+        }
+
+        if (shouldSwitch) {
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+        }
     }
-  }
 }
+
 
 // Event listener for the edit form submission
 document.getElementById('editTaskForm').addEventListener('submit', function(event) {
