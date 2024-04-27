@@ -4,6 +4,8 @@ package com.CiST2932.SRSProject.Service;
 import com.CiST2932.SRSProject.Domain.Users;
 import com.CiST2932.SRSProject.Repository.UsersRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import io.micrometer.common.lang.NonNullApi;
 
 import java.util.List;
@@ -26,8 +28,9 @@ public class UsersService {
         return usersRepository.findById(id);
     }
 
+    @Transactional
     public void deleteById(int id) {
-        usersRepository.deleteById(id);
+        usersRepository.deleteByEmployeeId(id);
     }
 
     //UPDATED save method for user validation

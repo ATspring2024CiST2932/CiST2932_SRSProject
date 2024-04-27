@@ -4,10 +4,10 @@ package com.CiST2932.SRSProject.Controller;
 
 import com.CiST2932.SRSProject.Domain.CreatePeerCodingTasksDTO;
 import com.CiST2932.SRSProject.Domain.PeerCodingTasks;
-import com.CiST2932.SRSProject.Domain.TaskDTO;
 import com.CiST2932.SRSProject.Domain.TaskWithAssigneeDTO;
 import com.CiST2932.SRSProject.Domain.UpdatePeerCodingTasksDTO;
 import com.CiST2932.SRSProject.Service.PeerCodingTasksService;
+import com.CiST2932.SRSProject.Repository.PeerCodingTasksRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,9 +21,13 @@ import java.util.Optional;
 @RequestMapping("/peercodingtasks")
 public class PeerCodingTasksController {
 
+    private final PeerCodingTasksRepository peerCodingTasksRepository;
+
     @Autowired
     private PeerCodingTasksService peerCodingTasksService;
-
+    public PeerCodingTasksController(PeerCodingTasksRepository peerCodingTasksRepository) {
+        this.peerCodingTasksRepository = peerCodingTasksRepository;
+    }
     @GetMapping
     public List<TaskWithAssigneeDTO> getAllPeerCodingTasks() {
         return peerCodingTasksService.findAllTasksWithAssigneeName();
@@ -42,10 +46,6 @@ public class PeerCodingTasksController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newTask);
     }
     
-    
-    
-     
-
     @PutMapping("/{id}")
     public ResponseEntity<PeerCodingTasks> updatePeerCodingTasks(@PathVariable int id, @RequestBody UpdatePeerCodingTasksDTO updateDto) {
         Optional<PeerCodingTasks> existingTask = peerCodingTasksService.findById(id);
@@ -62,14 +62,13 @@ public class PeerCodingTasksController {
         return ResponseEntity.ok(tasks);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePeerCodingTasks(@PathVariable int id) {
-        if (peerCodingTasksService.findById(id).isPresent()) {
-            peerCodingTasksService.deleteById(id);
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.notFound().build();
+    @DeleteMapping("/{employeeId}")
+    public ResponseEntity<String> deleteTasksByEmployeeId(@PathVariable int employeeId) {
+        peerCodingTasksService.deleteTasksByEmployeeId(employeeId);
+        return ResponseEntity.ok("Tasks deleted successfully for EmployeeID: " + employeeId);
     }
+    
+    
 
     @GetMapping("/mentor/{mentorId}/tasks")
     public ResponseEntity<List<PeerCodingTasks>> getTasksByMentorAndMentees(@PathVariable int mentorId) {

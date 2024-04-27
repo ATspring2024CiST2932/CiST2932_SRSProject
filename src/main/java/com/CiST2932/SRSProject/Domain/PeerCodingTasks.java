@@ -28,7 +28,7 @@ public class PeerCodingTasks {
     private BigDecimal totalHours;
 
     @ManyToOne
-    @JoinColumn(name = "employeeID", referencedColumnName = "EmployeeID")
+    @JoinColumn(name = "EmployeeID", referencedColumnName = "EmployeeID")
     @JsonBackReference
     private NewHireInfo assignee;
 

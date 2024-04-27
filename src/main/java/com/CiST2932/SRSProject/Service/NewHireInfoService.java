@@ -13,22 +13,21 @@ import com.CiST2932.SRSProject.Repository.NewHireInfoRepository;
 import com.CiST2932.SRSProject.Repository.PeerCodingTasksRepository;
 import com.CiST2932.SRSProject.Repository.UsersRepository;
 import com.CiST2932.SRSProject.Repository.MentorAssignmentsRepository;
+import com.CiST2932.SRSProject.Repository.PeerCodingTasksRepository;
+
+import java.sql.Timestamp;
+import java.util.List;
+import java.util.Optional;
 import org.modelmapper.ModelMapper;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
-
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.ResourceAccessException;
-import java.util.List;
-import java.util.stream.Stream;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.sql.Timestamp;
 
 @Service
 public class NewHireInfoService {
-
     @Autowired
     private NewHireInfoRepository newHireInfoRepository;
     @Autowired
@@ -39,7 +38,7 @@ public class NewHireInfoService {
     private PeerCodingTasksRepository peerCodingTasksRepository;
     @Autowired
     private ModelMapper modelMapper;
-
+    
     public List<NewHireInfo> findAll() {
         return newHireInfoRepository.findAll();
     }
@@ -57,6 +56,29 @@ public class NewHireInfoService {
         newHireInfoRepository.deleteById(id);
     }
 
+    @Transactional
+    public void deleteNewHireInfoAndRelatedData(int employeeId) {
+        NewHireInfo newHireInfo = newHireInfoRepository.findById(employeeId).orElseThrow(() ->
+            new IllegalStateException("Employee not found with id: " + employeeId));
+    
+        // Attempt to delete User first if exists
+        try {
+            if (newHireInfo.getUser() != null) {
+                usersRepository.deleteByEmployeeId(newHireInfo.getUser().getEmployeeId());
+            }
+    
+            // Then delete related data to avoid foreign key constraints
+            peerCodingTasksRepository.deleteByEmployeeId(employeeId);
+            mentorAssignmentsRepository.deleteByEmployeeId(employeeId);
+    
+            // Finally, delete the NewHireInfo record itself
+            newHireInfoRepository.deleteById(employeeId);
+        } catch (Exception e) {
+            // Log error or handle it as necessary
+            throw new RuntimeException("Error deleting employee and related data: " + e.getMessage(), e);
+        }
+    }
+ 
     public List<NewHireInfo> findMenteesByMentorId(int mentorId) {
         return newHireInfoRepository.findMenteesByMentorId(mentorId);
     }
@@ -197,29 +219,46 @@ private void updateNewHireInfoFromDto(NewHireInfo newHireInfo, NewEmployeeDTO dt
             System.out.println("Mentor/Mentee ID not found: " + newEmployeeDTO.getMentorOrMenteeId());
         }
     }
-     
+
+        // print out the username
+        System.out.println("Username: " + newEmployeeDTO.getUsername());
+        // refresh the newHireInfo
+        newHireInfo = newHireInfoRepository.findById(newHireInfo.getEmployeeId()).get();
+        System.out.println("Employee ID: " + newHireInfo.getEmployeeId());
+
+    
+        // Save the NewHireInfo entity, cascade should save Users too
+        return newHireInfoRepository.save(newHireInfo);        
+    }
+
     public NewHireInfo updateEmployee(int id, NewEmployeeDTO newEmployeeDTO) {
         NewHireInfo employee = newHireInfoRepository.findById(id)
                 .orElseThrow(() -> new ResourceAccessException("Employee not found with id " + id));
         modelMapper.map(newEmployeeDTO, employee);
         return newHireInfoRepository.save(employee);
     }
-     
+
     @Transactional
-    public void deleteNewHireInfoAndRelatedData(int employeeId) {
-        // Fetch NewHireInfo along with related data
-        NewHireInfo newHireInfo = newHireInfoRepository.findById(employeeId).orElse(null);
-        if (newHireInfo != null) {
-            // newHireInfo.setArchived(true);
-            newHireInfoRepository.save(newHireInfo);
-        // Delete related data first to avoid foreign key constraints
-        peerCodingTasksRepository.deleteAll(newHireInfo.getAssignedTasks());
-        mentorAssignmentsRepository.deleteAll(newHireInfo.getMentorAssignments());
-        usersRepository.deleteById(newHireInfo.getUser().getEmployeeId());
-        // Finally, delete the NewHireInfo record
-        newHireInfoRepository.deleteById(employeeId);
-    }
-}
+    public NewHireInfo updateOrCreateEmployee(int id, NewEmployeeDTO newEmployeeDTO) {
+        // Fetch the existing NewHireInfo or create a new one
+        NewHireInfo newHireInfo = newHireInfoRepository.findById(id).orElse(new NewHireInfo());
+
+        // Use modelMapper to map DTO to entity
+        modelMapper.map(newEmployeeDTO, newHireInfo);
+
+        // Save the NewHireInfo entity
+        NewHireInfo savedNewHireInfo = newHireInfoRepository.save(newHireInfo);
+
+        // Handling the Users entity
+        Users user = usersRepository.findById(newHireInfo.getEmployeeId()).orElse(new Users());
+        user.setNewHireInfo(savedNewHireInfo);
+        user.setEmail(newEmployeeDTO.getEmail());
+        user.setUsername(newEmployeeDTO.getUsername());
+        user.setPasswordHash(newEmployeeDTO.getPasswordHash());
+        user.setRegistrationDate(new Timestamp(System.currentTimeMillis()));
+
+        // Link User to NewHireInfo
+        savedNewHireInfo.setUser(user);
 
 @Transactional(readOnly = true)
 public NewEmployeeDTO getEmployeeDetails(int employeeId) {
@@ -241,7 +280,6 @@ public NewEmployeeDTO getEmployeeDetails(int employeeId) {
         dto.setPasswordHash(user.getPasswordHash());
         dto.setRegistrationDate(user.getRegistrationDate());
     }
-
     if (employee.getIsMentor()) {
         // Assume that each mentor has multiple mentees
         List<Integer> menteeIds = newHireInfoRepository.findMenteesByMentorId(employeeId)
@@ -280,4 +318,5 @@ public NewEmployeeDTO getEmployeeDetails(int employeeId) {
 
 }
 
-    
+        return savedNewHireInfo;
+    }

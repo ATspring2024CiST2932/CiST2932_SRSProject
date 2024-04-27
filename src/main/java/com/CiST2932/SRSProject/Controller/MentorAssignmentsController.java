@@ -54,13 +54,10 @@ public class MentorAssignmentsController {
     }
     
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteMentorAssignments(@PathVariable int id) {
-        if (mentorAssignmentsService.findById(id).isPresent()) {
-            mentorAssignmentsService.deleteById(id);
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.notFound().build();
+    @DeleteMapping("/{employeeId}")
+    public ResponseEntity<Void> deleteMentorAssignmentsByEmployeeId(@PathVariable int employeeId) {
+        mentorAssignmentsService.deleteMentorAssignmentsByEmployeeId(employeeId);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/mentor/{mentorEmployeeId}")

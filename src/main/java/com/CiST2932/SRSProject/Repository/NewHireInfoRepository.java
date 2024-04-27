@@ -4,10 +4,13 @@ package com.CiST2932.SRSProject.Repository;
 
 import com.CiST2932.SRSProject.Domain.NewHireInfo;
 
+import jakarta.transaction.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -17,7 +20,15 @@ import org.springframework.stereotype.Repository;
 public interface NewHireInfoRepository extends JpaRepository<NewHireInfo, Integer> {
 
     @Query("SELECT n FROM NewHireInfo n WHERE n.isMentor = false AND n.id NOT IN (SELECT ma.mentee.id FROM MentorAssignments ma)")
-    List<NewHireInfo> findUnassignedMentees();  
+    List<NewHireInfo> findUnassignedMentees(); 
+    
+    //getMentorAssignments
+    @Query("SELECT n FROM NewHireInfo n WHERE n.isMentor = true AND n.id IN (SELECT ma.mentor.id FROM MentorAssignments ma)")
+    List<NewHireInfo> findMentorAssignments();
+
+    //getMenteeAssignments
+    @Query("SELECT n FROM NewHireInfo n WHERE n.isMentor = false AND n.id IN (SELECT ma.mentee.id FROM MentorAssignments ma)")
+    List<NewHireInfo> findMenteeAssignments();
     
     @Query("SELECT n FROM NewHireInfo n WHERE n.isMentor = true")
     List<NewHireInfo> findAllMentors();
@@ -27,31 +38,12 @@ public interface NewHireInfoRepository extends JpaRepository<NewHireInfo, Intege
     @Query("SELECT n.name FROM NewHireInfo n")
     List<String> findAllNames();
 
-    // Find employee by ID with detailed information, including mentor and mentee information
-    @Query("SELECT e FROM NewHireInfo e LEFT JOIN FETCH e.mentorAssignments WHERE e.employeeId = :employeeId")
-    Optional<NewHireInfo> findEmployeeWithDetailsById(int employeeId);
-
-    // List all mentors
-    List<NewHireInfo> findByIsMentorTrue();
-
-    // List all mentees
-    List<NewHireInfo> findByIsMentorFalse();
-    
-    //mentorOrMenteeId
-    @Query("SELECT n FROM NewHireInfo n WHERE n.mentorOrMenteeId = :mentorOrMenteeId")
-    Optional<NewHireInfo> findByMentorOrMenteeId(@Param("mentorOrMenteeId") int mentorOrMenteeId);
-
-    // @Modifying
-    // void archiveNewHireInfoById(@Param("employeeId") int employeeId);
-
-    //getAllNewEmployeeDTO
-@Query("SELECT n FROM NewHireInfo n")
-List<NewHireInfo> getAllNewEmployeeDTO();
-
-@Query("SELECT ma.mentee FROM MentorAssignments ma WHERE ma.mentor.employeeId = :mentorId")
-List<NewHireInfo> findMenteesByMentorId(@Param("mentorId") int mentorId);
-
-@Query("SELECT ma.mentor FROM MentorAssignments ma WHERE ma.mentee.employeeId = :menteeId")
-List<NewHireInfo> findMentorByMenteeId(@Param("menteeId") int menteeId);
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM NewHireInfo n WHERE n.id = :id")    
+    void deleteById(@Param("id") int id);
+  
+    @Query("SELECT ma.mentor FROM MentorAssignments ma WHERE ma.mentee.employeeId = :menteeId")
+    List<NewHireInfo> findMentorByMenteeId(@Param("menteeId") int menteeId);
 
 }
