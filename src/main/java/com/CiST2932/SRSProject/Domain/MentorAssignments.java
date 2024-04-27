@@ -3,6 +3,7 @@ package com.CiST2932.SRSProject.Domain;
 
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Table;
 import jakarta.persistence.Id;
 
@@ -25,12 +26,12 @@ public class MentorAssignments {
     @Column(name = "AssignmentID")
     private int assignmentId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mentorID", referencedColumnName = "EmployeeID")
     @JsonBackReference //("mentor-assignments-mentor")
     private NewHireInfo mentor;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menteeID", referencedColumnName = "EmployeeID")
     @JsonBackReference //("mentor-assignments-mentee")
     private NewHireInfo mentee;

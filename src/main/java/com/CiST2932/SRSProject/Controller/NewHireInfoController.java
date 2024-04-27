@@ -6,7 +6,6 @@ import com.CiST2932.SRSProject.Domain.NewEmployeeDTO;
 import com.CiST2932.SRSProject.Domain.NewHireInfo;
 import com.CiST2932.SRSProject.Service.NewHireInfoService;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpStatus;
@@ -21,9 +20,7 @@ public class NewHireInfoController {
 
     @Autowired
     private NewHireInfoService newHireInfoService;
-    @Autowired
-    private ModelMapper modelMapper;
-    
+
     @GetMapping
     public ResponseEntity<List<NewHireInfo>> getAllNewEmployeeDTO() {
         List<NewHireInfo> getAllNewEmployeeDTOList = newHireInfoService.findAll();
