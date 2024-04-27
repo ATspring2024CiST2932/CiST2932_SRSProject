@@ -1,202 +1,226 @@
-// FrontEnd/App.js
-// Script to handle all user-related operations
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import 'bootstrap-icons/font/bootstrap-icons.css';
 
+// Document ready function
 document.addEventListener('DOMContentLoaded', function () {
-  // Fetch all employees and populate the table
-  fetchAllEmployees();
+    console.log("Initializing application...");
 
-  // Event listener for the 'New Employee' form submission
-  document.getElementById('newEmployeeModal').addEventListener('submit', function(event) {
-    event.preventDefault();
-    const formData = {
-        name: document.getElementById('newEmployeeName').value,
-        email: document.getElementById('newEmployeeEmail').value,
-        isMentor: document.getElementById('newEmployeeIsMentor').checked,
-        username: document.getElementById('newEmployeeUsername').value,
-        passwordHash: document.getElementById('newEmployeePassword').value,
-        employmentType: document.getElementById('newEmployeeEmploymentType').value,
-        mentor: document.getElementById('mentorSelect').value, // Assuming you have a select element with id 'mentorSelect'
-        mentee: document.getElementById('menteeSelect').value // Assuming you have a select element for mentees
-    };
-    createEmployee(formData);
+    // Set default form values
+    initializeFormDefaults();
+    // Attach all event listeners
+    attachEventListeners();
+    // Fetch and display all employees on load
+    fetchAllEmployees();
 });
 
-  // Event listener for the 'Edit Employee' form submission
-  document.getElementById('editEmployeeForm').addEventListener('submit', function(event) {
-      event.preventDefault();
-      const employeeId = document.getElementById('editEmployeeId').value;
-      const updatedEmployeeData = {
-          name: document.getElementById('editName').value,
-          isMentor: document.getElementById('editIsMentor').checked,
-          employmentType: document.getElementById('editEmploymentType').value
+// Function Checklist and Outline
+
+// initializeFormDefaults()
+// Sets default values for form inputs upon page load.
+// Example fields to set: newEmployeeName, newEmployeeEmail, etc.
+function initializeFormDefaults() {
+  console.log("Setting default form values...");
+  document.getElementById('newEmployeeName').value = 'John Doe';
+  document.getElementById('newEmployeeEmail').value = 'johndoe@example.com';
+  document.getElementById('newEmployeeIsMentor').checked = false;
+  document.getElementById('newEmployeeUsername').value = 'john.doe';
+  document.getElementById('newEmployeePassword').value = 'securepassword123';
+  document.getElementById('newEmployeeEmploymentType').value = 'Part-time';
+}
+
+// attachEventListeners()
+// Attaches all necessary event listeners when the document is ready.
+// Includes listeners for form submissions and interactive elements like buttons.
+// Attaches event listeners to various elements for interactive functionalities.
+function attachEventListeners() {
+  console.log("Attaching event listeners...");
+  document.getElementById('newEmployeeIsMentor').addEventListener('change', handleMentorChange);
+  document.getElementById('addEmployeeForm').addEventListener('submit', handleSubmitEmployee);
+  document.getElementById('editEmployeeForm').addEventListener('submit', handleSubmitEmployee);
+  document.getElementById('employeeTable').addEventListener('click', handleTableClick);
+
+  // Setup listeners for delete employee modal.
+  const deleteModal = document.getElementById('deleteEmployeeModal');
+  deleteModal.addEventListener('show.bs.modal', function(event) {
+      const button = event.relatedTarget; // Button that triggered the modal
+      const employeeId = button.getAttribute('data-employee-id'); // Extract info from data-attributes
+      console.log("Preparing to delete employee ID:", employeeId);
+      document.getElementById('confirmDelete').onclick = function() {
+          deleteEmployee(employeeId);
       };
-      updateEmployee(employeeId, updatedEmployeeData);
   });
-
-  // Event listener for the 'Add Task' form submission
-  document.getElementById('addTaskForm').addEventListener('submit', function(event) {
-      event.preventDefault();
-      const taskData = {
-          description: document.getElementById('taskDescription').value,
-          type: document.getElementById('taskType').value,
-          // Include other task details as needed
-      };
-      // Send taskData to your backend to add the new task
-      // For example, using fetch() if you're using a REST API
-      fetch('http://localhost:8080/peercodingtasks', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(taskData)
-      })
-      .then(response => {
-          if (response.ok) {
-              // Handle success, such as refreshing the task list or closing the modal
-              $('#addTaskModal').modal('hide');
-          } else {
-              // Handle errors
-              alert('Failed to add task.');
-          }
-      });
+  deleteModal.addEventListener('hidden.bs.modal', function() {
+      this.removeAttribute('data-employee-id');
   });
-
-  // Event delegation for employee actions
-  document.getElementById('employeeTable').addEventListener('click', function(event) {
-    if (event.target.classList.contains('view-btn')) {
-        const employeeId = event.target.dataset.employeeId;
-        viewEmployee(employeeId);
-    } else if (event.target.classList.contains('edit-btn')) {
-        const employeeId = event.target.dataset.employeeId;
-        editEmployee(employeeId);
-    } else if (event.target.classList.contains('archive-btn')) {
-        const employeeId = event.target.dataset.employeeId;
-        archiveEmployee(employeeId);
-    }
-});
+}
 
 
-  // Call toggleMentorAssignmentSection when the checkbox changes
-  document.getElementById('newEmployeeIsMentor').addEventListener('change', toggleMentorAssignmentSection);
-  });
+// handleMentorChange()
+// Handles changes to the 'Mentor' checkbox to dynamically update related form fields.
+// Adjusts form fields to either show mentor or mentee options based on the checkbox state.
+function handleMentorChange() {
+  console.log("Mentor checkbox state changed.");
+  const isMentor = document.getElementById('newEmployeeIsMentor').checked;
+  console.log("Is Mentor Checked:", isMentor);
+  const assignmentsDropdown = document.getElementById('newMentorAssignments');
+  assignmentsDropdown.innerHTML = ''; // Clear existing options
 
-// Function to populate mentor assignments for an employee
-function populateMentorAssignments(employeeId) {
-  fetch(`http://localhost:8080/newhireinfo/${employeeId}`)
-    .then(response => response.json())
-    .then(employee => {
-      const mentorAssignmentsSelect = document.getElementById('viewMentorAssignments');
-      mentorAssignmentsSelect.innerHTML = ''; // Clear existing options
-
-      if (employee.isMentor) {
-        // If the employee is a mentor, fetch and list their mentees
-        fetch(`http://localhost:8080/newhireinfo/${employeeId}/mentees`)
-          .then(response => response.json())
-          .then(mentees => {
-            console.log('Mentees:', mentees);
-            const viewMentorAssignments = document.getElementById('viewMentorAssignments');
-            viewMentorAssignments.textContent = ''; // Clear existing list items
-
-            mentees.forEach(mentee => {
-              const li = document.createElement('li');
-              li.textContent = `Mentee: ${mentee.name} - ${mentee.employmentType} `;
-              viewMentorAssignments.appendChild(li);
-            });            
+  if (isMentor) {
+      fetchMentees().then(mentees => {
+          console.log("Populating dropdown with mentees.");
+          mentees.forEach(mentee => {
+              const option = new Option(mentee.name, mentee.employeeId);
+              assignmentsDropdown.appendChild(option);
           });
+      }).catch(error => console.error('Error fetching mentees:', error));
+  } else {
+      fetchMentors().then(mentors => {
+          console.log("Populating dropdown with mentors.");
+          mentors.forEach(mentor => {
+              const option = new Option(mentor.name, mentor.employeeId);
+              assignmentsDropdown.appendChild(option);
+          });
+      }).catch(error => console.error('Error fetching mentors:', error));
+  }
+}
+
+
+// Submits new or edited employee data to the server.
+
+function handleSubmitEmployee(event) {
+  event.preventDefault();
+  console.log("Submitting employee form...");
+  const formId = event.target.id;
+  const isEdit = formId === 'editEmployeeForm';
+
+  const employeeData = prepareEmployeeData(isEdit);
+  if (!employeeData) {
+      console.error("Form validation failed. Required elements not found.");
+      return;
+  }
+
+  const url = isEdit ? `http://localhost:8080/newhireinfo/${employeeData.employeeId}` : 'http://localhost:8080/newhireinfo';
+  console.log("Posting data to:", url);
+  fetch(url, {
+      method: isEdit ? 'PUT' : 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(employeeData)
+  })
+  .then(response => {
+      if (response.ok) {
+          console.log("Employee data submitted successfully.");
+          fetchAllEmployees(); // Refresh the employee list on successful submit
       } else {
-        // If the employee is a mentee, note their mentor
-        fetch(`http://localhost:8080/newhireinfo/${employeeId}/mentor`)
-          .then(response => response.json())
-          .then(mentors => {
-            console.log('Mentors:', mentors);
-            const viewMentorAssignments = document.getElementById('viewMentorAssignments');
-            viewMentorAssignments.textContent = ''; // Clear existing list items
-
-            mentors.forEach(mentor => {
-              const li = document.createElement('li');
-              li.textContent = `Mentor: ${mentor.name} - ${mentor.employmentType} `;
-              viewMentorAssignments.appendChild(li);
-            });            
-          });
+          console.error("Failed to submit employee data.");
+          response.json().then(data => console.error('Submission error:', data.message));
       }
-    });
+  })
+  .catch(error => console.error('Error submitting employee data:', error));
 }
 
-// Function to populate tasks for an employee
-function populateTasks(employeeId) {
-  fetch(`http://localhost:8080/newhireinfo/${employeeId}`)
-  .then(response => response.json())
-  .then(employee => {
-    const mentorAssignmentsSelect = document.getElementById('viewMentorAssignments');
-    mentorAssignmentsSelect.innerHTML = ''; // Clear existing options
-  //if the employee is a mentor, fetch and list their tasks
-  if (employee.isMentor) {
-  fetch(`http://localhost:8080/peercodingtasks/mentor/${employeeId}/tasks`)
-      .then(response => response.json())
-      .then(tasks => {
-        console.log('Tasks:', tasks);
-        const tasksList = document.getElementById('viewTasks');
-        tasksList.innerHTML = ''; // Clear existing list items
-  
-        tasks.forEach(task => {
-          const li = document.createElement('li');
-          li.innerHTML = `Assignment: ${task.assigneeName}, Task ID: ${task.taskId}, Task URL: <a href="${task.taskUrl}" target="_blank">${task.taskUrl}</a>, Task Type: ${task.taskType}, Total Hours: ${task.totalHours}`;
-          tasksList.appendChild(li);
-        });
-      });
-    } else {
-      // If the employee is a mentee list their tasks
-      fetch(`http://localhost:8080/peercodingtasks/${employeeId}`)
-      .then(response => response.json())
-      .then(tasks => {
-        console.log('Tasks:', tasks);
-        const tasksList = document.getElementById('viewTasks');
-        tasksList.innerHTML = ''; // Clear existing list items
-  
-        tasks.forEach(task => {
-          const li = document.createElement('li');
-          li.innerHTML = `Task ID: ${task.taskId}, Task URL: <a href="${task.taskUrl}" target="_blank">${task.taskUrl}</a>, Task Type: ${task.taskType}, Total Hours: ${task.totalHours}`;
-          tasksList.appendChild(li);
-        });
-      });
-      
-    }
-  });    
+
+// Prepares and validates employee data from the form for submission.
+function prepareEmployeeData(isEdit) {
+  console.log("Preparing employee data for submission...");
+  const suffix = isEdit ? 'edit' : 'new';
+  const employeeId = isEdit ? document.getElementById('editEmployeeId').value : null;
+  const name = document.getElementById(`${suffix}EmployeeName`).value;
+  const email = document.getElementById(`${suffix}EmployeeEmail`).value;
+  const isMentor = document.getElementById(`${suffix}EmployeeIsMentor`).checked;
+  const employmentType = document.getElementById(`${suffix}EmployeeEmploymentType`).value;
+  const username = document.getElementById(`${suffix}EmployeeUsername`).value;
+  const password = document.getElementById(`${suffix}EmployeePassword`).value;
+
+  // Check for required fields
+  if (!name || !email || !employmentType || !username || !password) {
+      console.error("Validation failed. Missing required fields.");
+      return null;
+  }
+
+  return {
+      employeeId, name, email, isMentor, employmentType, username, password
+  };
 }
 
-  // Fetch all employees and display them in the table
+// handleTableClick(event)
+// Deals with click events on the employee table, distinguishing between view, edit, and archive actions based on button classes.
+// Calls respective functions like viewEmployee, editEmployee, or archiveEmployee.
+function handleTableClick(event) {
+  const employeeId = event.target.closest('tr').getAttribute('data-employee-id');
+  console.log("Clicked on employee table:", employeeId);
+
+  if (event.target.classList.contains('view-btn')) {
+      viewEmployee(employeeId);
+  } else if (event.target.classList.contains('edit-btn')) {
+      editEmployee(employeeId);
+  } else if (event.target.classList.contains('delete-btn')) {
+      const deleteModal = document.getElementById('deleteEmployeeModal');
+      deleteModal.setAttribute('data-employee-id', employeeId);
+      new bootstrap.Modal(deleteModal).show();
+  }
+}
+
+// fetchAllEmployees()
+// Fetches and displays all employees from the server.
+// Populates the employee table with fetched data.
 function fetchAllEmployees() {
+  console.log("Fetching all employees from the server...");
   fetch('http://localhost:8080/newhireinfo')
-    .then(response => response.json())
-    .then(employees => {
+  .then(response => response.json())
+  .then(employees => {
       const employeeTableBody = document.getElementById('employeeData');
       employeeTableBody.innerHTML = ''; // Clear existing rows
       employees.forEach(employee => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${employee.employeeId}</td>
-          <td>${employee.name}</td>
-          <td>${employee.employmentType}</td>
-          <td>${employee.isMentor ? 'Yes' : 'No'}</td>
-          <td>
-            <button class="btn btn-success" onclick="viewEmployee(${employee.employeeId})"><i class="bi bi-eye"></i></button>
-            <button class="btn btn-primary" onclick="editEmployee(${employee.employeeId})"><i class="bi bi-pencil-square"></i></button>
-            <button class="btn btn-danger" onclick="archiveEmployee(${employee.employeeId})"><i class="bi bi-trash"></i></button>
-          </td>
-
-        `;
-        employeeTableBody.appendChild(row);
+          const row = document.createElement('tr');
+          row.innerHTML = `
+              <td>${employee.employeeId}</td>
+              <td>${employee.name}</td>
+              <td>${employee.employmentType}</td>
+              <td>${employee.isMentor ? 'Yes' : 'No'}</td>
+              <td>
+                  <button class="btn btn-success view-btn"><i class="bi bi-eye"></i></button>
+                  <button class="btn btn-primary edit-btn"><i class="bi bi-pencil-square"></i></button>
+                  <button class="btn btn-danger delete-btn" data-bs-toggle="modal" data-bs-target="#deleteEmployeeModal"><i class="bi bi-trash"></i></button>
+              </td>
+          `;
+          employeeTableBody.appendChild(row);
       });
-    })
-    .catch(error => {
-      console.error('Error fetching employees:', error);
-    });
+      console.log("Employee table populated.");
+  })
+  .catch(error => console.error('Error fetching employees:', error));
 }
 
-// Function to create a new employee including mentor assignment
+  
+  // Event listener for the 'New Employee' form submission
+  document.getElementById('newEmployeeForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    createEmployee();
+  });
+  
+  // Fetch all employees on page load
+  document.addEventListener('DOMContentLoaded', fetchAllEmployees);
+  
+
+// createEmployee(formData)
+// Sends a request to the server to create a new employee with provided form data.
+// Handles server response and updates UI accordingly (refreshes employee list, etc.).
 function createEmployee(employeeData) {
+  // Get values from the form
+  const isMentor = document.getElementById('newEmployeeIsMentor').checked;
+  const mentorSelect = document.getElementById('mentorSelect');
+    if (mentorSelect) {
+      employeeData.mentor = mentorSelect.value;
+    } else {
+      console.error('Mentor select box not found');
+    }
+  const menteeSelect = document.getElementById('menteeSelect');
+
+  // Set mentor or mentee ID based on the role of the new hire
+  if (isMentor && menteeSelect) {
+    employeeData.mentee = menteeSelect.value; // New hire is a mentor and assigns a mentee
+  } else if (!isMentor && mentorSelect) {
+    employeeData.mentor = mentorSelect.value; // New hire is a mentee and assigns a mentor
+  }
+  console.log("Sending data to server for new employee creation:", employeeData);
   fetch('http://localhost:8080/newhireinfo', {
       method: 'POST',
       headers: {
@@ -206,7 +230,7 @@ function createEmployee(employeeData) {
   })
   .then(response => {
       if (response.ok) {
-          console.log('Employee created successfully');
+          onsole.log("Employee created successfully with ID:", data.employeeId);
           fetchAllEmployees(); // Refresh the employee list
           document.getElementById('newEmployeeForm').reset(); // Reset the form
           $('#newEmployeeModal').modal('hide'); // Close the modal
@@ -220,126 +244,36 @@ function createEmployee(employeeData) {
   .catch(error => console.error('Error creating employee:', error));
 }
 
-// // Function to toggle mentor assignment section based on the 'isMentor' checkbox
-// function toggleMentorAssignmentSection() {
-//     const isMentorCheckbox = document.getElementById('newEmployeeIsMentor');
-//     const mentorAssignmentSection = document.getElementById('mentorAssignmentSection');
-//     const mentorAssignmentsSelect = document.getElementById('newMentorAssignments');
+function createOrUpdateEmployee(employeeData, employeeId = null) {
+  const isNewEmployee = !employeeId;
+  const url = isNewEmployee ? 'http://localhost:8080/newhireinfo' : `http://localhost:8080/newhireinfo/${employeeId}`;
+  const method = isNewEmployee ? 'POST' : 'PUT';
 
-//     // Show or hide the mentor assignment section
-//     mentorAssignmentSection.style.display = isMentorCheckbox.checked ? 'block' : 'none';
+  // Logging the data to be sent for visual inspection
+  console.log("Prepared data for API request:", JSON.stringify(employeeData, null, 2));
+  console.log(`${isNewEmployee ? "Creating" : "Updating"} employee at ${url} using ${method} method.`);
 
-//     // Clear previous options
-//     mentorAssignmentsSelect.innerHTML = '';
-
-//     if (isMentorCheckbox.checked) {
-//         // If the employee is a mentor, fetch and populate with mentees (this example assumes you're a mentor looking for mentees)
-//         fetchMentees();
-//     } else {
-//         // If not a mentor, fetch and populate with mentors
-//         fetchMentors();
-//     }
-// }
-function toggleMentorAssignmentSection() {
-  const isMentorCheckbox = document.getElementById('newEmployeeIsMentor');
-  const mentorAssignmentSection = document.getElementById('mentorAssignmentSection');
-
-  // Show or hide the mentor assignment section based on the checkbox state
-  mentorAssignmentSection.style.display = isMentorCheckbox.checked ? 'block' : 'none';
+  fetch(url, {
+      method: method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(employeeData)
+  }).then(response => {
+      if (response.ok) {
+          console.log(isNewEmployee ? "Employee created successfully" : "Employee updated successfully");
+          fetchAllEmployees(); // Refresh the employee list
+          document.getElementById(isNewEmployee ? 'newEmployeeModal' : 'editEmployeeModal').modal('hide');
+      } else {
+          console.error("Failed to submit employee data");
+          response.json().then(data => {
+              console.error('Error details:', data.message);
+          });
+      }
+  }).catch(error => console.error('Error submitting employee data:', error));
 }
 
-
-// Add this event listener when the 'New Employee' modal is shown
-$('#newEmployeeModal').on('show.bs.modal', function () {
-  // Reset and populate the mentor dropdown if the employee is not a mentor
-  const mentorSelect = document.getElementById('newMentorAssignments');
-  mentorSelect.innerHTML = '<option value="">Select Mentor</option>';
-  if (!document.getElementById('newEmployeeIsMentor').checked) {
-      fetchMentors(); // This should fetch and populate the mentor dropdown
-  }
-});
-
-// Modify the fetchMentors function to handle auto-select logic if necessary
-function fetchMentors() {
-  fetch('http://localhost:8080/newhireinfo/mentors')
-  .then(response => response.json())
-  .then(mentors => {
-      const mentorSelect = document.getElementById('newMentorAssignments');
-      mentors.forEach(mentor => {
-          const option = document.createElement('option');
-          option.value = mentor.employeeId;
-          option.textContent = mentor.name;
-          mentorSelect.appendChild(option);
-      });
-      // Optionally auto-select a default mentor if required
-      // mentorSelect.value = 'defaultMentorId';
-  })
-  .catch(error => console.error('Error fetching mentors:', error));
-}
-
-// Function to fetch mentees and populate the dropdown, auto-select first unassigned
-function fetchMentees() {
-  fetch('http://localhost:8080/newhireinfo/unassigned-mentees')
-    .then(response => response.json())
-    .then(mentees => {
-      const menteeSelect = document.getElementById('newMentorAssignments');
-      mentees.forEach((mentee, index) => {
-        const option = document.createElement('option');
-        option.value = mentee.employeeId;
-        option.textContent = mentee.name;
-        option.selected = index === 0; // Auto-select the first unassigned mentee
-        menteeSelect.appendChild(option);
-      });
-    })
-    .catch(error => console.error('Error fetching mentees:', error));
-}
-
-// Function to update an existing employee
-function updateEmployee(employeeId, employeeData) {
-  fetch(`http://localhost:8080/newhireinfo/${employeeId}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(employeeData)
-  })
-  .then(response => {
-    if (response.ok) {
-      fetchAllEmployees(); // Refresh the employee list
-      $('#editEmployeeModal').modal('hide'); // Close the modal
-    } else {
-      // Handle errors
-      alert('Failed to update employee.');
-    }
-  });
-
-};
-
-// Function to edit an employee's details
- function editEmployee(employeeId) {
-  console.log(`Editing employee with ID: ${employeeId}`);
-  fetch(`http://localhost:8080/newhireinfo/${employeeId}`)
-    .then(response => response.json())
-    .then(employee => {
-      // Populate the edit form with the employee's details
-      document.getElementById('editEmployeeId').value = employee.employeeId;
-      document.getElementById('editName').value = employee.name;
-      document.getElementById('editIsMentor').checked = employee.isMentor;
-      document.getElementById('editEmploymentType').value = employee.employmentType;
-
-      // Populate mentor assignments
-      populateMentorAssignments(employeeId); // Populate mentor assignments
-      populateTasks(employeeId); // Populate tasks
-      // Show the edit modal
-      $('#editEmployeeModal').modal('show');
-
-            // Show the edit modal
-            // new bootstrap.Modal(document.getElementById('editEmployeeModal')).show();
-        })
-        // .catch(error => console.error('Error fetching employee details:', error));
-}
-window.editEmployee = editEmployee;
-
+// viewEmployee(employeeId)
+// Fetches detailed information about a specific employee for viewing.
+// Displays employee details in a modal or dedicated view section.
 function viewEmployee(employeeId) {
   console.log(`Viewing employee with ID: ${employeeId}`);
   fetch(`http://localhost:8080/newhireinfo/${employeeId}`)
@@ -362,60 +296,66 @@ function viewEmployee(employeeId) {
 }
 window.viewEmployee = viewEmployee;
 
-  // Function to archive an employee
-  function archiveEmployee(employeeId) {
-    const index = employees.findIndex(e => e.id === employeeId);
-    if (index !== -1) {
-      employees.splice(index, 1);
-      renderEmployees();
+// editEmployee(employeeId, formData)
+// Sends updated employee information to the server.
+// Handles the server response to confirm the update and refreshes the displayed data.
+function editEmployee(employeeId) {
+    const employee = employees.find(e => e.id === employeeId);
+    if (employee) {
+      const newName = prompt('Enter new name:', employee.name);
+      const newEmail = prompt('Enter new email:', employee.email);
+      const newIsMentor = confirm('Is this employee a mentor?');
+      const newEmploymentType = prompt('Enter new employment type:', employee.employmentType);
+      if (newName && newEmail && newEmploymentType) {
+        employee.name = newName;
+        employee.email = newEmail;
+        employee.isMentor = newIsMentor;
+        employee.employmentType = newEmploymentType;
+        renderEmployees();
+      }
     }
   }
-  window.archiveEmployee = archiveEmployee;
+  
+  // Function to delete an employee
+  function deleteEmployee(employeeId) {
+    if (confirm('Are you sure you want to delete this employee?')) {
+        console.log(`Deleting employee with ID: ${employeeId}`);
+        fetch(`http://localhost:8080/newhireinfo/${employeeId}`, { method: 'DELETE' })
+        .then(response => {
+            if (response.ok) {
+                console.log("Employee deleted successfully");
+                fetchAllEmployees(); // Refresh the employee list
+            } else {
+                alert('Failed to delete employee.');
+            }
+        })
+        .catch(error => console.error('Error deleting employee:', error));
+    }
+}
 
+  document.getElementById('employeeTable').addEventListener('click', function(event) {
+    const target = event.target;
+    const row = target.closest('tr');
+    if (target.classList.contains('edit-btn')) {
+        const employeeId = row.getAttribute('data-employee-id');
+        console.log("Preparing to edit employee ID:", employeeId);
+        fetchAndPopulateEditForm(employeeId);
+    } else if (target.classList.contains('delete-btn')) {
+        const employeeId = row.getAttribute('data-employee-id');
+        const deleteModal = document.getElementById('deleteEmployeeModal');
+        deleteModal.setAttribute('data-employee-id', employeeId);
+        new bootstrap.Modal(deleteModal).show();
+    }
+});
 
-// Function to delete an employee
-function deleteEmployee(employeeId) {
-  console.log(`Deleting employee with ID: ${employeeId}`);
-  if (confirm('Are you sure you want to delete this employee?')) {
-    fetch(`http://localhost:8080/newhireinfo/${employeeId}`, {
-      method: 'DELETE'
+function fetchAndPopulateEditForm(employeeId) {
+    // Fetch employee details and populate the edit form
+    fetch(`http://localhost:8080/newhireinfo/${employeeId}`)
+    .then(response => response.json())
+    .then(employee => {
+        document.getElementById('editEmployeeName').value = employee.name;
+        // Populate other fields
+        console.log("Edit form populated for employee ID:", employeeId);
     })
-    .then(response => {
-      if (response.ok) {
-        fetchAllEmployees(); // Refresh the employee list
-      } else {
-        // Handle errors
-        alert('Failed to delete employee.');
-      }
-    });
-  }
-}
-
-
-
-
-function handleNewEmployeeSubmit(event) {
-  event.preventDefault();
-  // Collect form data and call createEmployee
-  const formData = {
-      name: document.getElementById('newEmployeeName').value,
-      email: document.getElementById('newEmployeeEmail').value,
-      isMentor: document.getElementById('newEmployeeIsMentor').checked,
-      username: document.getElementById('newEmployeeUsername').value,
-      password: document.getElementById('newEmployeePassword').value,
-      employmentType: document.getElementById('newEmployeeEmploymentType').value
-  };
-  createEmployee(formData);
-}
-
-function handleEditEmployeeSubmit(event) {
-  event.preventDefault();
-  // Collect form data, including employeeId, and call updateEmployee
-  const employeeId = document.getElementById('editEmployeeId').value;
-  const updatedEmployeeData = {
-      name: document.getElementById('editName').value,
-      isMentor: document.getElementById('editIsMentor').checked,
-      employmentType: document.getElementById('editEmploymentType').value
-  };
-  updateEmployee(employeeId, updatedEmployeeData);
+    .catch(error => console.error('Error fetching employee details:', error));
 }

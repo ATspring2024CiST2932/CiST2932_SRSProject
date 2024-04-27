@@ -17,6 +17,7 @@
 <body>
     <h2>Employee Management</h2>
     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newEmployeeModal">Add Employee</button>
+    <input type="text" class="form-control" id="filterInput" onkeyup="filterTable()" placeholder="Search employees...">
         <!-- New Employee Modal -->
         <div class="modal fade" id="newEmployeeModal" tabindex="-1" aria-labelledby="newEmployeeModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -75,61 +76,21 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="addTaskForm">Add Task</button>
                     <button type="submit" class="btn btn-primary">Save</button>
                 </div>
                 </form>
             </div>
             </div>
         </div>
-  
-  <!-- New Task Modal -->
-  <div class="modal fade" id="taskForm">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">Complete Task Form</h4>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form action="#" id="taskFormElement" method="post">
-            <div class="mb-3">
-              <label for="taskURL" class="form-label">Task URL:</label>
-              <input type="text" id="taskUrl" name="taskUrl" required>
-            </div>
-            <div class="mb-3">
-              <label for="taskNumber" class="form-label">Task Number:</label>
-              <input type="text" id="taskNumber" name="taskNumber" required>
-            </div>
-            <div class="mb-3">
-              <label for="taskType" class="form-label">Task Type:</label>
-              <input type="text" id="taskType" name="taskType" required>
-            </div>
-            <div class="mb-3">
-              <label for="totalHours" class="form-label">Total Hours:</label>
-              <input type="number" step="0.1" id="totalHours" name="totalHours" required>
-            </div>
-            <div class="mb-3">
-              <label for="assigneeName" class="form-label">Assignee:</label>
-              <select id="assigneeName" name="assigneeName" required>
-                <option value="">Select Assignee</option>
-              </select>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
 
         <!-- Employee Table -->
         <table class="table table-striped mt-5" id="employeeTable">
             <thead>
                 <tr>
-                    <th>Employee ID</th>
-                    <th>Name</th>
-                    <th>Employment Type</th>
-                    <th>Is Mentor</th>
+                    <th class="sortable" onclick="sortTable(0)" data-dir="asc">Employee ID</th>
+                    <th class="sortable" onclick="sortTable(1)" data-dir="asc">Name</th>
+                    <th class="sortable" onclick="sortTable(2)" data-dir="asc">Employment Type</th>
+                    <th class="sortable" onclick="sortTable(3)" data-dir="asc">Is Mentor</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -148,6 +109,8 @@
                         <div><strong>Name:</strong> <span id="viewName"></span></div>
                         <div><strong>Is Mentor:</strong> <span id="viewIsMentor"></span></div>
                         <div><strong>Employment Type:</strong> <span id="viewEmploymentType"></span></div>
+                        <div><strong>Username:</strong> <span id="viewUsername"></span></div>
+                        <div><strong>Email:</strong> <span id="viewEmail"></span></div>
                         <div><strong>Mentor Assignments:</strong> <ul id="viewMentorAssignments"></ul></div>
                         <div><strong>Tasks:</strong> <ul id="viewTasks"></ul></div>
                     </div>
@@ -219,6 +182,79 @@
     <!-- React Script -->
     <script type="module" src="/src/main.jsx" defer></script>
 
+    <script>
+    function filterTable() {
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("filterInput");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("employeeTable");
+      tr = table.getElementsByTagName("tr");
+      for (i = 1; i < tr.length; i++) {
+        let found = false;
+        td = tr[i].getElementsByTagName("td");
+        for (let j = 0; j < td.length; j++) {
+          if (td[j]) {
+            txtValue = td[j].textContent || td[j].innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+              found = true;
+              break;
+            }
+          }
+        }
+        if (found) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+
+    function sortTable(columnIndex) {
+        var table, rows, switching, i, x, y;
+        table = document.getElementById("employeeTable");
+        switching = true;
+        var currentDir = table.getAttribute("data-dir");
+
+        if (!currentDir || currentDir === "asc") {
+            table.setAttribute("data-dir", "desc");
+        } else {
+            table.setAttribute("data-dir", "asc");
+        }
+
+        while (switching) {
+            switching = false;
+            rows = table.rows;
+
+            for (i = 1; i < rows.length - 1; i++) {
+                var shouldSwitch = false;
+                x = rows[i].getElementsByTagName("td")[columnIndex];
+                y = rows[i + 1].getElementsByTagName("td")[columnIndex];
+
+                // Compare the content of the cells based on the current direction
+                var xValue, yValue;
+
+                // Check if it's the first column (Employee ID)
+                if (columnIndex === 0) {
+                    xValue = parseFloat(x.innerHTML);
+                    yValue = parseFloat(y.innerHTML);
+                } else {
+                    xValue = x.innerHTML.toLowerCase();
+                    yValue = y.innerHTML.toLowerCase();
+                }
+
+                if (currentDir === "asc" ? xValue > yValue : xValue < yValue) {
+                    shouldSwitch = true;
+                    break;
+                }
+            }
+
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+            }
+        }
+    }
+    </script>
 
     <!-- Vanilla JavaScript Script -->
     <script src="App_copy.js" type="module"></script>

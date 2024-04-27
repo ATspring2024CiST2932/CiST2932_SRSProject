@@ -21,15 +21,14 @@ public class NewHireInfoController {
     @Autowired
     private NewHireInfoService newHireInfoService;
 
-
     @GetMapping
-    public ResponseEntity<List<NewHireInfo>> getAllNewHireInfo() {
-        List<NewHireInfo> newHireInfoList = newHireInfoService.findAll();
-        return ResponseEntity.ok(newHireInfoList);
+    public ResponseEntity<List<NewHireInfo>> getAllNewEmployeeDTO() {
+        List<NewHireInfo> getAllNewEmployeeDTOList = newHireInfoService.findAll();
+        return ResponseEntity.ok(getAllNewEmployeeDTOList);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<NewHireInfo> getNewHireInfoById(@PathVariable int id) {
+    public ResponseEntity<NewHireInfo> getAllNewEmployeeDTOById(@PathVariable int id) {
         return newHireInfoService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -54,24 +53,26 @@ public class NewHireInfoController {
         }
     }
 
+    // fetch mentees by mentor id
     @GetMapping("/{mentorId}/mentees")
     public ResponseEntity<List<NewHireInfo>> getMenteesByMentor(@PathVariable int mentorId) {
         List<NewHireInfo> mentees = newHireInfoService.findMenteesByMentorId(mentorId);
         return ResponseEntity.ok(mentees);
     }
-
+    // fetch mentor by mentee id
     @GetMapping("/{menteeId}/mentor")
     public ResponseEntity<List<NewHireInfo>> getMentorByMenteeId(@PathVariable int menteeId) {
         List<NewHireInfo> mentor = newHireInfoService.findMentorByMenteeId(menteeId);
         return ResponseEntity.ok(mentor);
     }
-
-    @GetMapping("/mentors")
+    // fetch list of mentors
+    @GetMapping("/fetchMentors")
     public ResponseEntity<List<NewHireInfo>> getAllMentors() {
         List<NewHireInfo> mentors = newHireInfoService.findAllMentors();
         return ResponseEntity.ok(mentors);
     }
-    @GetMapping("/unassigned-mentees")
+    // fetch list of unassigned mentees
+    @GetMapping("/fetchMentees")
     public ResponseEntity<List<NewHireInfo>> getUnassignedMentees() {
         List<NewHireInfo> unassignedMentees = newHireInfoService.findUnassignedMentees();
         if (unassignedMentees.isEmpty()) {
@@ -90,16 +91,28 @@ public class NewHireInfoController {
         NewHireInfo newHireInfo = newHireInfoService.createNewHireInfo(newEmployeeDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(newHireInfo);
     }
-    @PutMapping("/{id}")
-    public ResponseEntity<NewHireInfo> updateOrCreateEmployee(@PathVariable int id, @RequestBody NewEmployeeDTO employeeDTO) {
+//     @PutMapping("/{id}")
+//     public ResponseEntity<NewHireInfo> updateOrCreateEmployee(@PathVariable int id, @RequestBody NewEmployeeDTO newEmployeeDTO) {
+//         try {
+//             NewHireInfo updatedInfo = newHireInfoService.updateOrCreateEmployee(id, newEmployeeDTO);
+//             return ResponseEntity.ok(updatedInfo);
+//         } catch (Exception e) {
+//             return ResponseEntity.badRequest().build();
+//         }
+// }
+
+    @GetMapping("/{employeeId}/details")
+    public ResponseEntity<?> getEmployeeDetails(@PathVariable int employeeId) {
         try {
-            NewHireInfo updatedInfo = newHireInfoService.updateOrCreateEmployee(id, employeeDTO);
-            return ResponseEntity.ok(updatedInfo);
+            NewEmployeeDTO employeeDetails = newHireInfoService.getEmployeeDetails(employeeId);
+            if (employeeDetails != null) {
+                return ResponseEntity.ok(employeeDetails);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
         } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving employee details: " + e.getMessage());
         }
-}
-
-
+    }
 
 }

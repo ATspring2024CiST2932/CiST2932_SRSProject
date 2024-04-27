@@ -21,9 +21,6 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-@SpringBootApplication
 
 @Entity
 @Table(name = "newhireinfo")
@@ -55,7 +52,7 @@ public class NewHireInfo {
     @JsonManagedReference("task-assignee")
     private List<PeerCodingTasks> assignedTasks = new ArrayList<>();;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "newHireInfo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
     private Users user;
 
@@ -133,7 +130,6 @@ public class NewHireInfo {
     public void setUser(Users user) {
         this.user = user;
     }
-
     
     public Set<MentorAssignments> getMentorAssignments() {
     Set<MentorAssignments> allAssignments = new HashSet<>();
@@ -141,5 +137,4 @@ public class NewHireInfo {
     allAssignments.addAll(getAssignmentsAsMentee());
     return allAssignments;
 }
-
 }
