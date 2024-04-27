@@ -6,7 +6,6 @@ import com.CiST2932.SRSProject.Domain.NewEmployeeDTO;
 import com.CiST2932.SRSProject.Domain.NewHireInfo;
 import com.CiST2932.SRSProject.Service.NewHireInfoService;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpStatus;
@@ -21,8 +20,7 @@ public class NewHireInfoController {
 
     @Autowired
     private NewHireInfoService newHireInfoService;
-    @Autowired
-    private ModelMapper modelMapper;
+
 
     @GetMapping
     public ResponseEntity<List<NewHireInfo>> getAllNewHireInfo() {
@@ -47,12 +45,13 @@ public class NewHireInfoController {
     // }    
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteNewHireInfo(@PathVariable int id) {
-        if (newHireInfoService.findById(id).isPresent()) {
-            newHireInfoService.deleteById(id);
+    public ResponseEntity<?> deleteNewHireInfo(@PathVariable int id) {
+        try {
+            newHireInfoService.deleteNewHireInfoAndRelatedData(id);
             return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete new hire info: " + e.getMessage());
         }
-        return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/{mentorId}/mentees")

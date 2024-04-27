@@ -10,20 +10,21 @@ import com.CiST2932.SRSProject.Domain.Users;
 import com.CiST2932.SRSProject.Repository.NewHireInfoRepository;
 import com.CiST2932.SRSProject.Repository.UsersRepository;
 import com.CiST2932.SRSProject.Repository.MentorAssignmentsRepository;
+import com.CiST2932.SRSProject.Repository.PeerCodingTasksRepository;
+
+import java.sql.Timestamp;
+import java.util.List;
+import java.util.Optional;
 import org.modelmapper.ModelMapper;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
-
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.ResourceAccessException;
-import java.util.List;
-import java.util.Optional;
-import java.sql.Timestamp;
 
 @Service
 public class NewHireInfoService {
-
     @Autowired
     private NewHireInfoRepository newHireInfoRepository;
     @Autowired
@@ -31,8 +32,10 @@ public class NewHireInfoService {
     @Autowired
     private MentorAssignmentsRepository mentorAssignmentsRepository;
     @Autowired
+    private PeerCodingTasksRepository peerCodingTasksRepository;
+    @Autowired
     private ModelMapper modelMapper;
-
+    
     public List<NewHireInfo> findAll() {
         return newHireInfoRepository.findAll();
     }
@@ -48,6 +51,30 @@ public class NewHireInfoService {
 
     public void deleteById(int id) {
         newHireInfoRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void deleteNewHireInfoAndRelatedData(int employeeId) {
+        // Fetch NewHireInfo along with related data
+        NewHireInfo newHireInfo = newHireInfoRepository.findById(employeeId).orElseThrow(() ->
+            new IllegalStateException("Employee not found with id: " + employeeId));
+
+        // Delete related data first to avoid foreign key constraints
+        if (!newHireInfo.getAssignedTasks().isEmpty()) {
+            peerCodingTasksRepository.deleteAll(newHireInfo.getAssignedTasks());
+        }
+        if (!newHireInfo.getAssignmentsAsMentor().isEmpty()) {
+            mentorAssignmentsRepository.deleteAll(newHireInfo.getAssignmentsAsMentor());
+        }
+        if (!newHireInfo.getAssignmentsAsMentee().isEmpty()) {
+            mentorAssignmentsRepository.deleteAll(newHireInfo.getAssignmentsAsMentee());
+        }
+        if (newHireInfo.getUser() != null) {
+            usersRepository.deleteById(newHireInfo.getUser().getEmployeeId());
+        }
+
+        // Finally, delete the NewHireInfo record itself
+        newHireInfoRepository.deleteById(employeeId);
     }
 
     public List<NewHireInfo> findMenteesByMentorId(int mentorId) {
@@ -148,46 +175,41 @@ public class NewHireInfoService {
         return newHireInfoRepository.save(newHireInfo);
         
     }
-        
+
     public NewHireInfo updateEmployee(int id, NewEmployeeDTO newEmployeeDTO) {
         NewHireInfo employee = newHireInfoRepository.findById(id)
                 .orElseThrow(() -> new ResourceAccessException("Employee not found with id " + id));
         modelMapper.map(newEmployeeDTO, employee);
         return newHireInfoRepository.save(employee);
     }
-    
+
     @Transactional
     public NewHireInfo updateOrCreateEmployee(int id, NewEmployeeDTO newEmployeeDTO) {
-        // First, fetch the existing NewHireInfo or create a new one
+        // Fetch the existing NewHireInfo or create a new one
         NewHireInfo newHireInfo = newHireInfoRepository.findById(id).orElse(new NewHireInfo());
 
-        // Update properties from DTO
-        newHireInfo.setIsMentor(newEmployeeDTO.getIsMentor());
-        newHireInfo.setEmploymentType(newEmployeeDTO.getEmploymentType());  // Assuming these are included in DTO
-        newHireInfo.setName(newEmployeeDTO.getName()); // Assume name is also updatable
+        // Use modelMapper to map DTO to entity
+        modelMapper.map(newEmployeeDTO, newHireInfo);
 
-        // Save the NewHireInfo entity and ensure it has an ID
-        newHireInfo = newHireInfoRepository.save(newHireInfo);
+        // Save the NewHireInfo entity
+        NewHireInfo savedNewHireInfo = newHireInfoRepository.save(newHireInfo);
 
-        // Handle the Users entity
-        Users user = usersRepository.findById(id).orElse(new Users());
-
-        // Set properties from the DTO
-        user.setNewHireInfo(newHireInfo);
+        // Handling the Users entity
+        Users user = usersRepository.findById(newHireInfo.getEmployeeId()).orElse(new Users());
+        user.setNewHireInfo(savedNewHireInfo);
         user.setEmail(newEmployeeDTO.getEmail());
         user.setUsername(newEmployeeDTO.getUsername());
         user.setPasswordHash(newEmployeeDTO.getPasswordHash());
         user.setRegistrationDate(new Timestamp(System.currentTimeMillis()));
 
         // Link User to NewHireInfo
-        newHireInfo.setUser(user);
+        savedNewHireInfo.setUser(user);
 
         // Save or update the User
         usersRepository.save(user);
 
-        return newHireInfo;
-    } 
-
+        return savedNewHireInfo;
+    }
 
     
 }

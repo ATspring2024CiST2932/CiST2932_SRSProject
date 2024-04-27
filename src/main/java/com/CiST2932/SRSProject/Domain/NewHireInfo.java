@@ -13,7 +13,9 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -130,4 +132,13 @@ public class NewHireInfo {
     public void setUser(Users user) {
         this.user = user;
     }
+
+    
+    public Set<MentorAssignments> getMentorAssignments() {
+    Set<MentorAssignments> allAssignments = new HashSet<>();
+    allAssignments.addAll(getAssignmentsAsMentor());
+    allAssignments.addAll(getAssignmentsAsMentee());
+    return allAssignments;
+}
+
 }
