@@ -31,19 +31,7 @@
   font-size: 1rem;
   position: relative;
 }
-/* .toggle-theme-button{
-  position: absolute;
-  bottom: 30px;
-  left: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-} */
-/* .toggle{
-  margin-left: 15px;
 
-} */
 .table tr td {
 vertical-align: middle;
 position: relative;
@@ -126,4 +114,12 @@ position: relative;
   height: 100px;
 }
 
+.searchemployee {
+  position: absolute;
+  z-index: 2;
+  width: 25%;
+  left: 1000px;
+  top: 1px;
+  height: 100px;
+}
 

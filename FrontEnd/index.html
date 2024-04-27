@@ -18,6 +18,9 @@
     <!-- <h2>Employee Management</h2> -->
     <div class ="addbutton">
     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newEmployeeModal">Add Employee</button>
+    <div class="searchemployee">
+    <input type="text" class="form-control" id="filterInput" onkeyup="filterTable()" placeholder="Search employees...">
+    </div>
     </div>
         <!-- New Employee Modal -->
         <div class="modal fade" id="newEmployeeModal" tabindex="-1" aria-labelledby="newEmployeeModalLabel" aria-hidden="true">
