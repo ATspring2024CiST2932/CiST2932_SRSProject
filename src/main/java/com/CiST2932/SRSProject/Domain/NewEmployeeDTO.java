@@ -13,8 +13,8 @@ public class NewEmployeeDTO {
     private String employmentType;
     private Timestamp registrationDate;
     private Integer mentorOrMenteeId; // This will store either mentor ID or mentee ID based on the role
-    //private int mentor;  // Mentor's employee ID
-    //private int mentee;  // Mentee's employee ID
+    private int mentor;  // Mentor's employee ID
+    private int mentee;  // Mentee's employee ID
 
     // Getters and setters
     public int getEmployeeId() { return employeeId; }
@@ -41,13 +41,19 @@ public class NewEmployeeDTO {
     public Timestamp getRegistrationDate() { return registrationDate;}
     public void setRegistrationDate(Timestamp registrationDate) { this.registrationDate = registrationDate;}
 
+    public List<Integer> getAssignmentsAsMentorIds() { return assignmentsAsMentorIds;}
+    public void setAssignmentsAsMentorIds(List<Integer> assignmentsAsMentorIds) { this.assignmentsAsMentorIds = assignmentsAsMentorIds;}
+
+    public List<Integer> getAssignmentsAsMenteeIds() { return assignmentsAsMenteeIds;}
+    public void setAssignmentsAsMenteeIds(List<Integer> assignmentsAsMenteeIds) { this.assignmentsAsMenteeIds = assignmentsAsMenteeIds;}
+
     public Integer getMentorOrMenteeId() { return mentorOrMenteeId;}
     public void setMentorOrMenteeId(Integer mentorOrMenteeId) { this.mentorOrMenteeId = mentorOrMenteeId;}
 
-    // public int getMentor() { return mentor;}
-    // public void setMentor(int mentor) { this.mentor = mentor;}
+    public int getMentor() { return mentor;}
+    public void setMentor(int mentor) { this.mentor = mentor;}
     
-    // public int getMentee() { return mentee;}
-    // public void setMentee(int mentee) { this.mentee = mentee;}
+    public int getMentee() { return mentee;}
+    public void setMentee(int mentee) { this.mentee = mentee;}
     
 }

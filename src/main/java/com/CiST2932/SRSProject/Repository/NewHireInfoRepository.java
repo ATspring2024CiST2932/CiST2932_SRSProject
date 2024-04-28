@@ -60,4 +60,8 @@ public interface NewHireInfoRepository extends JpaRepository<NewHireInfo, Intege
     @Query("DELETE FROM NewHireInfo n WHERE n.id = :id")    
     void deleteById(@Param("id") int id);
 
+    //findMenteesByMentorId
+    @Query("SELECT ma.mentee FROM MentorAssignments ma WHERE ma.mentor.employeeId = :mentorId")
+    List<NewHireInfo> findMenteesByMentorId(@Param("mentorId") int mentorId);
+
 }
