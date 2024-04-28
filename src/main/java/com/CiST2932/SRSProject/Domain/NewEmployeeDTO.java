@@ -18,7 +18,7 @@ public class NewEmployeeDTO {
     private List<Integer> assignmentsAsMentorIds;
     private List<Integer> assignmentsAsMenteeIds;
     private Integer mentorOrMenteeId; // ID of the mentor or mentee
-    private List<NewHireInfo> mentees; // List of mentees if the employee is a mentor
+    private List<NewHireInfo> mentee; // List of mentees if the employee is a mentor
     private List<NewHireInfo> mentor; // List of mentor if the employee is a mentee
     private List<TaskDTO> tasks; // Tasks associated with the employee
 
@@ -49,13 +49,22 @@ public class NewEmployeeDTO {
     public Timestamp getRegistrationDate() { return registrationDate;}
     public void setRegistrationDate(Timestamp registrationDate) { this.registrationDate = registrationDate;}
 
+    public List<Integer> getAssignmentsAsMentorIds() { return assignmentsAsMentorIds;}
+    public void setAssignmentsAsMentorIds(List<Integer> assignmentsAsMentorIds) { this.assignmentsAsMentorIds = assignmentsAsMentorIds;}
+
+    public List<Integer> getAssignmentsAsMenteeIds() { return assignmentsAsMenteeIds;}
+    public void setAssignmentsAsMenteeIds(List<Integer> assignmentsAsMenteeIds) { this.assignmentsAsMenteeIds = assignmentsAsMenteeIds;}
+
     public Integer getMentorOrMenteeId() { return mentorOrMenteeId;}
     public void setMentorOrMenteeId(Integer mentorOrMenteeId) { this.mentorOrMenteeId = mentorOrMenteeId;}
 
-    public int getMentor() { return mentor;}
-    public void setMentor(int mentor) { this.mentor = mentor;}
-    
-    public int getMentee() { return mentee;}
-    public void setMentee(int mentee) { this.mentee = mentee;}
+    public List<NewHireInfo> getMentee() { return mentee;}  
+    public void setMentee(List<NewHireInfo> mentee) { this.mentee = mentee;}
 
+    public List<NewHireInfo> getMentor() { return mentor;}  
+    public void setMentor(List<NewHireInfo> mentor) { this.mentor = mentor;}
+    public void setTasks(List<TaskDTO> tasks2) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setTasks'");
+    }    
 }

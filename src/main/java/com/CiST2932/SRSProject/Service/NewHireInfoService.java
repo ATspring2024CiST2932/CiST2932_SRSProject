@@ -18,6 +18,8 @@ import com.CiST2932.SRSProject.Repository.PeerCodingTasksRepository;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.modelmapper.ModelMapper;
 
 
@@ -78,10 +80,11 @@ public class NewHireInfoService {
             throw new RuntimeException("Error deleting employee and related data: " + e.getMessage(), e);
         }
     }
- 
+    
     public List<NewHireInfo> findMenteesByMentorId(int mentorId) {
         return newHireInfoRepository.findMenteesByMentorId(mentorId);
     }
+    
 
     public List<NewHireInfo> findMentorByMenteeId(int menteeId) {
         return newHireInfoRepository.findMentorByMenteeId(menteeId);
@@ -218,7 +221,6 @@ private void updateNewHireInfoFromDto(NewHireInfo newHireInfo, NewEmployeeDTO dt
         } else {
             System.out.println("Mentor/Mentee ID not found: " + newEmployeeDTO.getMentorOrMenteeId());
         }
-    }
 
         // print out the username
         System.out.println("Username: " + newEmployeeDTO.getUsername());
@@ -227,8 +229,8 @@ private void updateNewHireInfoFromDto(NewHireInfo newHireInfo, NewEmployeeDTO dt
         System.out.println("Employee ID: " + newHireInfo.getEmployeeId());
 
     
-        // Save the NewHireInfo entity, cascade should save Users too
-        return newHireInfoRepository.save(newHireInfo);        
+        // // Save the NewHireInfo entity, cascade should save Users too
+        // return newHireInfoRepository.save(newHireInfo);        
     }
 
     public NewHireInfo updateEmployee(int id, NewEmployeeDTO newEmployeeDTO) {
@@ -259,6 +261,8 @@ private void updateNewHireInfoFromDto(NewHireInfo newHireInfo, NewEmployeeDTO dt
 
         // Link User to NewHireInfo
         savedNewHireInfo.setUser(user);
+        return savedNewHireInfo;
+    }
 
 @Transactional(readOnly = true)
 public NewEmployeeDTO getEmployeeDetails(int employeeId) {
@@ -316,7 +320,6 @@ public NewEmployeeDTO getEmployeeDetails(int employeeId) {
         return dto;
         }
 
-}
 
-        return savedNewHireInfo;
-    }
+
+}

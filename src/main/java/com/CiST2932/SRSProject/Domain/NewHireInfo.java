@@ -131,10 +131,10 @@ public class NewHireInfo {
         this.user = user;
     }
     
-    public Set<MentorAssignments> getMentorAssignments() {
-    Set<MentorAssignments> allAssignments = new HashSet<>();
-    allAssignments.addAll(getAssignmentsAsMentor());
-    allAssignments.addAll(getAssignmentsAsMentee());
-    return allAssignments;
-}
+    // public Set<MentorAssignments> getMentorAssignments() {
+    // Set<MentorAssignments> allAssignments = new HashSet<>();
+    // allAssignments.addAll(getAssignmentsAsMentor());
+    // allAssignments.addAll(getAssignmentsAsMentee());
+    // return allAssignments;
+    // }
 }

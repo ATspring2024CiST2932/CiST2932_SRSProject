@@ -45,4 +45,8 @@ public interface NewHireInfoRepository extends JpaRepository<NewHireInfo, Intege
     @Query("SELECT ma.mentor FROM MentorAssignments ma WHERE ma.mentee.employeeId = :menteeId")
     List<NewHireInfo> findMentorByMenteeId(@Param("menteeId") int menteeId);
 
+    //findMenteesByMentorId
+    @Query("SELECT ma.mentee FROM MentorAssignments ma WHERE ma.mentor.employeeId = :mentorId")
+    List<NewHireInfo> findMenteesByMentorId(@Param("mentorId") int mentorId);
+
 }

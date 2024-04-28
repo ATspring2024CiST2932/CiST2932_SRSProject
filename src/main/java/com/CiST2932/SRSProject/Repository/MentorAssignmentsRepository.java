@@ -21,6 +21,10 @@ public interface MentorAssignmentsRepository extends JpaRepository<MentorAssignm
     @Query("SELECT new com.CiST2932.SRSProject.Domain.MentorAssignmentsDTO(ma.mentor.employeeId, ma.mentee.employeeId) FROM MentorAssignments ma WHERE ma.mentor.employeeId = :mentorId")
     List<MentorAssignmentsDTO> findMentorAssignmentsDtoByMentorEmployeeId(@Param("mentorId") int mentorId);
 
+    // //findMenteesByMentorId
+    // @Query("SELECT ma.mentee.employeeId FROM MentorAssignments ma WHERE ma.mentor.employeeId = :mentorId")
+    // List<Integer> findMenteesByMentorId(@Param("mentorId") int mentorId);
+
     //deleteByEmployeeId
     @Transactional
     @Modifying
