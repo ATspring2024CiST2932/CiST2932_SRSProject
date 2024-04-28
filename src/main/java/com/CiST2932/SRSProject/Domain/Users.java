@@ -28,18 +28,18 @@ public class Users {
     @OneToOne
     @MapsId
     @JoinColumn(name = "EmployeeID", referencedColumnName = "EmployeeID")
-    private NewHireInfo developerId;
+    private NewHireInfo developer;
 
     public Users() {
     }
 
-    public Users(int userId, String username, String passwordHash, String email, Timestamp registrationDate, NewHireInfo developerId) {
+    public Users(int userId, String username, String passwordHash, String email, Timestamp registrationDate, NewHireInfo developer) {
         this.user_id = userId;
         this.username = username;
         this.passwordHash = passwordHash;
         this.email = email;
         this.registrationDate = registrationDate;
-        this.developerId = developerId;
+        this.developer= developer;
         
     }
 
@@ -83,23 +83,23 @@ public class Users {
         this.registrationDate = registrationDate;
     }
 
-    public NewHireInfo getDeveloperId() {
-        return developerId;
+    public NewHireInfo getDeveloper() {
+        return developer;
     }
 
-    public void setDeveloperId(NewHireInfo developerId) {
-        this.developerId = developerId;
+    public void setDeveloper(NewHireInfo developer) {
+        this.developer= developer;
     }
 
      public String getDeveloperName () {
-        return this.developerId != null ? this.developerId.getName(): null;
+        return this.developer!= null ? this.developer.getName(): null;
     }
     
     public void setDeveloperName(String developerName) {
-        if (this.developerId == null) {
-            this.developerId = new NewHireInfo();
+        if (this.developer== null) {
+            this.developer= new NewHireInfo();
         }
-        this.developerId.setName(developerName);
+        this.developer.setName(developerName);
     }
 
 }

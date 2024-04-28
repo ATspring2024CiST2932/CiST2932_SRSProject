@@ -2,6 +2,7 @@
 
 package com.CiST2932.SRSProject.Repository;
 
+import com.CiST2932.SRSProject.Domain.MentorAssignments;
 import com.CiST2932.SRSProject.Domain.NewEmployeeDTO;
 import com.CiST2932.SRSProject.Domain.NewHireInfo;
 
@@ -19,15 +20,21 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface NewHireInfoRepository extends JpaRepository<NewHireInfo, Integer> {
-    // show all the NewEmployeeDTO data
-    @Query("SELECT n FROM NewEmployeeDTO n")
-    List<NewEmployeeDTO> findAllNewEmployeeDTO();
+
+    @Query("SELECT n FROM NewHireInfo n JOIN FETCH n.developer WHERE n.employeeId = :id")
+    Optional<NewHireInfo> findById(@Param("id") int id);
+    
+    @Query("SELECT n FROM NewHireInfo n JOIN FETCH n.developer d LEFT JOIN FETCH n.mentorAssignments ma")
+    List<NewHireInfo> findAllNewHireInfoWithDetails();
+
+    @Query("SELECT n FROM NewHireInfo n JOIN FETCH n.developer WHERE n.employeeId = :id")
+    Optional<NewHireInfo> findByIdWithDetails(@Param("id") int id);
 
     @Query("SELECT ma.mentee FROM MentorAssignments ma WHERE ma.mentor.employeeId = :mentorId")
     List<NewHireInfo> findMenteesByMentorId(@Param("mentorId") int mentorId);
 
     @Query("SELECT ma.mentor FROM MentorAssignments ma WHERE ma.mentee.employeeId = :menteeId")
-    List<NewHireInfo> findMentorByMenteeId(@Param("menteeId") int menteeId);
+    MentorAssignments findMentorByMenteeId(@Param("menteeId") int menteeId);
 
     @Query("SELECT n FROM NewHireInfo n WHERE n.isMentor = false AND n.id NOT IN (SELECT ma.mentee.id FROM MentorAssignments ma)")
     List<NewHireInfo> findUnassignedMentees(); 
@@ -52,7 +59,5 @@ public interface NewHireInfoRepository extends JpaRepository<NewHireInfo, Intege
     @Modifying
     @Query("DELETE FROM NewHireInfo n WHERE n.id = :id")    
     void deleteById(@Param("id") int id);
-
-
 
 }

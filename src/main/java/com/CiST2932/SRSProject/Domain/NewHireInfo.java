@@ -55,9 +55,9 @@ public class NewHireInfo {
     @JsonManagedReference("task-assignee")
     private List<PeerCodingTasks> assignedTasks = new ArrayList<>();;
 
-    @OneToOne(mappedBy= "developerId", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JoinColumn
-    private Users developerId;
+    @OneToOne(mappedBy = "developer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Users developer;  // Clearer reference to the user as 'developer'
+
 
     // Constructors, getters, and setters
     public NewHireInfo() {
@@ -126,12 +126,12 @@ public class NewHireInfo {
         this.assignedTasks = assignedTasks;
     }
 
-    public Users getDeveloperId() {
-        return developerId;
+    public Users getDeveloper() {
+        return developer;
     }
 
-    public void setDeveloperId(Users developerId) {
-        this.developerId = developerId;
+    public void setDeveloper(Users developer) {
+        this.developer = developer;
     }
 
     

@@ -60,7 +60,7 @@ public class NewHireInfoService {
     
         // Attempt to delete User first if exists
         try {
-            if (newHireInfo.getDeveloperId() != null) {
+            if (newHireInfo.getDeveloper() != null) {
                 usersRepository.deleteByEmployeeId(newHireInfo.getEmployeeId());
             }
     
@@ -119,12 +119,12 @@ public NewHireInfo createNewHireInfo(NewEmployeeDTO newEmployeeDTO) {
 
     // Create user account
     Users user = new Users();
-    user.setDeveloperId(savedNewHireInfo);
+    user.setDeveloper(savedNewHireInfo);
     user.setEmail(newEmployeeDTO.getEmail());
     user.setUsername(newEmployeeDTO.getUsername());
     user.setPasswordHash(newEmployeeDTO.getPasswordHash());
     user.setRegistrationDate(new Timestamp(System.currentTimeMillis()));
-    savedNewHireInfo.setDeveloperId(user);
+    savedNewHireInfo.setDeveloper(user);
     usersRepository.save(user);
 
     // Handle mentor or mentee assignment based on the role
@@ -165,7 +165,7 @@ public NewHireInfo updateOrCreateEmployee(int id, NewEmployeeDTO newEmployeeDTO)
     if (user == null) {
         user = new Users(); // If user does not exist, create a new one
     }
-    user.setDeveloperId(savedNewHireInfo);
+    user.setDeveloper(savedNewHireInfo);
     user.setEmail(newEmployeeDTO.getEmail());
     user.setUsername(newEmployeeDTO.getUsername());
     user.setPasswordHash(newEmployeeDTO.getPasswordHash());
@@ -177,7 +177,7 @@ public NewHireInfo updateOrCreateEmployee(int id, NewEmployeeDTO newEmployeeDTO)
     // Handle mentor or mentee assignment based on the role
     if (newEmployeeDTO.getIsMentor() && newEmployeeDTO.getMentorOrMenteeId() != null) {
         // New hire is a mentor, link to existing mentee or update existing assignment
-        List<MentorAssignments> mentorAssignments = mentorAssignmentsRepository.findByMentor(savedNewHireInfo.getEmployeeId());
+        List<MentorAssignments> mentorAssignments = mentorAssignmentsRepository.findByMentorEmployeeId(savedNewHireInfo.getEmployeeId());
         MentorAssignments mentorAssignment;
         if (!mentorAssignments.isEmpty()) {
             mentorAssignment = mentorAssignments.get(0); // Assumes one-to-many can be changed as needed
@@ -190,7 +190,7 @@ public NewHireInfo updateOrCreateEmployee(int id, NewEmployeeDTO newEmployeeDTO)
         mentorAssignmentsRepository.save(mentorAssignment);
     } else if (!newEmployeeDTO.getIsMentor() && newEmployeeDTO.getMentorOrMenteeId() != null) {
         // New hire is a mentee, link to existing mentor or update existing assignment
-        List<MentorAssignments> mentorAssignments = mentorAssignmentsRepository.findByMentee(savedNewHireInfo.getEmployeeId());
+        List<MentorAssignments> mentorAssignments = mentorAssignmentsRepository.findByMenteeEmployeeId(savedNewHireInfo.getEmployeeId());
         MentorAssignments mentorAssignment;
         if (!mentorAssignments.isEmpty()) {
             mentorAssignment = mentorAssignments.get(0); // Assumes one-to-many can be changed as needed

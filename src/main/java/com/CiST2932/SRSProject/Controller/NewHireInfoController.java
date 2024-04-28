@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/newhireinfo")
@@ -21,28 +22,12 @@ public class NewHireInfoController {
     @Autowired
     private NewHireInfoService newHireInfoService;
 
-    //List<NewEmployeeDTO> findAllNewEmployeeDTO();
-    @GetMapping
-    public ResponseEntity<List<NewHireInfo>> getAllNewEmployeeDTO() {
-        List<NewHireInfo> newHireInfo = newHireInfoService.findAll();
-        return ResponseEntity.ok(newHireInfo);
-    }
-
     @GetMapping("/{id}")
-    public ResponseEntity<NewHireInfo> getAllNewEmployeeDTOById(@PathVariable int id) {
-        return newHireInfoService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-    
-    // @PostMapping
-    // public ResponseEntity<NewHireInfo> createNewHireInfo(@RequestBody NewHireInfo newHireInfo) {
-    //     // Save the new hire information to the database
-    //     NewHireInfo savedNewHireInfo = newHireInfoService.save(newHireInfo);
-
-    //     // Return a response entity with the saved object and a status of CREATED
-    //     return ResponseEntity.status(HttpStatus.CREATED).body(savedNewHireInfo);
-    // }    
+    public ResponseEntity<?> findAllNewHireInfoWithDetails(@PathVariable int id) {
+    Optional<NewHireInfo> newHireInfo = newHireInfoService.findById(id);
+    return newHireInfo.map(info -> ResponseEntity.ok(newHireInfoService.convertToDTO(info)))
+    .orElseGet(() -> ResponseEntity.notFound().build());
+    }  
     
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteNewHireInfo(@PathVariable int id) {
