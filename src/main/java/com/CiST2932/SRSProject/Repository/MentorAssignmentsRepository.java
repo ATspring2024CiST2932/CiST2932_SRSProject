@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface MentorAssignmentsRepository extends JpaRepository<MentorAssignments, Integer> {
-    List<MentorAssignments> findByMentorEmployeeId(int mentorEmployeeId);
+    List<MentorAssignments> findByMentor(int mentorId);
     
     @Query("SELECT new com.CiST2932.SRSProject.Domain.MentorAssignmentsDTO(ma.mentor.employeeId, ma.mentee.employeeId) FROM MentorAssignments ma WHERE ma.mentor.employeeId = :mentorId")
     List<MentorAssignmentsDTO> findMentorAssignmentsDtoByMentorEmployeeId(@Param("mentorId") int mentorId);
@@ -27,4 +27,6 @@ public interface MentorAssignmentsRepository extends JpaRepository<MentorAssignm
     @Query("DELETE FROM MentorAssignments m WHERE m.mentor.employeeId = :employeeId OR m.mentee.employeeId = :employeeId")
     void deleteByEmployeeId(@Param("employeeId") int employeeId);
 
+    //findByMentee
+    List<MentorAssignments> findByMentee(int menteeId);
 }

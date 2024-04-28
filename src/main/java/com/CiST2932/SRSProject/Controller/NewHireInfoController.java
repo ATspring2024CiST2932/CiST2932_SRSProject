@@ -21,10 +21,11 @@ public class NewHireInfoController {
     @Autowired
     private NewHireInfoService newHireInfoService;
 
+    //List<NewEmployeeDTO> findAllNewEmployeeDTO();
     @GetMapping
     public ResponseEntity<List<NewHireInfo>> getAllNewEmployeeDTO() {
-        List<NewHireInfo> getAllNewEmployeeDTOList = newHireInfoService.findAll();
-        return ResponseEntity.ok(getAllNewEmployeeDTOList);
+        List<NewHireInfo> newHireInfo = newHireInfoService.findAll();
+        return ResponseEntity.ok(newHireInfo);
     }
 
     @GetMapping("/{id}")
@@ -91,28 +92,14 @@ public class NewHireInfoController {
         NewHireInfo newHireInfo = newHireInfoService.createNewHireInfo(newEmployeeDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(newHireInfo);
     }
-//     @PutMapping("/{id}")
-//     public ResponseEntity<NewHireInfo> updateOrCreateEmployee(@PathVariable int id, @RequestBody NewEmployeeDTO newEmployeeDTO) {
-//         try {
-//             NewHireInfo updatedInfo = newHireInfoService.updateOrCreateEmployee(id, newEmployeeDTO);
-//             return ResponseEntity.ok(updatedInfo);
-//         } catch (Exception e) {
-//             return ResponseEntity.badRequest().build();
-//         }
-// }
 
-    @GetMapping("/{employeeId}/details")
-    public ResponseEntity<?> getEmployeeDetails(@PathVariable int employeeId) {
-        try {
-            NewEmployeeDTO employeeDetails = newHireInfoService.getEmployeeDetails(employeeId);
-            if (employeeDetails != null) {
-                return ResponseEntity.ok(employeeDetails);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving employee details: " + e.getMessage());
-        }
+    @PutMapping("/{id}")
+    //updateOrCreateEmployee
+    public ResponseEntity<NewHireInfo> updateOrCreateEmployee(@PathVariable int id, @RequestBody NewEmployeeDTO newEmployeeDTO) {
+        NewHireInfo newHireInfo = newHireInfoService.updateOrCreateEmployee(id, newEmployeeDTO);
+        return ResponseEntity.ok(newHireInfo);
     }
+
+
 
 }

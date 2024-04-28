@@ -17,7 +17,6 @@ public class NewEmployeeDTO {
     private int mentee;  // Mentee's employee ID
 
     // Getters and setters
-
     public int getEmployeeId() { return employeeId; }
     public void setEmployeeId(int employeeId) { this.employeeId = employeeId; }
    
@@ -50,5 +49,5 @@ public class NewEmployeeDTO {
     
     public int getMentee() { return mentee;}
     public void setMentee(int mentee) { this.mentee = mentee;}
-
+    
 }

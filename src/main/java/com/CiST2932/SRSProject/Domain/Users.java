@@ -9,12 +9,9 @@ import jakarta.persistence.*;
 @Table(name = "users")
 public class Users {
     @Id
-    private int employeeId; // This will be populated automatically from newHireInfo's ID.
-
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "EmployeeID", referencedColumnName = "EmployeeID")
-    private NewHireInfo newHireInfo;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
+    private int user_id;
 
     @Column(name = "username")
     private String username;
@@ -28,29 +25,30 @@ public class Users {
     @Column(name = "registration_date")
     private Timestamp registrationDate;
 
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "EmployeeID", referencedColumnName = "EmployeeID")
+    private NewHireInfo developerId;
+
     public Users() {
     }
 
-    public Users(int employeeId, String username, String passwordHash, String email, Timestamp registrationDate, NewHireInfo newHireInfo) {
-        this.employeeId = employeeId;
+    public Users(int userId, String username, String passwordHash, String email, Timestamp registrationDate, NewHireInfo developerId) {
+        this.user_id = userId;
         this.username = username;
         this.passwordHash = passwordHash;
         this.email = email;
         this.registrationDate = registrationDate;
-        this.newHireInfo = newHireInfo;
+        this.developerId = developerId;
+        
     }
 
-    public int getEmployeeId() {
-        return employeeId; // Automatically mirrors the ID of newHireInfo
+    public int getUserId() {
+        return user_id;
     }
 
-    public NewHireInfo getNewHireInfo() {
-        return newHireInfo;
-    }
-
-    public void setNewHireInfo(NewHireInfo newHireInfo) {
-        this.newHireInfo = newHireInfo;
-        // The employeeId is automatically managed through the @MapsId, no need to set it explicitly
+    public void setUserId(int userId) {
+        this.user_id = userId;
     }
 
     public String getUsername() {
@@ -84,5 +82,24 @@ public class Users {
     public void setRegistrationDate(Timestamp registrationDate) {
         this.registrationDate = registrationDate;
     }
+
+    public NewHireInfo getDeveloperId() {
+        return developerId;
+    }
+
+    public void setDeveloperId(NewHireInfo developerId) {
+        this.developerId = developerId;
+    }
+
+     public String getDeveloperName () {
+        return this.developerId != null ? this.developerId.getName(): null;
+    }
     
+    public void setDeveloperName(String developerName) {
+        if (this.developerId == null) {
+            this.developerId = new NewHireInfo();
+        }
+        this.developerId.setName(developerName);
+    }
+
 }

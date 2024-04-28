@@ -14,7 +14,10 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
 
 @Transactional
 @Modifying
-@Query("DELETE FROM Users u WHERE u.employeeId = :employeeId")
+@Query("DELETE FROM Users u WHERE u.developerId.employeeId = :employeeId")
 void deleteByEmployeeId(@Param("employeeId") int employeeId);
+
+//findByDeveloperId
+Users findByDeveloperId(int developerId);
 
 }

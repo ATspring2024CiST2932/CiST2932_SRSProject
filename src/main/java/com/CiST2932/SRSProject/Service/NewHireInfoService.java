@@ -60,8 +60,8 @@ public class NewHireInfoService {
     
         // Attempt to delete User first if exists
         try {
-            if (newHireInfo.getUser() != null) {
-                usersRepository.deleteByEmployeeId(newHireInfo.getUser().getEmployeeId());
+            if (newHireInfo.getDeveloperId() != null) {
+                usersRepository.deleteByEmployeeId(newHireInfo.getEmployeeId());
             }
     
             // Then delete related data to avoid foreign key constraints
@@ -108,107 +108,102 @@ public class NewHireInfoService {
     public List<String> findAllNames() {
         return newHireInfoRepository.findAllNames();
     }
+public NewHireInfo createNewHireInfo(NewEmployeeDTO newEmployeeDTO) {
+    NewHireInfo newHireInfo = new NewHireInfo();
+    newHireInfo.setName(newEmployeeDTO.getName());
+    newHireInfo.setIsMentor(newEmployeeDTO.getIsMentor());
+    newHireInfo.setEmploymentType(newEmployeeDTO.getEmploymentType());
+    
+    // Save the NewHireInfo entity first to get an employeeId
+    NewHireInfo savedNewHireInfo = newHireInfoRepository.save(newHireInfo);
 
-    public NewHireInfo createNewHireInfo(NewEmployeeDTO newEmployeeDTO) {
-        NewHireInfo newHireInfo = new NewHireInfo();
-        newHireInfo.setName(newEmployeeDTO.getName());
-        newHireInfo.setIsMentor(newEmployeeDTO.getIsMentor());
-        newHireInfo.setEmploymentType(newEmployeeDTO.getEmploymentType());
-        newHireInfo.setEmployeeId(newEmployeeDTO.getEmployeeId());
+    // Create user account
+    Users user = new Users();
+    user.setDeveloperId(savedNewHireInfo);
+    user.setEmail(newEmployeeDTO.getEmail());
+    user.setUsername(newEmployeeDTO.getUsername());
+    user.setPasswordHash(newEmployeeDTO.getPasswordHash());
+    user.setRegistrationDate(new Timestamp(System.currentTimeMillis()));
+    savedNewHireInfo.setDeveloperId(user);
+    usersRepository.save(user);
 
-        // Save the NewHireInfo entity
-        NewHireInfo savedNewHireInfo = newHireInfoRepository.save(newHireInfo);
-
-        // Print out the newHireInfo employeeId
-        System.out.println("Employee ID: " + newHireInfo.getEmployeeId());
-
-
-        // If username and password are provided, create the Users object first
-        if (newEmployeeDTO.getUsername() != null && newEmployeeDTO.getPasswordHash() != null) {
-            Users user = new Users();
-            // Set the EmployeeID from NewHireInfo
-            user. setNewHireInfo(newHireInfo);
-            user.setEmail(newEmployeeDTO.getEmail());
-            user.setUsername(newEmployeeDTO.getUsername());
-            user.setPasswordHash(newEmployeeDTO.getPasswordHash()); // Consider using a hashed password
-            user.setRegistrationDate(new Timestamp(System.currentTimeMillis()));
-
-        // Associate User with NewHireInfo
-        newHireInfo.setUser(user);
-        user.setNewHireInfo(newHireInfo);
-
-        // Save the Users entity, it should now have the correct employeeId
-        usersRepository.save(user);
-
-        }
-
-    // Handle mentorship assignment
-    if (newEmployeeDTO.getMentor() != 0) {
+    // Handle mentor or mentee assignment based on the role
+    if (newEmployeeDTO.getIsMentor() && newEmployeeDTO.getMentorOrMenteeId() != null) {
+        // New hire is a mentor, link to existing mentee
         MentorAssignments mentorAssignment = new MentorAssignments();
-        NewHireInfo mentor = newHireInfoRepository.findById(newEmployeeDTO.getMentor()).orElse(null);
+        mentorAssignment.setMentor(savedNewHireInfo);
+        NewHireInfo mentee = newHireInfoRepository.findById(newEmployeeDTO.getMentorOrMenteeId()).orElseThrow(() -> new ResourceAccessException("Mentee not found with id " + newEmployeeDTO.getMentorOrMenteeId()));
+        mentorAssignment.setMentee(mentee);
+        mentorAssignmentsRepository.save(mentorAssignment);
+    } else if (!newEmployeeDTO.getIsMentor() && newEmployeeDTO.getMentorOrMenteeId() != null) {
+        // New hire is a mentee, link to existing mentor
+        MentorAssignments mentorAssignment = new MentorAssignments();
+        NewHireInfo mentor = newHireInfoRepository.findById(newEmployeeDTO.getMentorOrMenteeId()).orElseThrow(() -> new ResourceAccessException("Mentor not found with id " + newEmployeeDTO.getMentorOrMenteeId()));
         mentorAssignment.setMentor(mentor);
         mentorAssignment.setMentee(savedNewHireInfo);
-
-        if (mentor != null) {
-            mentorAssignment.setMentor(mentor);
-            mentorAssignment.setMentee(savedNewHireInfo);
-            mentorAssignmentsRepository.save(mentorAssignment);
-            System.out.println("Mentor Assignment Saved: Mentor ID - " + mentor.getEmployeeId() + " Mentee ID - " + savedNewHireInfo.getEmployeeId());
-        } else {
-            System.out.println("Mentor ID not found: " + newEmployeeDTO.getMentor());
-        }
-        
-
-        // Save the mentorship assignment
         mentorAssignmentsRepository.save(mentorAssignment);
     }
 
-        // print out the username
-        System.out.println("Username: " + newEmployeeDTO.getUsername());
-        // refresh the newHireInfo
-        newHireInfo = newHireInfoRepository.findById(newHireInfo.getEmployeeId()).get();
-        System.out.println("Employee ID: " + newHireInfo.getEmployeeId());
+    return savedNewHireInfo;
+}
 
+@Transactional
+public NewHireInfo updateOrCreateEmployee(int id, NewEmployeeDTO newEmployeeDTO) {
+    // Fetch the existing NewHireInfo or create a new one
+    NewHireInfo newHireInfo = newHireInfoRepository.findById(id).orElse(new NewHireInfo());
+
+    // Update newHireInfo fields
+    newHireInfo.setName(newEmployeeDTO.getName());
+    newHireInfo.setIsMentor(newEmployeeDTO.getIsMentor());
+    newHireInfo.setEmploymentType(newEmployeeDTO.getEmploymentType());
+
+    // Save the NewHireInfo entity to get or refresh an employeeId
+    NewHireInfo savedNewHireInfo = newHireInfoRepository.save(newHireInfo);
+
+    // Handling the Users entity
+    Users user = usersRepository.findByDeveloperId(savedNewHireInfo.getEmployeeId());
+    if (user == null) {
+        user = new Users(); // If user does not exist, create a new one
+    }
+    user.setDeveloperId(savedNewHireInfo);
+    user.setEmail(newEmployeeDTO.getEmail());
+    user.setUsername(newEmployeeDTO.getUsername());
+    user.setPasswordHash(newEmployeeDTO.getPasswordHash());
+    user.setRegistrationDate(new Timestamp(System.currentTimeMillis()));
     
-        // Save the NewHireInfo entity, cascade should save Users too
-        return newHireInfoRepository.save(newHireInfo);
-        
+    // Save or update the User
+    usersRepository.save(user);
+
+    // Handle mentor or mentee assignment based on the role
+    if (newEmployeeDTO.getIsMentor() && newEmployeeDTO.getMentorOrMenteeId() != null) {
+        // New hire is a mentor, link to existing mentee or update existing assignment
+        List<MentorAssignments> mentorAssignments = mentorAssignmentsRepository.findByMentor(savedNewHireInfo.getEmployeeId());
+        MentorAssignments mentorAssignment;
+        if (!mentorAssignments.isEmpty()) {
+            mentorAssignment = mentorAssignments.get(0); // Assumes one-to-many can be changed as needed
+        } else {
+            mentorAssignment = new MentorAssignments(); // Create new if none exist
+        }
+        NewHireInfo mentee = newHireInfoRepository.findById(newEmployeeDTO.getMentorOrMenteeId()).orElseThrow(() -> new ResourceAccessException("Mentee not found with id " + newEmployeeDTO.getMentorOrMenteeId()));
+        mentorAssignment.setMentor(savedNewHireInfo);
+        mentorAssignment.setMentee(mentee);
+        mentorAssignmentsRepository.save(mentorAssignment);
+    } else if (!newEmployeeDTO.getIsMentor() && newEmployeeDTO.getMentorOrMenteeId() != null) {
+        // New hire is a mentee, link to existing mentor or update existing assignment
+        List<MentorAssignments> mentorAssignments = mentorAssignmentsRepository.findByMentee(savedNewHireInfo.getEmployeeId());
+        MentorAssignments mentorAssignment;
+        if (!mentorAssignments.isEmpty()) {
+            mentorAssignment = mentorAssignments.get(0); // Assumes one-to-many can be changed as needed
+        } else {
+            mentorAssignment = new MentorAssignments(); // Create new if none exist
+        }
+        NewHireInfo mentor = newHireInfoRepository.findById(newEmployeeDTO.getMentorOrMenteeId()).orElseThrow(() -> new ResourceAccessException("Mentor not found with id " + newEmployeeDTO.getMentorOrMenteeId()));
+        mentorAssignment.setMentor(mentor);
+        mentorAssignment.setMentee(savedNewHireInfo);
+        mentorAssignmentsRepository.save(mentorAssignment);
     }
 
-    public NewHireInfo updateEmployee(int id, NewEmployeeDTO newEmployeeDTO) {
-        NewHireInfo employee = newHireInfoRepository.findById(id)
-                .orElseThrow(() -> new ResourceAccessException("Employee not found with id " + id));
-        modelMapper.map(newEmployeeDTO, employee);
-        return newHireInfoRepository.save(employee);
-    }
-
-    @Transactional
-    public NewHireInfo updateOrCreateEmployee(int id, NewEmployeeDTO newEmployeeDTO) {
-        // Fetch the existing NewHireInfo or create a new one
-        NewHireInfo newHireInfo = newHireInfoRepository.findById(id).orElse(new NewHireInfo());
-
-        // Use modelMapper to map DTO to entity
-        modelMapper.map(newEmployeeDTO, newHireInfo);
-
-        // Save the NewHireInfo entity
-        NewHireInfo savedNewHireInfo = newHireInfoRepository.save(newHireInfo);
-
-        // Handling the Users entity
-        Users user = usersRepository.findById(newHireInfo.getEmployeeId()).orElse(new Users());
-        user.setNewHireInfo(savedNewHireInfo);
-        user.setEmail(newEmployeeDTO.getEmail());
-        user.setUsername(newEmployeeDTO.getUsername());
-        user.setPasswordHash(newEmployeeDTO.getPasswordHash());
-        user.setRegistrationDate(new Timestamp(System.currentTimeMillis()));
-
-        // Link User to NewHireInfo
-        savedNewHireInfo.setUser(user);
-
-        // Save or update the User
-        usersRepository.save(user);
-
-        return savedNewHireInfo;
-    }
-
-    
+    return savedNewHireInfo;
+}
+ 
 }

@@ -2,6 +2,7 @@
 
 package com.CiST2932.SRSProject.Repository;
 
+import com.CiST2932.SRSProject.Domain.NewEmployeeDTO;
 import com.CiST2932.SRSProject.Domain.NewHireInfo;
 
 import jakarta.transaction.Transactional;
@@ -18,6 +19,15 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface NewHireInfoRepository extends JpaRepository<NewHireInfo, Integer> {
+    // show all the NewEmployeeDTO data
+    @Query("SELECT n FROM NewEmployeeDTO n")
+    List<NewEmployeeDTO> findAllNewEmployeeDTO();
+
+    @Query("SELECT ma.mentee FROM MentorAssignments ma WHERE ma.mentor.employeeId = :mentorId")
+    List<NewHireInfo> findMenteesByMentorId(@Param("mentorId") int mentorId);
+
+    @Query("SELECT ma.mentor FROM MentorAssignments ma WHERE ma.mentee.employeeId = :menteeId")
+    List<NewHireInfo> findMentorByMenteeId(@Param("menteeId") int menteeId);
 
     @Query("SELECT n FROM NewHireInfo n WHERE n.isMentor = false AND n.id NOT IN (SELECT ma.mentee.id FROM MentorAssignments ma)")
     List<NewHireInfo> findUnassignedMentees(); 
@@ -43,27 +53,6 @@ public interface NewHireInfoRepository extends JpaRepository<NewHireInfo, Intege
     @Query("DELETE FROM NewHireInfo n WHERE n.id = :id")    
     void deleteById(@Param("id") int id);
 
-    // List all mentors
-    List<NewHireInfo> findByIsMentorTrue();
 
-    // List all mentees
-    List<NewHireInfo> findByIsMentorFalse();
-    
-    //mentorOrMenteeId
-    @Query("SELECT n FROM NewHireInfo n WHERE n.mentorOrMenteeId = :mentorOrMenteeId")
-    Optional<NewHireInfo> findByMentorOrMenteeId(@Param("mentorOrMenteeId") int mentorOrMenteeId);
-
-    // @Modifying
-    // void archiveNewHireInfoById(@Param("employeeId") int employeeId);
-
-    //getAllNewEmployeeDTO
-@Query("SELECT n FROM NewHireInfo n")
-List<NewHireInfo> getAllNewEmployeeDTO();
-
-@Query("SELECT ma.mentee FROM MentorAssignments ma WHERE ma.mentor.employeeId = :mentorId")
-List<NewHireInfo> findMenteesByMentorId(@Param("mentorId") int mentorId);
-
-@Query("SELECT ma.mentor FROM MentorAssignments ma WHERE ma.mentee.employeeId = :menteeId")
-List<NewHireInfo> findMentorByMenteeId(@Param("menteeId") int menteeId);
 
 }

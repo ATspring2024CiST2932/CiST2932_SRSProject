@@ -49,7 +49,7 @@ public class MentorAssignmentsService {
     
 
     public List<MentorAssignments> findByMentorEmployeeId(int mentorEmployeeId) {
-        return mentorAssignmentsRepository.findByMentorEmployeeId(mentorEmployeeId);
+        return mentorAssignmentsRepository.findByMentor(mentorEmployeeId);
     }
 
     // Convert a MentorAssignments to a MentorAssignmentsDTO

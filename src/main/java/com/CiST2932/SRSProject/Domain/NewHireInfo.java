@@ -7,11 +7,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Table;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrimaryKeyJoinColumn;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -55,9 +55,9 @@ public class NewHireInfo {
     @JsonManagedReference("task-assignee")
     private List<PeerCodingTasks> assignedTasks = new ArrayList<>();;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @PrimaryKeyJoinColumn
-    private Users user;
+    @OneToOne(mappedBy= "developerId", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JoinColumn
+    private Users developerId;
 
     // Constructors, getters, and setters
     public NewHireInfo() {
@@ -126,12 +126,12 @@ public class NewHireInfo {
         this.assignedTasks = assignedTasks;
     }
 
-    public Users getUser() {
-        return user;
+    public Users getDeveloperId() {
+        return developerId;
     }
 
-    public void setUser(Users user) {
-        this.user = user;
+    public void setDeveloperId(Users developerId) {
+        this.developerId = developerId;
     }
 
     
