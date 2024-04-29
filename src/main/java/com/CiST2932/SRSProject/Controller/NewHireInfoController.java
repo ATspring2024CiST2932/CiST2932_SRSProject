@@ -22,6 +22,12 @@ public class NewHireInfoController {
     @Autowired
     private NewHireInfoService newHireInfoService;
 
+    @GetMapping
+    public ResponseEntity<List<NewHireInfo>> findAll() {
+        List<NewHireInfo> newHireInfo = newHireInfoService.findAll();
+        return ResponseEntity.ok(newHireInfo);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> findAllNewHireInfoWithDetails(@PathVariable int id) {
     Optional<NewHireInfo> newHireInfo = newHireInfoService.findById(id);

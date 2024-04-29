@@ -2,8 +2,6 @@
 
 package com.CiST2932.SRSProject.Repository;
 
-import com.CiST2932.SRSProject.Domain.MentorAssignments;
-import com.CiST2932.SRSProject.Domain.NewEmployeeDTO;
 import com.CiST2932.SRSProject.Domain.NewHireInfo;
 
 import jakarta.transaction.Transactional;
@@ -20,6 +18,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface NewHireInfoRepository extends JpaRepository<NewHireInfo, Integer> {
+    
+    @SuppressWarnings("null")
+    @Query("SELECT n FROM NewHireInfo n")
+    List<NewHireInfo> findAll();
 
     @Query("SELECT n FROM NewHireInfo n JOIN FETCH n.developer WHERE n.employeeId = :id")
     Optional<NewHireInfo> findById(@Param("id") int id);

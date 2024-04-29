@@ -21,12 +21,9 @@ import java.util.Optional;
 @RequestMapping("/peercodingtasks")
 public class PeerCodingTasksController {
 
-    private final PeerCodingTasksRepository peerCodingTasksRepository;
-
     @Autowired
     private PeerCodingTasksService peerCodingTasksService;
     public PeerCodingTasksController(PeerCodingTasksRepository peerCodingTasksRepository) {
-        this.peerCodingTasksRepository = peerCodingTasksRepository;
     }
     @GetMapping
     public List<TaskWithAssigneeDTO> getAllPeerCodingTasks() {
