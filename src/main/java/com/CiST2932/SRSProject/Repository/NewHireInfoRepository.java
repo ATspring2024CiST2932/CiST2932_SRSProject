@@ -26,7 +26,7 @@ public interface NewHireInfoRepository extends JpaRepository<NewHireInfo, Intege
     @Query("SELECT n FROM NewHireInfo n JOIN FETCH n.developer WHERE n.employeeId = :id")
     Optional<NewHireInfo> findById(@Param("id") int id);
     
-    @Query("SELECT n FROM NewHireInfo n JOIN FETCH n.developer d LEFT JOIN FETCH n.assignmentsAsMentor ma")
+    @Query("SELECT n FROM NewHireInfo n LEFT JOIN FETCH n.developer d LEFT JOIN FETCH n.assignmentsAsMentor ma")
     List<NewHireInfo> findAllNewHireInfoWithDetails();
 
 

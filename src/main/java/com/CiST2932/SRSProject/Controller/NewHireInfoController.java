@@ -30,12 +30,16 @@ public class NewHireInfoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> findAllNewHireInfoWithDetails(@PathVariable int id) {
-    Optional<NewHireInfo> newHireInfo = newHireInfoService.findById(id);
-    if (newHireInfo.isPresent()) {
-        return ResponseEntity.ok(newHireInfo);
+        Optional<NewHireInfo> newHireInfo = newHireInfoService.findById(id);
+        if (newHireInfo.isPresent() && newHireInfo.get().getDeveloper() != null) {
+            return ResponseEntity.ok(newHireInfo);
+        } else {
+            // Handle the case where the associated user record is missing
+            return ResponseEntity.notFound().build();
+        }
     }
-    return ResponseEntity.notFound().build();
-    }
+    
+    
     
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteNewHireInfo(@PathVariable int id) {

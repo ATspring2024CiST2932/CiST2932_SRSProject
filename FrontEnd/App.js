@@ -34,26 +34,26 @@ function initializeFormDefaults() {
 // Attaches all necessary event listeners when the document is ready.
 // Includes listeners for form submissions and interactive elements like buttons.
 function attachEventListeners() {
-    console.log("Attaching event listeners...");
-    document.getElementById('newEmployeeIsMentor').addEventListener('change', handleMentorChange);
-    document.getElementById('newEmployeeForm').addEventListener('submit', handleSubmitEmployee);
-    document.getElementById('editEmployeeForm').addEventListener('submit', handleSubmitEmployee);
-    document.getElementById('employeeTable').addEventListener('click', handleTableClick);
-    
-    // Setup listeners for delete employee modal.
-    const deleteModal = document.getElementById('deleteEmployeeModal');
-    deleteModal.addEventListener('show.bs.modal', function(event) {
-        const button = event.relatedTarget; // Button that triggered the modal
-        const employeeId = button.getAttribute('data-employee-id'); // Correctly get employeeId from the button
-        console.log("Preparing to delete employee ID:", employeeId);
-        document.getElementById('confirmDelete').onclick = function() {
-            deleteEmployee(employeeId);
-        };
-    });
-    deleteModal.addEventListener('hidden.bs.modal', function() {
-        this.removeAttribute('data-employee-id'); // Reset the data-employee-id attribute when modal is hidden
-    });
-  }
+  console.log("Attaching event listeners...");
+  document.getElementById('newEmployeeIsMentor').addEventListener('change', handleMentorChange);
+  document.getElementById('newEmployeeForm').addEventListener('submit', handleSubmitEmployee);
+  document.getElementById('editEmployeeForm').addEventListener('submit', handleSubmitEmployee);
+  document.getElementById('employeeTable').addEventListener('click', handleTableClick);
+  
+  // Setup listeners for delete employee modal.
+  const deleteModal = document.getElementById('deleteEmployeeModal');
+  deleteModal.addEventListener('show.bs.modal', function(event) {
+      const button = event.relatedTarget; // Button that triggered the modal
+      const employeeId = button.getAttribute('data-employee-id'); // Correctly get employeeId from the button
+      console.log("Preparing to delete employee ID:", employeeId);
+      document.getElementById('confirmDelete').onclick = function() {
+          deleteEmployee(event); // Pass the event to deleteEmployee function
+      };
+  });
+  deleteModal.addEventListener('hidden.bs.modal', function() {
+      this.removeAttribute('data-employee-id'); // Reset the data-employee-id attribute when modal is hidden
+  });
+}
   
   // handleMentorChange()
   // Handles changes to the 'Mentor' checkbox to dynamically update related form fields.
@@ -153,23 +153,29 @@ function prepareEmployeeData(isEdit) {
     return employeeData;
 }
 
-// handleTableClick(event)
-// Deals with click events on the employee table, distinguishing between view, edit, and archive actions based on button classes.
-// Calls respective functions like viewEmployee, editEmployee, or archiveEmployee.
-function handleTableClick(event) {
-    const employeeId = event.target.closest('tr').getAttribute('data-employee-id');
+  // handleTableClick(event)
+  // Deals with click events on the employee table, distinguishing between view, edit, and archive actions based on button classes.
+  // Calls respective functions like viewEmployee, editEmployee, or archiveEmployee.
+  function handleTableClick(event) {
+    const button = event.target.closest('.btn');
+    if (!button) {
+        console.error('No button clicked');
+        return;
+    }
+    const employeeId = button.closest('tr').getAttribute('data-employee-id');
     console.log("Clicked on employee table:", employeeId);
-  
-    if (event.target.classList.contains('view-btn')) {
+
+    if (button.classList.contains('view-btn')) {
         viewEmployee(employeeId);
-    } else if (event.target.classList.contains('edit-btn')) {
+    } else if (button.classList.contains('edit-btn')) {
         editEmployee(employeeId);
-    } else if (event.target.classList.contains('delete-btn')) {
+    } else if (button.classList.contains('delete-btn')) {
         const deleteModal = document.getElementById('deleteEmployeeModal');
         deleteModal.setAttribute('data-employee-id', employeeId);
         new bootstrap.Modal(deleteModal).show();
     }
   }
+
 
 
 // Show the edit modal and load the employee data
@@ -290,8 +296,8 @@ function viewEmployee(employeeId) {
           document.getElementById('viewName').textContent = employee.name;
           document.getElementById('viewIsMentor').textContent = employee.isMentor;
           document.getElementById('viewEmploymentType').textContent = employee.employmentType;
-          document.getElementById('viewUsername').textContent = employee.username;
-          document.getElementById('viewEmail').textContent = employee.email;
+          document.getElementById('viewUsername').textContent = employee.developer.username;
+            document.getElementById('viewEmail').textContent = employee.developer.email;
 
           // Populate mentor assignments and tasks for viewing
           populateMentorAssignments(employeeId);
@@ -379,29 +385,29 @@ window.editEmployee = editEmployee;
 // Similar to archiveEmployee, but specifically sends a deletion request.
 // Optionally confirms with the user before deletion.
 // Function to delete an employee
-function deleteEmployee() {
-    const deleteModal = document.getElementById('deleteEmployeeModal');
-    const employeeId = deleteModal.getAttribute('data-employee-id');
+function deleteEmployee(event) {
+  const deleteModal = document.getElementById('deleteEmployeeModal');
+  const employeeId = deleteModal.getAttribute('data-employee-id');
 
-    console.log(`Preparing to delete employee with ID: ${employeeId}`);
-    if (confirm('Are you sure you want to delete this employee?')) {
-        console.log(`Deleting employee with ID: ${employeeId}`);
+  console.log(`Preparing to delete employee with ID: ${employeeId}`);
+  if (confirm('Are you sure you want to delete this employee?')) {
+      console.log(`Deleting employee with ID: ${employeeId}`);
 
-        fetch(`http://localhost:8080/newhireinfo/${employeeId}`, { method: 'DELETE' })
-            .then(response => {
-                if (response.ok) {
-                    console.log("Employee deleted successfully");
-                    fetchAllEmployees(); // Refresh the employee list
-                } else {
-                    console.error(`Failed to delete employee. Status: ${response.status}`);
-                    response.text().then(text => alert(`Failed to delete employee: ${text}`));
-                }
-            })
-            .catch(error => {
-                console.error('Error deleting employee:', error);
-                alert('An error occurred while deleting the employee.');
-            });
-    }
+      fetch(`http://localhost:8080/newhireinfo/${employeeId}`, { method: 'DELETE' })
+          .then(response => {
+              if (response.ok) {
+                  console.log("Employee deleted successfully");
+                  fetchAllEmployees(); // Refresh the employee list
+              } else {
+                  console.error(`Failed to delete employee. Status: ${response.status}`);
+                  response.text().then(text => alert(`Failed to delete employee: ${text}`));
+              }
+          })
+          .catch(error => {
+              console.error('Error deleting employee:', error);
+              alert('An error occurred while deleting the employee.');
+          });
+  }
 }
 
 
