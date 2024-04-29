@@ -23,7 +23,6 @@ import jakarta.persistence.GenerationType;
 public class MentorAssignments {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "AssignmentID")
     private int assignmentId;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -71,6 +70,7 @@ public class MentorAssignments {
     }
 
     public int getId() {
-        return this.assignmentId;
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getId'");
     }
 }

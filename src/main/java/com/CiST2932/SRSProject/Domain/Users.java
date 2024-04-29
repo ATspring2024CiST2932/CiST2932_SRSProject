@@ -27,8 +27,9 @@ public class Users {
 
     @OneToOne
     @MapsId
-    @JoinColumn(name = "EmployeeID", referencedColumnName = "EmployeeID")
-    private NewHireInfo developer;
+    @JoinColumn(name = "EmployeeID", referencedColumnName = "employeeId")
+    private NewHireInfo developer;  // this links back to NewHireInfo
+    
 
     public Users() {
     }

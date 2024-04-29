@@ -24,44 +24,43 @@ public interface NewHireInfoRepository extends JpaRepository<NewHireInfo, Intege
     @Query("SELECT n FROM NewHireInfo n JOIN FETCH n.developer WHERE n.employeeId = :id")
     Optional<NewHireInfo> findById(@Param("id") int id);
     
-    @Query("SELECT n FROM NewHireInfo n JOIN FETCH n.developer d LEFT JOIN FETCH n.mentorAssignments ma")
+    @Query("SELECT n FROM NewHireInfo n JOIN FETCH n.developer d LEFT JOIN FETCH n.assignmentsAsMentor ma")
     List<NewHireInfo> findAllNewHireInfoWithDetails();
 
-    @Query("SELECT n FROM NewHireInfo n JOIN FETCH n.developer WHERE n.employeeId = :id")
-    Optional<NewHireInfo> findByIdWithDetails(@Param("id") int id);
+
+    // @Query("SELECT n FROM NewHireInfo n JOIN FETCH n.developer WHERE n.employeeId = :id")
+    // Optional<NewHireInfo> findByIdWithDetails(@Param("id") int id);
 
     @Query("SELECT ma.mentee FROM MentorAssignments ma WHERE ma.mentor.employeeId = :mentorId")
     List<NewHireInfo> findMenteesByMentorId(@Param("mentorId") int mentorId);
-
+    
     @Query("SELECT ma.mentor FROM MentorAssignments ma WHERE ma.mentee.employeeId = :menteeId")
-    MentorAssignments findMentorByMenteeId(@Param("menteeId") int menteeId);
+    List<NewHireInfo> findMentorByMenteeId(@Param("menteeId") int menteeId);
 
     @Query("SELECT n FROM NewHireInfo n WHERE n.isMentor = false AND n.id NOT IN (SELECT ma.mentee.id FROM MentorAssignments ma)")
     List<NewHireInfo> findUnassignedMentees(); 
     
     //getMentorAssignments
-    @Query("SELECT n FROM NewHireInfo n WHERE n.isMentor = true AND n.id IN (SELECT ma.mentor.id FROM MentorAssignments ma)")
+    @Query("SELECT DISTINCT ma.mentor FROM MentorAssignments ma WHERE ma.mentor.isMentor = true")
     List<NewHireInfo> findMentorAssignments();
 
     //getMenteeAssignments
-    @Query("SELECT n FROM NewHireInfo n WHERE n.isMentor = false AND n.id IN (SELECT ma.mentee.id FROM MentorAssignments ma)")
+    @Query("SELECT DISTINCT ma.mentee FROM MentorAssignments ma WHERE ma.mentee.isMentor = false")
     List<NewHireInfo> findMenteeAssignments();
     
     @Query("SELECT n FROM NewHireInfo n WHERE n.isMentor = true")
     List<NewHireInfo> findAllMentors();
-    
+
     Optional<NewHireInfo> findByName(String name);
 
     @Query("SELECT n.name FROM NewHireInfo n")
     List<String> findAllNames();
+
 
     @Transactional
     @Modifying
     @Query("DELETE FROM NewHireInfo n WHERE n.id = :id")    
     void deleteById(@Param("id") int id);
 
-    //findMenteesByMentorId
-    @Query("SELECT ma.mentee FROM MentorAssignments ma WHERE ma.mentor.employeeId = :mentorId")
-    List<NewHireInfo> findMenteesByMentorId(@Param("mentorId") int mentorId);
 
 }

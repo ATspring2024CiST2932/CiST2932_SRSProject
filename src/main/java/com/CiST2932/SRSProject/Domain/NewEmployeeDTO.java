@@ -2,6 +2,7 @@
 package com.CiST2932.SRSProject.Domain;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 public class NewEmployeeDTO {
     private int employeeId;
@@ -41,11 +42,11 @@ public class NewEmployeeDTO {
     public Timestamp getRegistrationDate() { return registrationDate;}
     public void setRegistrationDate(Timestamp registrationDate) { this.registrationDate = registrationDate;}
 
-    public List<Integer> getAssignmentsAsMentorIds() { return assignmentsAsMentorIds;}
-    public void setAssignmentsAsMentorIds(List<Integer> assignmentsAsMentorIds) { this.assignmentsAsMentorIds = assignmentsAsMentorIds;}
+    // public List<Integer> getAssignmentsAsMentorIds() { return assignmentsAsMentorIds;}
+    // public void setAssignmentsAsMentorIds(List<Integer> assignmentsAsMentorIds) { this.assignmentsAsMentorIds = assignmentsAsMentorIds;}
 
-    public List<Integer> getAssignmentsAsMenteeIds() { return assignmentsAsMenteeIds;}
-    public void setAssignmentsAsMenteeIds(List<Integer> assignmentsAsMenteeIds) { this.assignmentsAsMenteeIds = assignmentsAsMenteeIds;}
+    // public List<Integer> getAssignmentsAsMenteeIds() { return assignmentsAsMenteeIds;}
+    // public void setAssignmentsAsMenteeIds(List<Integer> assignmentsAsMenteeIds) { this.assignmentsAsMenteeIds = assignmentsAsMenteeIds;}
 
     public Integer getMentorOrMenteeId() { return mentorOrMenteeId;}
     public void setMentorOrMenteeId(Integer mentorOrMenteeId) { this.mentorOrMenteeId = mentorOrMenteeId;}
@@ -56,4 +57,23 @@ public class NewEmployeeDTO {
     public int getMentee() { return mentee;}
     public void setMentee(int mentee) { this.mentee = mentee;}
     
+    private List<Integer> assignmentsAsMentorIds;
+    private List<TaskDTO> tasks;
+
+    public List<Integer> getAssignmentsAsMentorIds() {
+        return assignmentsAsMentorIds;
+    }
+
+    public void setAssignmentsAsMentorIds(List<Integer> assignmentsAsMentorIds) {
+        this.assignmentsAsMentorIds = assignmentsAsMentorIds;
+    }
+
+    public List<TaskDTO> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<TaskDTO> tasks) {
+        this.tasks = tasks;
+    }
+
 }

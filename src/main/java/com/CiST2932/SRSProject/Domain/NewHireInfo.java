@@ -56,7 +56,7 @@ public class NewHireInfo {
     private List<PeerCodingTasks> assignedTasks = new ArrayList<>();;
 
     @OneToOne(mappedBy = "developer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Users developer;  // Clearer reference to the user as 'developer'
+    private Users developer;  // this should map back to the Users entity
 
 
     // Constructors, getters, and setters

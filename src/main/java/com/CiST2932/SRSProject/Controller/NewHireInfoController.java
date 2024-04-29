@@ -25,9 +25,11 @@ public class NewHireInfoController {
     @GetMapping("/{id}")
     public ResponseEntity<?> findAllNewHireInfoWithDetails(@PathVariable int id) {
     Optional<NewHireInfo> newHireInfo = newHireInfoService.findById(id);
-    return newHireInfo.map(info -> ResponseEntity.ok(newHireInfoService.convertToDTO(info)))
-    .orElseGet(() -> ResponseEntity.notFound().build());
-    }  
+    if (newHireInfo.isPresent()) {
+        return ResponseEntity.ok(newHireInfo);
+    }
+    return ResponseEntity.notFound().build();
+    }
     
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteNewHireInfo(@PathVariable int id) {
