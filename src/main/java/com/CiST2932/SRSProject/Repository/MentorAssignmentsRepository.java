@@ -11,24 +11,25 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-@Repository
 public interface MentorAssignmentsRepository extends JpaRepository<MentorAssignments, Integer> {
-    List<MentorAssignments> findByMentorEmployeeId(int mentorEmployeeId);
-    
+
+    // Finding all assignments by mentor's employee ID
+    List<MentorAssignments> findByMentorEmployeeId(int mentorId);
+
+    // Custom query to fetch DTOs by mentor's employee ID
     @Query("SELECT new com.CiST2932.SRSProject.Domain.MentorAssignmentsDTO(ma.mentor.employeeId, ma.mentee.employeeId) FROM MentorAssignments ma WHERE ma.mentor.employeeId = :mentorId")
     List<MentorAssignmentsDTO> findMentorAssignmentsDtoByMentorEmployeeId(@Param("mentorId") int mentorId);
 
-    // //findMenteesByMentorId
-    // @Query("SELECT ma.mentee.employeeId FROM MentorAssignments ma WHERE ma.mentor.employeeId = :mentorId")
-    // List<Integer> findMenteesByMentorId(@Param("mentorId") int mentorId);
-
+    // Finding all assignments by mentee's employee ID
+    List<MentorAssignments> findByMenteeEmployeeId(int menteeId);
+    
     //deleteByEmployeeId
     @Transactional
     @Modifying
     @Query("DELETE FROM MentorAssignments m WHERE m.mentor.employeeId = :employeeId OR m.mentee.employeeId = :employeeId")
     void deleteByEmployeeId(@Param("employeeId") int employeeId);
-
+    
+    
 }

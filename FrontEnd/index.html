@@ -26,7 +26,7 @@
                 <h5 class="modal-title" id="newEmployeeModalLabel">Add New Employee</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="addEmployeeForm">
+                <form id="newEmployeeForm">
                 <div class="modal-body">
                     <div class="row">
                     <div class="col-md-6">
@@ -77,6 +77,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Save</button>
+                    <form id="newEmployeeForm" onsubmit="handleSubmitEmployee(event)"></form>
                 </div>
                 </form>
             </div>
@@ -119,38 +120,67 @@
         </div>
 <!-- Edit Employee Modal -->
 <div class="modal fade" id="editEmployeeModal" tabindex="-1" aria-labelledby="editEmployeeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editEmployeeModalLabel">Edit Employee</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <form id="editEmployeeForm">
-                    <input type="text" id="editEmployeeId">
-                    <div class="mb-3">
-                        <label for="editName" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="editName">
+            <form id="editEmployeeForm">
+                <div class="modal-body">
+                    <input type="hidden" id="editEmployeeId"> <!-- Only in edit form to store employee ID -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <!-- Column 1: Name, Employment Type, Is Mentor -->
+                            <div class="mb-3">
+                                <label for="editEmployeeName" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="editEmployeeName" name="name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editEmploymentType" class="form-label">Employment Type</label>
+                                <select class="form-select" id="editEmploymentType" name="employmentType" required>
+                                    <option value="Apprentice">Apprentice</option>
+                                    <option value="Full-time">Full-time</option>
+                                    <option value="Part-time">Part-time</option>
+                                    <option value="Contractor">Contractor</option>
+                                </select>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="editEmployeeIsMentor" name="isMentor">
+                                <label class="form-check-label" for="editEmployeeIsMentor">Is Mentor?</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <!-- Column 2: Email, Username, Password -->
+                            <div class="mb-3">
+                                <label for="editEmployeeEmail" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="editEmployeeEmail" name="email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editEmployeeUsername" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="editEmployeeUsername" name="username" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editEmployeePassword" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="editEmployeePassword" name="passwordHash" required>
+                            </div>
+                        </div>
                     </div>
+                    <!--The mentor assignments -->
                     <div class="mb-3">
-                        <label for="editIsMentor" class="form-label">Is Mentor?</label>
-                        <input type="checkbox" class="form-check-input" id="editIsMentor">
-                    </div>
-                    <div class="mb-3">
-                        <label for="editEmploymentType" class="form-label">Employment Type</label>
-                        <select class="form-select" id="editEmploymentType">
-                            <option value="Apprentice">Apprentice</option>
-                            <option value="Full-time">Full-time</option>
-                            <option value="Part-time">Part-time</option>
-                            <option value="Contractor">Contractor</option>
+                        <label for="editMentorAssignments" class="form-label">Mentor Assignments</label>
+                        <select class="form-select" id="editMentorAssignments" multiple>
+                            <!-- Options dynamically loaded here -->
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Update</button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
-</div>
 
         <!-- Delete Employee Modal -->
         <div class="modal fade" id="deleteEmployeeModal" tabindex="-1" aria-labelledby="deleteEmployeeModalLabel" aria-hidden="true">
@@ -257,7 +287,7 @@
     </script>
 
     <!-- Vanilla JavaScript Script -->
-    <script src="App_copy.js" type="module"></script>
+    <script src="App.js" type="module"></script>
     <!-- Bootstrap Bundle -->
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

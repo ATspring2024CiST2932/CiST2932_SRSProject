@@ -16,17 +16,11 @@ import java.util.List;
 public interface PeerCodingTasksRepository extends JpaRepository<PeerCodingTasks, Integer> {
 
     @Query("SELECT t FROM PeerCodingTasks t WHERE t.assignee.employeeId = :employeeId") 
-    List<PeerCodingTasks> findByAssigneeEmployeeId(Integer employeeId);
-    
-    // Find tasks by employee ID
-    List<PeerCodingTasks> findByEmployeeId(Integer employeeId);
-
-    // Find tasks by assignee's employee ID
-    List<PeerCodingTasks> findByAssigneeId(int assigneeId);
+    List<PeerCodingTasks> findByAssigneeEmployeeId(int employeeId);
 
     @Query("SELECT t FROM PeerCodingTasks t WHERE t.assignee.employeeId = :mentorId OR t.assignee.employeeId IN (SELECT ma.mentee.employeeId FROM MentorAssignments ma WHERE ma.mentor.employeeId = :mentorId)")
     List<PeerCodingTasks> findTasksByMentorAndMentees(@Param("mentorId") int mentorId);
-
+    
     //getAssignedTasks
     @Query("SELECT t FROM PeerCodingTasks t WHERE t.assignee.employeeId = :employeeId")
     List<PeerCodingTasks> getAssignedTasks(@Param("employeeId") int employeeId);
@@ -40,5 +34,6 @@ public interface PeerCodingTasksRepository extends JpaRepository<PeerCodingTasks
     @Modifying
     @Query("DELETE FROM PeerCodingTasks t WHERE t.id = :id")    
     void deleteById(@Param("id") int id);
+
 
 }

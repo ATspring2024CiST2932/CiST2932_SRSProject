@@ -13,17 +13,11 @@ public class NewEmployeeDTO {
     private String passwordHash;
     private String employmentType;
     private Timestamp registrationDate;
-    
-    // Detailed relationship fields
-    private List<Integer> assignmentsAsMentorIds;
-    private List<Integer> assignmentsAsMenteeIds;
-    private Integer mentorOrMenteeId; // ID of the mentor or mentee
-    private List<NewHireInfo> mentee; // List of mentees if the employee is a mentor
-    private List<NewHireInfo> mentor; // List of mentor if the employee is a mentee
-    private List<TaskDTO> tasks; // Tasks associated with the employee
+    private Integer mentorOrMenteeId; // This will store either mentor ID or mentee ID based on the role
+    private int mentor;  // Mentor's employee ID
+    private int mentee;  // Mentee's employee ID
 
     // Getters and setters
-  
     public int getEmployeeId() { return employeeId; }
     public void setEmployeeId(int employeeId) { this.employeeId = employeeId; }
    
@@ -32,7 +26,6 @@ public class NewEmployeeDTO {
 
     public String getEmail() { return email;}
     public void setEmail(String email) { this.email = email;}
-
 
     public boolean getIsMentor() { return isMentor;}
     public void setIsMentor(boolean isMentor) { this.isMentor = isMentor;}
@@ -49,22 +42,38 @@ public class NewEmployeeDTO {
     public Timestamp getRegistrationDate() { return registrationDate;}
     public void setRegistrationDate(Timestamp registrationDate) { this.registrationDate = registrationDate;}
 
-    public List<Integer> getAssignmentsAsMentorIds() { return assignmentsAsMentorIds;}
-    public void setAssignmentsAsMentorIds(List<Integer> assignmentsAsMentorIds) { this.assignmentsAsMentorIds = assignmentsAsMentorIds;}
+    // public List<Integer> getAssignmentsAsMentorIds() { return assignmentsAsMentorIds;}
+    // public void setAssignmentsAsMentorIds(List<Integer> assignmentsAsMentorIds) { this.assignmentsAsMentorIds = assignmentsAsMentorIds;}
 
-    public List<Integer> getAssignmentsAsMenteeIds() { return assignmentsAsMenteeIds;}
-    public void setAssignmentsAsMenteeIds(List<Integer> assignmentsAsMenteeIds) { this.assignmentsAsMenteeIds = assignmentsAsMenteeIds;}
+    // public List<Integer> getAssignmentsAsMenteeIds() { return assignmentsAsMenteeIds;}
+    // public void setAssignmentsAsMenteeIds(List<Integer> assignmentsAsMenteeIds) { this.assignmentsAsMenteeIds = assignmentsAsMenteeIds;}
 
     public Integer getMentorOrMenteeId() { return mentorOrMenteeId;}
     public void setMentorOrMenteeId(Integer mentorOrMenteeId) { this.mentorOrMenteeId = mentorOrMenteeId;}
 
-    public List<NewHireInfo> getMentee() { return mentee;}  
-    public void setMentee(List<NewHireInfo> mentee) { this.mentee = mentee;}
+    public int getMentor() { return mentor;}
+    public void setMentor(int mentor) { this.mentor = mentor;}
+    
+    public int getMentee() { return mentee;}
+    public void setMentee(int mentee) { this.mentee = mentee;}
+    
+    private List<Integer> assignmentsAsMentorIds;
+    private List<TaskDTO> tasks;
 
-    public List<NewHireInfo> getMentor() { return mentor;}  
-    public void setMentor(List<NewHireInfo> mentor) { this.mentor = mentor;}
-    public void setTasks(List<TaskDTO> tasks2) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setTasks'");
-    }    
+    public List<Integer> getAssignmentsAsMentorIds() {
+        return assignmentsAsMentorIds;
+    }
+
+    public void setAssignmentsAsMentorIds(List<Integer> assignmentsAsMentorIds) {
+        this.assignmentsAsMentorIds = assignmentsAsMentorIds;
+    }
+
+    public List<TaskDTO> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<TaskDTO> tasks) {
+        this.tasks = tasks;
+    }
+
 }

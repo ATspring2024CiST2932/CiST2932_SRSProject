@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/newhireinfo")
@@ -21,27 +22,14 @@ public class NewHireInfoController {
     @Autowired
     private NewHireInfoService newHireInfoService;
 
-    @GetMapping
-    public ResponseEntity<List<NewHireInfo>> getAllNewEmployeeDTO() {
-        List<NewHireInfo> getAllNewEmployeeDTOList = newHireInfoService.findAll();
-        return ResponseEntity.ok(getAllNewEmployeeDTOList);
-    }
-
     @GetMapping("/{id}")
-    public ResponseEntity<NewHireInfo> getAllNewEmployeeDTOById(@PathVariable int id) {
-        return newHireInfoService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<?> findAllNewHireInfoWithDetails(@PathVariable int id) {
+    Optional<NewHireInfo> newHireInfo = newHireInfoService.findById(id);
+    if (newHireInfo.isPresent()) {
+        return ResponseEntity.ok(newHireInfo);
     }
-    
-    // @PostMapping
-    // public ResponseEntity<NewHireInfo> createNewHireInfo(@RequestBody NewHireInfo newHireInfo) {
-    //     // Save the new hire information to the database
-    //     NewHireInfo savedNewHireInfo = newHireInfoService.save(newHireInfo);
-
-    //     // Return a response entity with the saved object and a status of CREATED
-    //     return ResponseEntity.status(HttpStatus.CREATED).body(savedNewHireInfo);
-    // }    
+    return ResponseEntity.notFound().build();
+    }
     
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteNewHireInfo(@PathVariable int id) {
@@ -91,28 +79,14 @@ public class NewHireInfoController {
         NewHireInfo newHireInfo = newHireInfoService.createNewHireInfo(newEmployeeDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(newHireInfo);
     }
-//     @PutMapping("/{id}")
-//     public ResponseEntity<NewHireInfo> updateOrCreateEmployee(@PathVariable int id, @RequestBody NewEmployeeDTO newEmployeeDTO) {
-//         try {
-//             NewHireInfo updatedInfo = newHireInfoService.updateOrCreateEmployee(id, newEmployeeDTO);
-//             return ResponseEntity.ok(updatedInfo);
-//         } catch (Exception e) {
-//             return ResponseEntity.badRequest().build();
-//         }
-// }
 
-    @GetMapping("/{employeeId}/details")
-    public ResponseEntity<?> getEmployeeDetails(@PathVariable int employeeId) {
-        try {
-            NewEmployeeDTO employeeDetails = newHireInfoService.getEmployeeDetails(employeeId);
-            if (employeeDetails != null) {
-                return ResponseEntity.ok(employeeDetails);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving employee details: " + e.getMessage());
-        }
+    @PutMapping("/{id}")
+    //updateOrCreateEmployee
+    public ResponseEntity<NewHireInfo> updateOrCreateEmployee(@PathVariable int id, @RequestBody NewEmployeeDTO newEmployeeDTO) {
+        NewHireInfo newHireInfo = newHireInfoService.updateOrCreateEmployee(id, newEmployeeDTO);
+        return ResponseEntity.ok(newHireInfo);
     }
+
+
 
 }

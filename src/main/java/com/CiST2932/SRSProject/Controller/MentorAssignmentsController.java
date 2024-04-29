@@ -43,15 +43,21 @@ public class MentorAssignmentsController {
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<MentorAssignmentsDTO> updateMentorAssignments(
+    public ResponseEntity<?> updateMentorAssignments(
         @PathVariable int id, 
         @RequestBody MentorAssignmentsDTO dto) {
         
-        MentorAssignments updatedMentorAssignments = mentorAssignmentsService.update(id, dto);
-        MentorAssignmentsDTO updatedDto = MentorAssignmentsDTO.convertToDto(updatedMentorAssignments);
-        
-        return ResponseEntity.ok(updatedDto);
+        try {
+            MentorAssignments updatedMentorAssignments = mentorAssignmentsService.update(id, dto);
+            MentorAssignmentsDTO updatedDto = mentorAssignmentsService.convertToDto(updatedMentorAssignments);
+            
+            return ResponseEntity.ok(updatedDto);
+        } catch (RuntimeException ex) {
+            // You can further refine this by using more specific exceptions
+            return ResponseEntity.notFound().build();
+        }
     }
+    
     
 
     @DeleteMapping("/{employeeId}")

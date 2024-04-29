@@ -7,11 +7,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Table;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrimaryKeyJoinColumn;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -21,6 +21,9 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
 
 @Entity
 @Table(name = "newhireinfo")
@@ -52,9 +55,9 @@ public class NewHireInfo {
     @JsonManagedReference("task-assignee")
     private List<PeerCodingTasks> assignedTasks = new ArrayList<>();;
 
-    @OneToOne(mappedBy = "newHireInfo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @PrimaryKeyJoinColumn
-    private Users user;
+    @OneToOne(mappedBy = "developer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Users developer;  // this should map back to the Users entity
+
 
     // Constructors, getters, and setters
     public NewHireInfo() {
@@ -123,18 +126,20 @@ public class NewHireInfo {
         this.assignedTasks = assignedTasks;
     }
 
-    public Users getUser() {
-        return user;
+    public Users getDeveloper() {
+        return developer;
     }
 
-    public void setUser(Users user) {
-        this.user = user;
+    public void setDeveloper(Users developer) {
+        this.developer = developer;
     }
+
     
-    // public Set<MentorAssignments> getMentorAssignments() {
-    // Set<MentorAssignments> allAssignments = new HashSet<>();
-    // allAssignments.addAll(getAssignmentsAsMentor());
-    // allAssignments.addAll(getAssignmentsAsMentee());
-    // return allAssignments;
-    // }
+    public Set<MentorAssignments> getMentorAssignments() {
+    Set<MentorAssignments> allAssignments = new HashSet<>();
+    allAssignments.addAll(getAssignmentsAsMentor());
+    allAssignments.addAll(getAssignmentsAsMentee());
+    return allAssignments;
+}
+
 }
