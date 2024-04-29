@@ -16,9 +16,9 @@ function fetchAllEmployees() {
             <td>${employee.email}</td>
             <td>${employee.employmentType}</td>
             <td>
-              <button class="btn btn-success" onclick="viewEmployee(${employee.employeeId})"><i class="bi bi-eye"></i></button>
-              <button class="btn btn-primary" onclick="editEmployee(${employee.employeeId})"><i class="bi bi-pencil-square"></i></button>
-              <button class="btn btn-danger" onclick="archiveEmployee(${employee.employeeId})"><i class="bi bi-trash"></i></button>
+              <button class="btn btn-success" onclick="viewEmployee(${employee.employeeId})">View</button>
+              <button class="btn btn-primary" onclick="editEmployee(${employee.employeeId})">Edit</button>
+              <button class="btn btn-danger" onclick="archiveEmployee(${employee.employeeId})">Delete</button>
             </td>
           `;
           tableBody.appendChild(row);

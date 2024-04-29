@@ -23,9 +23,7 @@ function App() {
           <Header style={{padding: 0, background: colorBgContainer}}>
           </Header>
         </Layout>
-      </Layout>
-
-      
+      </Layout>      
     </>
   )
 }
