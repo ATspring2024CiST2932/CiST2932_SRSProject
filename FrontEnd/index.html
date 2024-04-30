@@ -30,40 +30,36 @@
                 <div class="modal-body">
                     <div class="row">
                     <div class="col-md-6">
-                        <!-- Column 1: Name, Employment Type, Is Mentor -->
+                        <!-- Column 1: Name, Email -->
                         <div class="mb-3">
                         <label for="newEmployeeName" class="form-label">Name</label>
                         <input type="text" class="form-control" id="newEmployeeName" required>
-                        </div>
-                        <div class="mb-3">
-                        <label for="newEmployeeEmploymentType" class="form-label">Employment Type</label>
-                        <select class="form-select" id="newEmployeeEmploymentType" required>
-                            <option value="">Select Employment Type</option>
-                            <option value="Apprentice">Apprentice</option>
-                            <option value="Full-time">Full-time</option>
-                            <option value="Part-time">Part-time</option> 
-                            <option value="Contractor">Contractor</option>
-                        </select>
-                        </div>
-                        <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" id="newEmployeeIsMentor">
-                        <label class="form-check-label" for="newEmployeeIsMentor">Is Mentor?</label>
-                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="newEmployeeEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="newEmployeeEmail">
+                    </div>
                     </div>
                     <div class="col-md-6">
-                        <!-- Column 2: Email, Username, Password -->
+                        <!-- Column 2: EmployeeId, EmployeeType, IsMentor -->
                         <div class="mb-3">
-                        <label for="newEmployeeEmail" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="newEmployeeEmail" required>
+                            <label for="newEmployeeId" class="form-label">Employee ID</label>
+                            <input type="text" class="form-control" id="newEmployeeId" required>
                         </div>
                         <div class="mb-3">
-                        <label for="newEmployeeUsername" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="newEmployeeUsername" required>
-                        </div>
-                        <div class="mb-3">
-                        <label for="newEmployeePassword" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="newEmployeePassword" required>
-                        </div>
+                            <label for="newEmployeeEmploymentType" class="form-label">Employment Type</label>
+                            <select class="form-select" id="newEmployeeEmploymentType" required>
+                                <option value="">Select Employment Type</option>
+                                <option value="Apprentice">Apprentice</option>
+                                <option value="Full-time">Full-time</option>
+                                <option value="Part-time">Part-time</option> 
+                                <option value="Contractor">Contractor</option>
+                            </select>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="newEmployeeIsMentor">
+                                <label class="form-check-label" for="newEmployeeIsMentor">Is Mentor?</label>
+                            </div>
                     </div>
                     </div>
                     <div class="mb-3" id="mentorAssignmentSection">
@@ -110,7 +106,6 @@
                         <div><strong>Name:</strong> <span id="viewName"></span></div>
                         <div><strong>Is Mentor:</strong> <span id="viewIsMentor"></span></div>
                         <div><strong>Employment Type:</strong> <span id="viewEmploymentType"></span></div>
-                        <div><strong>Username:</strong> <span id="viewUsername"></span></div>
                         <div><strong>Email:</strong> <span id="viewEmail"></span></div>
                         <div><strong>Mentor Assignments:</strong> <ul id="viewMentorAssignments"></ul></div>
                         <div><strong>Tasks:</strong> <ul id="viewTasks"></ul></div>
@@ -131,10 +126,22 @@
                     <input type="hidden" id="editEmployeeId"> <!-- Only in edit form to store employee ID -->
                     <div class="row">
                         <div class="col-md-6">
-                            <!-- Column 1: Name, Employment Type, Is Mentor -->
+                            <!-- Column 1: Name, Email -->
                             <div class="mb-3">
                                 <label for="editEmployeeName" class="form-label">Name</label>
                                 <input type="text" class="form-control" id="editEmployeeName" name="name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editEmployeeEmail" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="editEmployeeEmail" name="email">
+                            </div>
+
+                        </div>
+                        <div class="col-md-6">
+                            <!-- Column 2: EmployeeId, EmployeeType, IsMentor -->
+                            <div class="mb-3">
+                                <label for="editEmployeeId" class="form-label">Employee ID</label>
+                                <input type="text" class="form-control" id="editEmployeeId" name="employeeId" required>
                             </div>
                             <div class="mb-3">
                                 <label for="editEmploymentType" class="form-label">Employment Type</label>
@@ -148,21 +155,6 @@
                             <div class="form-check mb-3">
                                 <input class="form-check-input" type="checkbox" id="editEmployeeIsMentor" name="isMentor">
                                 <label class="form-check-label" for="editEmployeeIsMentor">Is Mentor?</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <!-- Column 2: Email, Username, Password -->
-                            <div class="mb-3">
-                                <label for="editEmployeeEmail" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="editEmployeeEmail" name="email" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="editEmployeeUsername" class="form-label">Username</label>
-                                <input type="text" class="form-control" id="editEmployeeUsername" name="username" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="editEmployeePassword" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="editEmployeePassword" name="passwordHash" required>
                             </div>
                         </div>
                     </div>

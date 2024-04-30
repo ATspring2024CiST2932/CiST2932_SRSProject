@@ -122,32 +122,33 @@ function handleSubmitEmployee(event) {
 
 // Prepares and validates employee data from the form for submission.
 function prepareEmployeeData(isEdit) {
-    console.log("Preparing employee data for submission...");
-    const suffix = isEdit ? 'edit' : 'new';
-      const employeeId = isEdit ? document.getElementById('editEmployeeId').value : null;
-      const name = document.getElementById(`${suffix}EmployeeName`).value;
-      const email = document.getElementById(`${suffix}EmployeeEmail`).value;
-      const isMentor = document.getElementById(`${suffix}EmployeeIsMentor`).checked;
-      const employmentType = document.getElementById(`${suffix}EmployeeEmploymentType`).value;
-        const mentorOrMenteeId = document.getElementById(`${suffix}MentorAssignments`).value;
-      console.log("Employee data that is ff:", employeeId, name, email, isMentor, employmentType, mentorOrMenteeId);
-  
-    // Validation
-    if (!name || !email || !employmentType || (isEdit && !employeeId)) {
-        console.error("Validation failed. Missing required fields.");
-        return null;
-    }
+  console.log("Preparing employee data for submission...");
+  const suffix = isEdit ? 'edit' : 'new';
+  const employeeId = isEdit ? document.getElementById('editEmployeeId').value : null;
+  const name = document.getElementById(`${suffix}EmployeeName`).value;
+  const email = document.getElementById(`${suffix}EmployeeEmail`).value;
+  const isMentor = document.getElementById(`${suffix}EmployeeIsMentor`).checked;
+  const employmentType = document.getElementById(`${suffix}EmployeeEmploymentType`).value;
+  const mentorOrMenteeId = document.getElementById(`${suffix}MentorAssignments`).value;
+  console.log("Employee data that is ff:", employeeId, name, email, isMentor, employmentType, mentorOrMenteeId);
 
-    const employeeData = {
-        employeeId, name, email, isMentor, employmentType
-    };
+  // Validation
+  if (!name || !email || !employmentType || (isEdit && !employeeId)) {
+      console.error("Validation failed. Missing required fields.");
+      return null;
+  }
 
-    if (mentorOrMenteeId) {
-        employeeData.mentorOrMenteeId = mentorOrMenteeId;
-    }
+  const employeeData = {
+      employeeId, name, email, isMentor, employmentType
+  };
 
-    return employeeData;
+  if (mentorOrMenteeId) {
+      employeeData.mentorOrMenteeId = mentorOrMenteeId;
+  }
+
+  return employeeData;
 }
+
 
   // handleTableClick(event)
   // Deals with click events on the employee table, distinguishing between view, edit, and archive actions based on button classes.
@@ -349,6 +350,12 @@ function editEmployee(employeeId) {
         console.log("Employment Type select element:", employmentTypeSelect ? "Found" : "Not Found");
         if (employmentTypeSelect) {
             employmentTypeSelect.value = employee.employmentType;
+        }
+
+        const employeeIdInput = document.getElementById('editEmployeeId');
+        console.log("Employee ID input element:", employeeIdInput ? "Found" : "Not Found");
+        if (employeeIdInput) {
+            employeeIdInput.value = employee.employeeId;
         }
 
         // Populate mentor assignments and tasks for viewing

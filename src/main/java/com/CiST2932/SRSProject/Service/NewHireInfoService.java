@@ -12,7 +12,6 @@ import com.CiST2932.SRSProject.Repository.NewHireInfoRepository;
 import com.CiST2932.SRSProject.Repository.MentorAssignmentsRepository;
 import com.CiST2932.SRSProject.Repository.PeerCodingTasksRepository;
 
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -110,6 +109,7 @@ public class NewHireInfoService {
     @Transactional
     public NewHireInfo createNewHireInfo(NewEmployeeDTO newEmployeeDTO) {
         NewHireInfo newHireInfo = new NewHireInfo();
+        newHireInfo.setEmployeeId(newEmployeeDTO.getEmployeeId());
         newHireInfo.setName(newEmployeeDTO.getName());
         newHireInfo.setIsMentor(newEmployeeDTO.getIsMentor());
         newHireInfo.setEmploymentType(newEmployeeDTO.getEmploymentType());

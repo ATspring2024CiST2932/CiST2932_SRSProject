@@ -39,8 +39,6 @@ public class NewHireInfoController {
         }
     }
     
-    
-    
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteNewHireInfo(@PathVariable int id) {
         try {
