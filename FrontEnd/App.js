@@ -25,8 +25,6 @@ function initializeFormDefaults() {
   document.getElementById('newEmployeeName').value = 'John Doe';
   document.getElementById('newEmployeeEmail').value = 'johndoe@example.com';
   document.getElementById('newEmployeeIsMentor').checked = false;
-  document.getElementById('newEmployeeUsername').value = 'john.doe';
-  document.getElementById('newEmployeePassword').value = 'securepassword123';
   document.getElementById('newEmployeeEmploymentType').value = 'Part-time';
 }
 
@@ -131,19 +129,17 @@ function prepareEmployeeData(isEdit) {
       const email = document.getElementById(`${suffix}EmployeeEmail`).value;
       const isMentor = document.getElementById(`${suffix}EmployeeIsMentor`).checked;
       const employmentType = document.getElementById(`${suffix}EmployeeEmploymentType`).value;
-      const username = document.getElementById(`${suffix}EmployeeUsername`).value;
-      const password = document.getElementById(`${suffix}EmployeePassword`).value;
         const mentorOrMenteeId = document.getElementById(`${suffix}MentorAssignments`).value;
-      console.log("Employee data that is ff:", employeeId, name, email, isMentor, employmentType, username, password, mentorOrMenteeId);
+      console.log("Employee data that is ff:", employeeId, name, email, isMentor, employmentType, mentorOrMenteeId);
   
     // Validation
-    if (!name || !email || !employmentType || !username || (isEdit && !employeeId)) {
+    if (!name || !email || !employmentType || (isEdit && !employeeId)) {
         console.error("Validation failed. Missing required fields.");
         return null;
     }
 
     const employeeData = {
-        employeeId, name, email, isMentor, employmentType, username, passwordHash: password
+        employeeId, name, email, isMentor, employmentType
     };
 
     if (mentorOrMenteeId) {
@@ -296,8 +292,7 @@ function viewEmployee(employeeId) {
           document.getElementById('viewName').textContent = employee.name;
           document.getElementById('viewIsMentor').textContent = employee.isMentor;
           document.getElementById('viewEmploymentType').textContent = employee.employmentType;
-          document.getElementById('viewUsername').textContent = employee.developer.username;
-          document.getElementById('viewEmail').textContent = employee.developer.email;
+          document.getElementById('viewEmail').textContent = employee.email;
 
           // Populate mentor assignments and tasks for viewing
           populateMentorAssignments(employeeId);
@@ -341,7 +336,7 @@ function editEmployee(employeeId) {
         const emailInput = document.getElementById('editEmployeeEmail');
         console.log("Email input element:", emailInput ? "Found" : "Not Found");
         if (emailInput) {
-            emailInput.value = employee.developer.email;
+            emailInput.value = employee.email;
         }
 
         const isMentorCheckbox = document.getElementById('editEmployeeIsMentor');
@@ -354,18 +349,6 @@ function editEmployee(employeeId) {
         console.log("Employment Type select element:", employmentTypeSelect ? "Found" : "Not Found");
         if (employmentTypeSelect) {
             employmentTypeSelect.value = employee.employmentType;
-        }
-
-        const usernameInput = document.getElementById('editEmployeeUsername');
-        console.log("Username input element:", usernameInput ? "Found" : "Not Found");
-        if (usernameInput) {
-            usernameInput.value = employee.developer.username;
-        }
-
-        const passwordInput = document.getElementById('editEmployeePassword');
-        console.log("Password input element:", passwordInput ? "Found" : "Not Found");
-        if (passwordInput) {
-            passwordInput.value = employee.developer.passwordHash;
         }
 
         // Populate mentor assignments and tasks for viewing
@@ -398,7 +381,6 @@ window.editEmployee = editEmployee;
 
 // deleteEmployee(employeeId)
 // Similar to archiveEmployee, but specifically sends a deletion request.
-// Optionally confirms with the user before deletion.
 // Function to delete an employee
 function deleteEmployee(event) {
   const deleteModal = document.getElementById('deleteEmployeeModal');
