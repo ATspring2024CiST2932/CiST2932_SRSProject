@@ -23,20 +23,23 @@ public class NewHireInfoController {
     private NewHireInfoService newHireInfoService;
 
     @GetMapping
-    public ResponseEntity<List<NewEmployeeDTO>> findAllNewEmployeeDTO() {
-        List<NewEmployeeDTO> newHireInfo = newHireInfoService.findAllNewEmployeeDTO();
+    public ResponseEntity<List<NewHireInfo>> findAll() {
+        List<NewHireInfo> newHireInfo = newHireInfoService.findAll();
         return ResponseEntity.ok(newHireInfo);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findAllNewEmployeeDTO(@PathVariable int id) {
+    public ResponseEntity<?> findAllNewHireInfoWithDetails(@PathVariable int id) {
         Optional<NewHireInfo> newHireInfo = newHireInfoService.findById(id);
-        if (newHireInfo.isPresent()) {
-            return ResponseEntity.ok(newHireInfo.get());
+        if (newHireInfo.isPresent() && newHireInfo.get().getEmployeeId() != 0) {
+            return ResponseEntity.ok(newHireInfo);
         } else {
+            // Handle the case where the associated user record is missing
             return ResponseEntity.notFound().build();
         }
     }
+    
+    
     
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteNewHireInfo(@PathVariable int id) {

@@ -27,8 +27,10 @@ List<NewEmployeeDTO> findAllNewEmployeeDTO();
     // @Query("SELECT n FROM NewHireInfo n JOIN FETCH n.developer WHERE n.employeeId = :id")
     // Optional<NewHireInfo> findById(@Param("id") int id);
     
-    // @Query("SELECT n FROM NewHireInfo n LEFT JOIN FETCH n.developer d LEFT JOIN FETCH n.assignmentsAsMentor ma")
-    // List<NewHireInfo> findAllNewHireInfoWithDetails();
+    // find All New HireInfo With Details from the MentorAssignments and PeerCodingTasks
+    @Query("SELECT n FROM NewHireInfo n JOIN FETCH n.assignmentsAsMentor JOIN FETCH n.assignmentsAsMentee JOIN FETCH n.assignedTasks")
+    List<NewHireInfo> findAllNewHireInfoWithDetails();
+    
 
     // @Query("SELECT n FROM NewHireInfo n JOIN FETCH n.developer WHERE n.employeeId = :id")
     // Optional<NewHireInfo> findByIdWithDetails(@Param("id") int id);
