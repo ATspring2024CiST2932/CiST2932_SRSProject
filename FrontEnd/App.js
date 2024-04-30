@@ -122,33 +122,32 @@ function handleSubmitEmployee(event) {
 
 // Prepares and validates employee data from the form for submission.
 function prepareEmployeeData(isEdit) {
-  console.log("Preparing employee data for submission...");
-  const suffix = isEdit ? 'edit' : 'new';
-  const employeeId = isEdit ? document.getElementById('editEmployeeId').value : null;
-  const name = document.getElementById(`${suffix}EmployeeName`).value;
-  const email = document.getElementById(`${suffix}EmployeeEmail`).value;
-  const isMentor = document.getElementById(`${suffix}EmployeeIsMentor`).checked;
-  const employmentType = document.getElementById(`${suffix}EmployeeEmploymentType`).value;
-  const mentorOrMenteeId = document.getElementById(`${suffix}MentorAssignments`).value;
-  console.log("Employee data that is ff:", employeeId, name, email, isMentor, employmentType, mentorOrMenteeId);
+    console.log("Preparing employee data for submission...");
+    const suffix = isEdit ? 'edit' : 'new';
+      const employeeId = isEdit ? document.getElementById('editEmployeeId').value : null;
+      const name = document.getElementById(`${suffix}EmployeeName`).value;
+      const email = document.getElementById(`${suffix}EmployeeEmail`).value;
+      const isMentor = document.getElementById(`${suffix}EmployeeIsMentor`).checked;
+      const employmentType = document.getElementById(`${suffix}EmployeeEmploymentType`).value;
+        const mentorOrMenteeId = document.getElementById(`${suffix}MentorAssignments`).value;
+      console.log("Employee data that is ff:", employeeId, name, email, isMentor, employmentType, mentorOrMenteeId);
+  
+    // Validation
+    if (!name || !email || !employmentType || (isEdit && !employeeId)) {
+        console.error("Validation failed. Missing required fields.");
+        return null;
+    }
 
-  // Validation
-  if (!name || !email || !employmentType || (isEdit && !employeeId)) {
-      console.error("Validation failed. Missing required fields.");
-      return null;
-  }
+    const employeeData = {
+        employeeId, name, email, isMentor, employmentType
+    };
 
-  const employeeData = {
-      employeeId, name, email, isMentor, employmentType
-  };
+    if (mentorOrMenteeId) {
+        employeeData.mentorOrMenteeId = mentorOrMenteeId;
+    }
 
-  if (mentorOrMenteeId) {
-      employeeData.mentorOrMenteeId = mentorOrMenteeId;
-  }
-
-  return employeeData;
+    return employeeData;
 }
-
 
   // handleTableClick(event)
   // Deals with click events on the employee table, distinguishing between view, edit, and archive actions based on button classes.
@@ -186,34 +185,34 @@ function showEditModal(employeeId) {
 // fetchAllEmployees()
 // Fetches and displays all employees from the server.
 // Populates the employee table with fetched data.
+// Fetch all employees and display them in the table
 function fetchAllEmployees() {
-    console.log("Fetching all employees from the server...");
-    fetch('http://localhost:8080/newhireinfo')
+  fetch('http://localhost:8080/newhireinfo')
     .then(response => response.json())
     .then(employees => {
-        const employeeTableBody = document.getElementById('employeeData');
-        employeeTableBody.innerHTML = ''; // Clear existing rows
-        employees.forEach(employee => {
-            const row = document.createElement('tr');
-            row.setAttribute('data-employee-id', employee.employeeId);
-            row.innerHTML = `
-                <td>${employee.employeeId}</td>
-                <td>${employee.name}</td>
-                <td>${employee.employmentType}</td>
-                <td>${employee.isMentor ? 'Yes' : 'No'}</td>
-                <td>
-                    <button class="btn btn-success view-btn"><i class="bi bi-eye"></i></button>
-                    <button class="btn btn-primary edit-btn"><i class="bi bi-pencil-square"></i></button>
-                    <button class="btn btn-danger delete-btn"><i class="bi bi-trash"></i></button>
-                </td>
-            `;
-            employeeTableBody.appendChild(row);
-        });
-        console.log("Employee table populated.");
+      const tableBody = document.getElementById('data');
+      tableBody.innerHTML = ''; // Clear existing rows
+      employees.forEach(employee => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${employee.employeeId}</td>
+          <td>${employee.name}</td>
+          <td>${employee.userType}</td>
+          <td>${employee.username}</td>
+          <td>${employee.password}</td>
+          <td>${employee.email}</td>
+          <td>${employee.employmentType}</td>
+          <td>
+            <button class="btn btn-success" onclick="viewEmployee(${employee.employeeId})">View</button>
+            <button class="btn btn-primary" onclick="editEmployee(${employee.employeeId})">Edit</button>
+            <button class="btn btn-danger" onclick="archiveEmployee(${employee.employeeId})">Delete</button>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
     })
     .catch(error => console.error('Error fetching employees:', error));
-  }
-
+}
 // function populateEmployeeTable(employees) {
 //   const tableBody = document.getElementById('employeeData');
 //   tableBody.innerHTML = ''; // Clear existing entries
@@ -350,12 +349,6 @@ function editEmployee(employeeId) {
         console.log("Employment Type select element:", employmentTypeSelect ? "Found" : "Not Found");
         if (employmentTypeSelect) {
             employmentTypeSelect.value = employee.employmentType;
-        }
-
-        const employeeIdInput = document.getElementById('editEmployeeId');
-        console.log("Employee ID input element:", employeeIdInput ? "Found" : "Not Found");
-        if (employeeIdInput) {
-            employeeIdInput.value = employee.employeeId;
         }
 
         // Populate mentor assignments and tasks for viewing
@@ -549,13 +542,3 @@ $('#newEmployeeModal').on('show.bs.modal', function () {
     fetchMentors(); // This should fetch and populate the mentor dropdown
   }
 });
-
-// Modal initialization
-// This should be triggered when the edit button is clicked and the modal is about to be shown.
-// $('#editEmployeeModal').on('show.bs.modal', function (event) {
-//     var button = $(event.relatedTarget); // Button that triggered the modal
-//     var employeeId = button.data('employee-id'); // Extract info from data-* attributes
-//     console.log("Modal is being triggered for employee ID:", employeeId);
-//     $(this).data('employeeId', employeeId); // Set employeeId to the modal for later use
-//     editEmployee(employeeId);
-//   });

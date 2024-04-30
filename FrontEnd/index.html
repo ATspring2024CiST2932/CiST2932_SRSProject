@@ -15,51 +15,59 @@
     </style>
 </head>
 <body>
-    <h2>Employee Management</h2>
+    <!-- <h2>Employee Management</h2> -->
+    <div class ="addbutton">
     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newEmployeeModal">Add Employee</button>
+    <div class="searchemployee">
     <input type="text" class="form-control" id="filterInput" onkeyup="filterTable()" placeholder="Search employees...">
+    </div>
+    </div>
         <!-- New Employee Modal -->
-        <div class="modal fade" id="newEmployeeModal" tabindex="-1" aria-labelledby="newEmployeeModalLabel" aria-hidden="true">
+        <div class="modal fade" id="newEmployeeForm" tabindex="-1" aria-labelledby="newEmployeeModalLabel" aria-hidden="true">
             <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                <h5 class="modal-title" id="newEmployeeModalLabel">Add New Employee</h5>
+                <h5 class="modal-title" id="newEmployeeFormLabel">Add New Employee</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="newEmployeeForm">
+                <form id="addEmployeeForm">
                 <div class="modal-body">
                     <div class="row">
                     <div class="col-md-6">
-                        <!-- Column 1: Name, Email -->
+                        <!-- Column 1: Name, Employment Type, Is Mentor -->
                         <div class="mb-3">
                         <label for="newEmployeeName" class="form-label">Name</label>
                         <input type="text" class="form-control" id="newEmployeeName" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="newEmployeeEmail" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="newEmployeeEmail">
-                    </div>
-                    </div>
-                    <div class="col-md-6">
-                        <!-- Column 2: EmployeeId, EmployeeType, IsMentor -->
-                        <div class="mb-3">
-                            <label for="newEmployeeId" class="form-label">Employee ID</label>
-                            <input type="text" class="form-control" id="newEmployeeId" required>
                         </div>
                         <div class="mb-3">
-                            <label for="newEmployeeEmploymentType" class="form-label">Employment Type</label>
-                            <select class="form-select" id="newEmployeeEmploymentType" required>
-                                <option value="">Select Employment Type</option>
-                                <option value="Apprentice">Apprentice</option>
-                                <option value="Full-time">Full-time</option>
-                                <option value="Part-time">Part-time</option> 
-                                <option value="Contractor">Contractor</option>
-                            </select>
-                            </div>
-                            <div class="form-check mb-3">
-                                <input class="form-check-input" type="checkbox" id="newEmployeeIsMentor">
-                                <label class="form-check-label" for="newEmployeeIsMentor">Is Mentor?</label>
-                            </div>
+                        <label for="newEmployeeEmploymentType" class="form-label">Employment Type</label>
+                        <select class="form-select" id="newEmployeeEmploymentType" required>
+                            <option value="">Select Employment Type</option>
+                            <option value="Apprentice">Apprentice</option>
+                            <option value="Full-time">Full-time</option>
+                            <option value="Part-time">Part-time</option> 
+                            <option value="Contractor">Contractor</option>
+                        </select>
+                        </div>
+                        <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="newEmployeeIsMentor">
+                        <label class="form-check-label" for="newEmployeeIsMentor">Is Mentor?</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <!-- Column 2: Email, Username, Password -->
+                        <div class="mb-3">
+                        <label for="newEmployeeEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="newEmployeeEmail" required>
+                        </div>
+                        <div class="mb-3">
+                        <label for="newEmployeeUsername" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="newEmployeeUsername" required>
+                        </div>
+                        <div class="mb-3">
+                        <label for="newEmployeePassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="newEmployeePassword" required>
+                        </div>
                     </div>
                     </div>
                     <div class="mb-3" id="mentorAssignmentSection">
@@ -72,16 +80,56 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="addTaskButton">Add Employee</button>
                     <button type="submit" class="btn btn-primary">Save</button>
-                    <form id="newEmployeeForm" onsubmit="handleSubmitEmployee(event)"></form>
                 </div>
                 </form>
             </div>
             </div>
         </div>
+  
+  <!-- New Task Modal -->
+  <div class="modal fade" id="taskForm">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Complete Task Form</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="#" id="taskFormElement" method="post">
+            <div class="mb-3">
+              <label for="taskURL" class="form-label">Task URL:</label>
+              <input type="text" id="taskUrl" name="taskUrl" required>
+            </div>
+            <div class="mb-3">
+              <label for="taskNumber" class="form-label">Task Number:</label>
+              <input type="text" id="taskNumber" name="taskNumber" required>
+            </div>
+            <div class="mb-3">
+              <label for="taskType" class="form-label">Task Type:</label>
+              <input type="text" id="taskType" name="taskType" required>
+            </div>
+            <div class="mb-3">
+              <label for="totalHours" class="form-label">Total Hours:</label>
+              <input type="number" step="0.1" id="totalHours" name="totalHours" required>
+            </div>
+            <div class="mb-3">
+              <label for="assigneeName" class="form-label">Assignee:</label>
+              <select id="assigneeName" name="assigneeName" required>
+                <option value="">Select Assignee</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
         <!-- Employee Table -->
-        <table class="table table-striped mt-5" id="employeeTable">
+        <div class="etable">
+          <table class="table table-striped mt-5" id="employeeTable">
             <thead>
                 <tr>
                     <th class="sortable" onclick="sortTable(0)" data-dir="asc">Employee ID</th>
@@ -91,8 +139,10 @@
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody id="employeeData"></tbody>
+            <tbody id="employeeData">
+            </tbody>
         </table>
+      </div>
         <!-- View Employee Modal -->
         <div class="modal fade" id="viewEmployeeModal" tabindex="-1" aria-labelledby="viewEmployeeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -106,42 +156,40 @@
                         <div><strong>Name:</strong> <span id="viewName"></span></div>
                         <div><strong>Is Mentor:</strong> <span id="viewIsMentor"></span></div>
                         <div><strong>Employment Type:</strong> <span id="viewEmploymentType"></span></div>
+<<<<<<< HEAD
+=======
+                        <div><strong>Username:</strong> <span id="viewUsername"></span></div>
                         <div><strong>Email:</strong> <span id="viewEmail"></span></div>
+>>>>>>> parent of a557b910 (30Apr)
                         <div><strong>Mentor Assignments:</strong> <ul id="viewMentorAssignments"></ul></div>
                         <div><strong>Tasks:</strong> <ul id="viewTasks"></ul></div>
                     </div>
                 </div>
             </div>
         </div>
+      
 <!-- Edit Employee Modal -->
 <div class="modal fade" id="editEmployeeModal" tabindex="-1" aria-labelledby="editEmployeeModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editEmployeeModalLabel">Edit Employee</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+<<<<<<< HEAD
+            <div class="modal-body">
+                <form id="editEmployeeForm">
+                    <input type="text" id="editEmployeeId">
+=======
             <form id="editEmployeeForm">
                 <div class="modal-body">
                     <input type="hidden" id="editEmployeeId"> <!-- Only in edit form to store employee ID -->
                     <div class="row">
                         <div class="col-md-6">
-                            <!-- Column 1: Name, Email -->
+                            <!-- Column 1: Name, Employment Type, Is Mentor -->
                             <div class="mb-3">
                                 <label for="editEmployeeName" class="form-label">Name</label>
                                 <input type="text" class="form-control" id="editEmployeeName" name="name" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="editEmployeeEmail" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="editEmployeeEmail" name="email">
-                            </div>
-
-                        </div>
-                        <div class="col-md-6">
-                            <!-- Column 2: EmployeeId, EmployeeType, IsMentor -->
-                            <div class="mb-3">
-                                <label for="editEmployeeId" class="form-label">Employee ID</label>
-                                <input type="text" class="form-control" id="editEmployeeId" name="employeeId" required>
                             </div>
                             <div class="mb-3">
                                 <label for="editEmploymentType" class="form-label">Employment Type</label>
@@ -157,19 +205,77 @@
                                 <label class="form-check-label" for="editEmployeeIsMentor">Is Mentor?</label>
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <!-- Column 2: Email, Username, Password -->
+                            <div class="mb-3">
+                                <label for="editEmployeeEmail" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="editEmployeeEmail" name="email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editEmployeeUsername" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="editEmployeeUsername" name="username" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editEmployeePassword" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="editEmployeePassword" name="passwordHash" required>
+                            </div>
+                        </div>
                     </div>
                     <!--The mentor assignments -->
+>>>>>>> parent of a557b910 (30Apr)
                     <div class="mb-3">
-                        <label for="editMentorAssignments" class="form-label">Mentor Assignments</label>
-                        <select class="form-select" id="editMentorAssignments" multiple>
-                            <!-- Options dynamically loaded here -->
+                        <label for="editName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="editName">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editIsMentor" class="form-label">Is Mentor?</label>
+                        <input type="checkbox" class="form-check-input" id="editIsMentor">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editEmploymentType" class="form-label">Employment Type</label>
+                        <select class="form-select" id="editEmploymentType">
+                            <option value="Apprentice">Apprentice</option>
+                            <option value="Full-time">Full-time</option>
+                            <option value="Part-time">Part-time</option>
+                            <option value="Contractor">Contractor</option>
                         </select>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Update</button>
-                    </div>
+                    <div class="col-md-6">
+                      <!-- Column 2: Email, Username, Password -->
+                      <div class="mb-3">
+                      <label for="newEmployeeEmail" class="form-label">Email</label>
+                      <input type="email" class="form-control" id="newEmployeeEmail" required>
+                      </div>
+                      <div class="mb-3">
+                      <label for="newEmployeeUsername" class="form-label">Username</label>
+                      <input type="text" class="form-control" id="newEmployeeUsername" required>
+                      </div>
+                      <div class="mb-3">
+                      <label for="newEmployeePassword" class="form-label">Password</label>
+                      <input type="password" class="form-control" id="newEmployeePassword" required>
+                      </div>
+                  </div>
+                  </div>
+                    <button type="submit" class="btn btn-primary">Update</button>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+        <!-- Delete Employee Modal -->
+        <div class="modal fade" id="deleteEmployeeModal" tabindex="-1" aria-labelledby="deleteEmployeeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteEmployeeModalLabel">Delete Employee</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete this employee?</p>
+                        <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

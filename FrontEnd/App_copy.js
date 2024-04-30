@@ -274,20 +274,19 @@ function fetchAllEmployees() {
       const employeeTableBody = document.getElementById('employeeData');
       employeeTableBody.innerHTML = ''; // Clear existing rows
       employees.forEach(employee => {
-          const row = document.createElement('tr');
-          row.setAttribute('data-employee-id', employee.employeeId);
-          row.innerHTML = `
-              <td>${employee.employeeId}</td>
-              <td>${employee.name}</td>
-              <td>${employee.employmentType}</td>
-              <td>${employee.isMentor ? 'Yes' : 'No'}</td>
-              <td>
-                  <button class="btn btn-success view-btn"><i class="bi bi-eye"></i></button>
-                  <button class="btn btn-primary edit-btn"><i class="bi bi-pencil-square"></i></button>
-                  <button class="btn btn-danger delete-btn" data-bs-toggle="modal" data-bs-target="#deleteEmployeeModal"><i class="bi bi-trash"></i></button>
-              </td>
-          `;
-          employeeTableBody.appendChild(row);
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${employee.employeeId}</td>
+          <td>${employee.name}</td>
+          <td>${employee.employmentType}</td>
+          <td>${employee.isMentor ? 'Yes' : 'No'}</td>
+          <td>
+            <button class="btn btn-success" onclick="viewEmployee(${employee.employeeId})">View</button>
+            <button class="btn btn-primary" onclick="editEmployee(${employee.employeeId})">Edit</i></button>
+            <button class="btn btn-danger" onclick="archiveEmployee(${employee.employeeId})">Delete</i></button>
+          </td>
+        `;
+        employeeTableBody.appendChild(row);
       });
       console.log("Employee table populated.");
   })
