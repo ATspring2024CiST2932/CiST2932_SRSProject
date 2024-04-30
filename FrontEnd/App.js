@@ -297,7 +297,7 @@ function viewEmployee(employeeId) {
           document.getElementById('viewIsMentor').textContent = employee.isMentor;
           document.getElementById('viewEmploymentType').textContent = employee.employmentType;
           document.getElementById('viewUsername').textContent = employee.developer.username;
-            document.getElementById('viewEmail').textContent = employee.developer.email;
+          document.getElementById('viewEmail').textContent = employee.developer.email;
 
           // Populate mentor assignments and tasks for viewing
           populateMentorAssignments(employeeId);
@@ -341,7 +341,7 @@ function editEmployee(employeeId) {
         const emailInput = document.getElementById('editEmployeeEmail');
         console.log("Email input element:", emailInput ? "Found" : "Not Found");
         if (emailInput) {
-            emailInput.value = employee.email;
+            emailInput.value = employee.developer.email;
         }
 
         const isMentorCheckbox = document.getElementById('editEmployeeIsMentor');
@@ -355,6 +355,21 @@ function editEmployee(employeeId) {
         if (employmentTypeSelect) {
             employmentTypeSelect.value = employee.employmentType;
         }
+
+        const usernameInput = document.getElementById('editEmployeeUsername');
+        console.log("Username input element:", usernameInput ? "Found" : "Not Found");
+        if (usernameInput) {
+            usernameInput.value = employee.developer.username;
+        }
+
+        const passwordInput = document.getElementById('editEmployeePassword');
+        console.log("Password input element:", passwordInput ? "Found" : "Not Found");
+        if (passwordInput) {
+            passwordInput.value = employee.developer.passwordHash;
+        }
+
+        // Populate mentor assignments and tasks for viewing
+        populateMentorAssignments(employeeId);
 
         if (editModal.length) {
             editModal.modal('show');
