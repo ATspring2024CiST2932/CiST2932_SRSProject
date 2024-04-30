@@ -2,6 +2,7 @@
 
 package com.CiST2932.SRSProject.Repository;
 
+import com.CiST2932.SRSProject.Domain.NewEmployeeDTO;
 import com.CiST2932.SRSProject.Domain.NewHireInfo;
 
 import jakarta.transaction.Transactional;
@@ -19,16 +20,15 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface NewHireInfoRepository extends JpaRepository<NewHireInfo, Integer> {
     
-    @SuppressWarnings("null")
-    @Query("SELECT n FROM NewHireInfo n")
-    List<NewHireInfo> findAll();
+//find all newEmployeeDTO fields, mentorasignments, and peercodingtasks
+@Query("SELECT new com.CiST2932.SRSProject.Domain.NewEmployeeDTO(n.employeeId, n.name, n.employmentType, n.email, n.isMentor, n.assignmentsAsMentor, n.assignmentsAsMentee, n.assignedTasks) FROM NewHireInfo n")
+List<NewEmployeeDTO> findAllNewEmployeeDTO();
 
-    @Query("SELECT n FROM NewHireInfo n JOIN FETCH n.developer WHERE n.employeeId = :id")
-    Optional<NewHireInfo> findById(@Param("id") int id);
+    // @Query("SELECT n FROM NewHireInfo n JOIN FETCH n.developer WHERE n.employeeId = :id")
+    // Optional<NewHireInfo> findById(@Param("id") int id);
     
-    @Query("SELECT n FROM NewHireInfo n LEFT JOIN FETCH n.developer d LEFT JOIN FETCH n.assignmentsAsMentor ma")
-    List<NewHireInfo> findAllNewHireInfoWithDetails();
-
+    // @Query("SELECT n FROM NewHireInfo n LEFT JOIN FETCH n.developer d LEFT JOIN FETCH n.assignmentsAsMentor ma")
+    // List<NewHireInfo> findAllNewHireInfoWithDetails();
 
     // @Query("SELECT n FROM NewHireInfo n JOIN FETCH n.developer WHERE n.employeeId = :id")
     // Optional<NewHireInfo> findByIdWithDetails(@Param("id") int id);

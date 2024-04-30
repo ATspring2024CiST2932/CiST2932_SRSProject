@@ -8,9 +8,7 @@ import com.CiST2932.SRSProject.Domain.NewHireInfo;
 import com.CiST2932.SRSProject.Domain.NewHireInfoDTO;
 import com.CiST2932.SRSProject.Domain.PeerCodingTasks;
 import com.CiST2932.SRSProject.Domain.TaskDTO;
-import com.CiST2932.SRSProject.Domain.Users;
 import com.CiST2932.SRSProject.Repository.NewHireInfoRepository;
-import com.CiST2932.SRSProject.Repository.UsersRepository;
 import com.CiST2932.SRSProject.Repository.MentorAssignmentsRepository;
 import com.CiST2932.SRSProject.Repository.PeerCodingTasksRepository;
 
@@ -31,8 +29,6 @@ import org.springframework.web.client.ResourceAccessException;
 public class NewHireInfoService {
     @Autowired
     private NewHireInfoRepository newHireInfoRepository;
-    @Autowired
-    private UsersRepository usersRepository;
     @Autowired
     private MentorAssignmentsRepository mentorAssignmentsRepository;
     @Autowired
@@ -63,11 +59,7 @@ public class NewHireInfoService {
             new IllegalStateException("Employee not found with id: " + employeeId));
     
         // Attempt to delete User first if exists
-        try {
-            if (newHireInfo.getDeveloper() != null) {
-                usersRepository.deleteByEmployeeId(newHireInfo.getEmployeeId());
-            }
-    
+        try {    
             // Then delete related data to avoid foreign key constraints
             peerCodingTasksRepository.deleteByEmployeeId(employeeId);
             mentorAssignmentsRepository.deleteByEmployeeId(employeeId);
@@ -106,6 +98,7 @@ public class NewHireInfoService {
                 newHireInfo.getName(), 
                 newHireInfo.getEmploymentType(), 
                 newHireInfo.getIsMentor()));
+                newHireInfo.getEmail();
             }
         return newHireInfoDTOs;
     }
@@ -120,25 +113,10 @@ public class NewHireInfoService {
         newHireInfo.setName(newEmployeeDTO.getName());
         newHireInfo.setIsMentor(newEmployeeDTO.getIsMentor());
         newHireInfo.setEmploymentType(newEmployeeDTO.getEmploymentType());
-
+        newHireInfo.setEmail(newEmployeeDTO.getEmail());
         
         // Save the NewHireInfo entity first to get an employeeId
         NewHireInfo savedNewHireInfo = newHireInfoRepository.save(newHireInfo);
-    
-        /// If username and password are provided, create the Users object first
-        if (newEmployeeDTO.getUsername() != null && newEmployeeDTO.getPasswordHash() != null) {
-        Users user = new Users();
-        user.setDeveloper(savedNewHireInfo);
-        user.setEmail(newEmployeeDTO.getEmail());
-        user.setUsername(newEmployeeDTO.getUsername());
-        user.setPasswordHash(newEmployeeDTO.getPasswordHash());
-        user.setRegistrationDate(new Timestamp(System.currentTimeMillis()));
-        usersRepository.save(user);
-    
-        // Link back to NewHireInfo for bi-directional association
-        savedNewHireInfo.setDeveloper(user);
-        System.out.println("User info created successfully");
-        }
     
         // Handle Mentor/Mentee Assignment
         if (newEmployeeDTO.getMentorOrMenteeId() != null) {
@@ -185,19 +163,10 @@ public NewHireInfo updateOrCreateEmployee(int id, NewEmployeeDTO newEmployeeDTO)
     newHireInfo.setName(newEmployeeDTO.getName());
     newHireInfo.setIsMentor(newEmployeeDTO.getIsMentor());
     newHireInfo.setEmploymentType(newEmployeeDTO.getEmploymentType());
+    newHireInfo.setEmail(newEmployeeDTO.getEmail());
 
     // Save the NewHireInfo entity to get or refresh an employeeId
     NewHireInfo savedNewHireInfo = newHireInfoRepository.save(newHireInfo);
-
-    // Handling the Users entity
-    Users user = usersRepository.findById(newHireInfo.getEmployeeId()).orElse(new Users());
-    user.setDeveloper(savedNewHireInfo);  // Corrected method name
-    user.setEmail(newEmployeeDTO.getEmail());
-    user.setUsername(newEmployeeDTO.getUsername());
-    user.setPasswordHash(newEmployeeDTO.getPasswordHash());
-    user.setRegistrationDate(new Timestamp(System.currentTimeMillis()));
-
-    usersRepository.save(user); // Save the user to persist the changes
 
     return savedNewHireInfo; // Return the updated or created NewHireInfo
 }
@@ -212,15 +181,8 @@ public NewEmployeeDTO getEmployeeDetails(int employeeId) {
     dto.setName(employee.getName());
     dto.setIsMentor(employee.getIsMentor());
     dto.setEmploymentType(employee.getEmploymentType());
+    dto.setEmail(employee.getEmail());
 
-    // Access the Users entity through the NewHireInfo entity
-    Users user = employee.getDeveloper();  // Corrected from getUser to getDeveloper
-    if (user != null) {
-        dto.setUsername(user.getUsername());
-        dto.setEmail(user.getEmail());
-        dto.setPasswordHash(user.getPasswordHash());
-        dto.setRegistrationDate(user.getRegistrationDate());
-    }
     if (employee.getIsMentor()) {
         // Assume that each mentor has multiple mentees
         List<Integer> menteeIds = newHireInfoRepository.findMenteesByMentorId(employeeId)
@@ -257,7 +219,7 @@ public NewEmployeeDTO getEmployeeDetails(int employeeId) {
         return dto;
         }
 
-        public List<NewHireInfo> findAllNewHireInfoWithDetails() {
-            return newHireInfoRepository.findAllNewHireInfoWithDetails();
+        public List<NewEmployeeDTO> findAllNewEmployeeDTO() {
+            return newHireInfoRepository.findAllNewEmployeeDTO();
         }
     }

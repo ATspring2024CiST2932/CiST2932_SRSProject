@@ -39,6 +39,9 @@ public class NewHireInfo {
     @Column(name = "EmploymentType")
     private String employmentType;
 
+    @Column(name = "email")
+    private String email;
+
     @Column(name = "Mentor")
     private boolean isMentor;
 
@@ -53,10 +56,6 @@ public class NewHireInfo {
     @OneToMany(mappedBy = "assignee", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("task-assignee")
     private List<PeerCodingTasks> assignedTasks = new ArrayList<>();;
-
-    @OneToOne(mappedBy = "developer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Users developer;  // this should map back to the Users entity
-
 
     // Constructors, getters, and setters
     public NewHireInfo() {
@@ -93,6 +92,14 @@ public class NewHireInfo {
         this.employmentType = employmentType;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public boolean getIsMentor() {
         return isMentor;
     }    
@@ -124,15 +131,6 @@ public class NewHireInfo {
     public void setAssignedTasks(List<PeerCodingTasks> assignedTasks) {
         this.assignedTasks = assignedTasks;
     }
-
-    public Users getDeveloper() {
-        return developer;
-    }
-
-    public void setDeveloper(Users developer) {
-        this.developer = developer;
-    }
-
     
     public Set<MentorAssignments> getMentorAssignments() {
     Set<MentorAssignments> allAssignments = new HashSet<>();

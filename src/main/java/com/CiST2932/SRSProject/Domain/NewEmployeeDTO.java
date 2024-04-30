@@ -9,10 +9,10 @@ public class NewEmployeeDTO {
     private String name;
     private String email;
     private boolean isMentor;
-    private String username;
-    private String passwordHash;
+    // private String username;
+    // private String passwordHash;
     private String employmentType;
-    private Timestamp registrationDate;
+    // private Timestamp registrationDate;
     private Integer mentorOrMenteeId; // This will store either mentor ID or mentee ID based on the role
     private int mentor;  // Mentor's employee ID
     private int mentee;  // Mentee's employee ID
@@ -30,17 +30,17 @@ public class NewEmployeeDTO {
     public boolean getIsMentor() { return isMentor;}
     public void setIsMentor(boolean isMentor) { this.isMentor = isMentor;}
     
-    public String getUsername() { return username;}
-    public void setUsername(String username) { this.username = username;}
+    // public String getUsername() { return username;}
+    // public void setUsername(String username) { this.username = username;}
 
-    public String getPasswordHash() { return passwordHash;}
-    public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash;}
+    // public String getPasswordHash() { return passwordHash;}
+    // public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash;}
 
     public String getEmploymentType() { return employmentType;}
     public void setEmploymentType(String employmentType) { this.employmentType = employmentType;}
 
-    public Timestamp getRegistrationDate() { return registrationDate;}
-    public void setRegistrationDate(Timestamp registrationDate) { this.registrationDate = registrationDate;}
+    // public Timestamp getRegistrationDate() { return registrationDate;}
+    // public void setRegistrationDate(Timestamp registrationDate) { this.registrationDate = registrationDate;}
 
     // public List<Integer> getAssignmentsAsMentorIds() { return assignmentsAsMentorIds;}
     // public void setAssignmentsAsMentorIds(List<Integer> assignmentsAsMentorIds) { this.assignmentsAsMentorIds = assignmentsAsMentorIds;}
