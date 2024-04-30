@@ -1,8 +1,10 @@
+CREATE DATABASE  IF NOT EXISTS `myproject2` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `myproject2`;
 -- MySQL dump 10.13  Distrib 8.0.36, for Win64 (x86_64)
 --
--- Host: localhost    Database: project2
+-- Host: localhost    Database: myproject2
 -- ------------------------------------------------------
--- Server version	8.3.0
+-- Server version	8.0.36
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -58,9 +60,9 @@ CREATE TABLE `newhireinfo` (
   `Name` varchar(50) DEFAULT NULL,
   `EmploymentType` varchar(50) DEFAULT NULL,
   `Mentor` bit(1) DEFAULT NULL,
+  `Email` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`EmployeeID`),
   KEY `idx_name` (`Name`)
---  CONSTRAINT `chk_mentor_employment_type` CHECK ((((`Mentor` = 1) and (`EmploymentType` in (_utf8mb4'Full Time',_utf8mb4'Contractor'))) or (`Mentor` = 0)))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -70,7 +72,7 @@ CREATE TABLE `newhireinfo` (
 
 LOCK TABLES `newhireinfo` WRITE;
 /*!40000 ALTER TABLE `newhireinfo` DISABLE KEYS */;
-INSERT INTO `newhireinfo` VALUES (1,'John Mentor','Full Time',_binary ''),(2,'Bob Mentor','Contractor',_binary ''),(3,'Eve Mentor','Full Time',_binary ''),(4,'Grace Mentor','Full Time',_binary ''),(5,'Alice Mentee','Full Time',_binary '\0'),(6,'Charlie Mentee','Full Time',_binary '\0'),(7,'David Mentee','Contractor',_binary '\0'),(8,'Frank Mentee','Full Time',_binary '\0'),(9,'Emily Mentee','Full-Time',_binary '\0'),(10,'Daniel Mentee','Part-Time',_binary '\0'),(11,'Grace Mentee','Contractor',_binary '\0'),(12,'Isaac Mentee','Full-Time',_binary '\0'),(13,'Hannah Mentee','Part-Time',_binary '\0'),(14,'Jacob Mentee','Full-Time',_binary '\0'),(15,'Lily Mentee','Contractor',_binary '\0'),(16,'Olivia Mentee','Part-Time',_binary '\0');
+INSERT INTO `newhireinfo` VALUES (1,'John Mentor','Full Time',_binary '','JohnMentor@example.com'),(2,'Bob Mentor','Contractor',_binary '','BobMentor@example.com'),(3,'Eve Mentor','Full Time',_binary '','EveMentor@example.com'),(4,'Grace Mentor','Full Time',_binary '','GraceMentor@example.com'),(5,'Alice Mentee','Full Time',_binary '\0','AliceMentee@example.com'),(6,'Charlie Mentee','Full Time',_binary '\0','CharlieMentee@example.com'),(7,'David Mentee','Contractor',_binary '\0','DavidMentee@example.com'),(8,'Frank Mentee','Full Time',_binary '\0','FrankMentee@example.com'),(9,'Emily Mentee','Full-Time',_binary '\0','EmilyMentee@example.com'),(10,'Daniel Mentee','Part-Time',_binary '\0','DanielMentee@example.com'),(11,'Grace Mentee','Contractor',_binary '\0','GraceMentee@example.com'),(12,'Isaac Mentee','Full-Time',_binary '\0','IsaacMentee@example.com'),(13,'Hannah Mentee','Part-Time',_binary '\0','HannahMentee@example.com'),(14,'Jacob Mentee','Full-Time',_binary '\0','JacobMentee@example.com'),(15,'Lily Mentee','Contractor',_binary '\0','LilyMentee@example.com'),(16,'Olivia Mentee','Part-Time',_binary '\0','OliviaMentee@example.com');
 /*!40000 ALTER TABLE `newhireinfo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -86,12 +88,12 @@ CREATE TABLE `peercodingtasks` (
   `task_url` varchar(255) DEFAULT NULL,
   `task_number` varchar(50) DEFAULT NULL,
   `task_type` varchar(50) DEFAULT NULL,
-  `total_hours` decimal(10,2) DEFAULT NULL,
+  `total_hours` decimal(38,2) DEFAULT NULL,
   `employeeID` int DEFAULT NULL,
   PRIMARY KEY (`task_id`),
   KEY `fk_employeeID` (`employeeID`),
   CONSTRAINT `fk_employeeID` FOREIGN KEY (`employeeID`) REFERENCES `newhireinfo` (`EmployeeID`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -100,43 +102,12 @@ CREATE TABLE `peercodingtasks` (
 
 LOCK TABLES `peercodingtasks` WRITE;
 /*!40000 ALTER TABLE `peercodingtasks` DISABLE KEYS */;
-INSERT INTO `peercodingtasks` VALUES (1,'http://example.com/task1','T123','UI',10.50,1),(2,'http://example.com/task2','T124','Cypress',8.75,2),(3,'http://example.com/task3','T125','Service',15.25,3),(4,'http://example.com/task4','T126','Junit',12.00,4);
+INSERT INTO `peercodingtasks` VALUES (1,'http://example.com/task1','T123','UI',10.50,1),(2,'http://example.com/task2','T124','Cypress',8.75,2),(3,'http://example.com/task3','T125','Service',15.25,3),(4,'http://example.com/task4','T126','Junit',12.00,4),(5,'example.com','t126','Java',2.10,5),(6,'example.com','t126','Java2',2.10,11),(7,'example.com','t126','Java2',2.10,16),(8,'example.com','t126','Java2',2.10,12);
 /*!40000 ALTER TABLE `peercodingtasks` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `users`
---
-
-DROP TABLE IF EXISTS `users`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `users` (
-  `EmployeeID` int NOT NULL,
-  `username` varchar(50) NOT NULL,
-  `password_hash` varchar(255) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `registration_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`EmployeeID`),
-  UNIQUE KEY `username` (`username`),
-  UNIQUE KEY `email` (`email`),
-  UNIQUE KEY `EmployeeID_UNIQUE` (`EmployeeID`),
-  CONSTRAINT `fk_employeeID_Users` FOREIGN KEY (`EmployeeID`) REFERENCES `newhireinfo` (`EmployeeID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `users`
---
-
-LOCK TABLES `users` WRITE;
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'john_mentor','hashed_password','john.doe@example.com','2024-02-02 19:09:57');
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping events for database 'project2'
+-- Dumping routines for database 'myproject2'
 --
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -148,4 +119,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-03-16 19:41:45
+-- Dump completed on 2024-04-29 21:13:34
